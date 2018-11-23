@@ -10,8 +10,6 @@
         android:label="@string/app_name">
         <activity
             android:name=".DebugWebServerActivity"
-            android:allowTaskReparenting="true"
-            android:clearTaskOnLaunch="true"
             android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
             android:process=":androscope"
