@@ -1,10 +1,13 @@
 package nl.ngti.debugwebserver;
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,7 +17,7 @@ import fi.iki.elonen.IoServerRunner;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHttpListener;
 
-public class DebugWebServerStartService extends IntentService {
+public class DebugWebServerStartService extends Service {
 
     private static final String TAG = DebugWebServerStartService.class.getSimpleName();
 
@@ -22,10 +25,6 @@ public class DebugWebServerStartService extends IntentService {
     private static final String KEY_FORCE = "nl.ngti.debugwebserver.key.FORCE";
 
     private static boolean sServerStarted;
-
-    public DebugWebServerStartService() {
-        super("DebugWebServerStartService");
-    }
 
     public static void startServer(Context context, boolean force) {
         Intent intent = new Intent(context, DebugWebServerStartService.class);
@@ -35,7 +34,7 @@ public class DebugWebServerStartService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_START_WEB_SERVER.equals(action)) {
@@ -43,6 +42,7 @@ public class DebugWebServerStartService extends IntentService {
                 handleServerStart(force);
             }
         }
+        return START_NOT_STICKY;
     }
 
     private void handleServerStart(boolean force) {
@@ -50,6 +50,7 @@ public class DebugWebServerStartService extends IntentService {
             showToast("Debug Web Server is already running");
             return;
         }
+
         NanoHTTPD server = DeviceExplorerHttpServer.newInstance(this, force);
         if (server != null) {
             IoServerRunner.executeInstance(this, server, new NanoListener());
@@ -60,6 +61,12 @@ public class DebugWebServerStartService extends IntentService {
 
     private void showToast(String message) {
         new Handler(Looper.getMainLooper()).post(new ShowMessageRunnable(this, message));
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private static final class NanoListener implements NanoHttpListener {
