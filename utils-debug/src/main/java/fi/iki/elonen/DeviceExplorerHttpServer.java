@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,6 +26,7 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
     private static final String KEY_IMAGE_CACHE = "nl.ngti.debugwebserver.IMAGE_CACHE";
     private static final String KEY_IMAGE_CACHE_FILTER = "nl.ngti.debugwebserver.IMAGE_CACHE.filter";
     private static final String KEY_HTTP_PORT = "nl.ngti.debugwebserver.HTTP_PORT";
+    private static final String KEY_AUTO_START = "nl.ngti.debugwebserver.AUTO_START";
     private static final int HTTP_PORT = 8787;
 
     private final Set<HtmlResponse> mHtmlResponses = new LinkedHashSet<>();
@@ -47,8 +49,8 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
         }
     }
 
-    @NonNull
-    public static DeviceExplorerHttpServer newInstance(Context context) {
+    @Nullable
+    public static DeviceExplorerHttpServer newInstance(Context context, boolean force) {
         ApplicationInfo applicationInfo;
         try {
             applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -56,6 +58,9 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
             throw new RuntimeException(e);
         }
         Bundle metadata = applicationInfo.metaData;
+        if (!force && !metadata.getBoolean(KEY_AUTO_START, false)) {
+            return null;
+        }
         String databaseName = metadata.getString(KEY_DATABASE_NAME);
         String imageCache = metadata.getString(KEY_IMAGE_CACHE);
         String imageFilter = metadata.getString(KEY_IMAGE_CACHE_FILTER);

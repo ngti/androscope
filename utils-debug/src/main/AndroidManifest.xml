@@ -21,6 +21,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".DebugWebServerContentProvider"
+            android:authorities="${applicationId}.androscope"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
+
+        <service
+            android:name=".DebugWebServerStartService"
+            android:exported="false"
+            android:process=":androscope">
+        </service>
+
     </application>
 
 </manifest>
