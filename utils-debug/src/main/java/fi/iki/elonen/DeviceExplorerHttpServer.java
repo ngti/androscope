@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-
+import fi.iki.elonen.database.HtmlResponseDatabaseExplorer;
+import fi.iki.elonen.database.HtmlResponseDownloadDatabase;
+import fi.iki.elonen.database.HtmlResponseUploadDatabase;
 import fi.iki.elonen.filebrowser.HtmlResponseFileExplorer;
 import java.io.IOException;
 import java.util.LinkedHashSet;

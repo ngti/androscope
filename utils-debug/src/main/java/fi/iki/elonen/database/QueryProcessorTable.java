@@ -1,9 +1,9 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-
+import fi.iki.elonen.NanoHTTPD;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashSet;

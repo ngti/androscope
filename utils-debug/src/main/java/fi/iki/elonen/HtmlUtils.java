@@ -8,22 +8,22 @@ import android.support.annotation.NonNull;
 public class HtmlUtils {
 
     @NonNull
-    static String cellHeader(String html) {
+    public static String cellHeader(String html) {
         return "<th>" + html + "</th>";
     }
 
     @NonNull
-    static String cell(String html) {
+    public static String cell(String html) {
         return "<td>" + html + "</td>";
     }
 
     @NonNull
-    static String startRow(String style) {
+    public static String startRow(String style) {
         return "<tr class='" + style + "'>";
     }
 
     @NonNull
-    static String endRow() {
+    public static String endRow() {
         return "</tr>";
     }
 

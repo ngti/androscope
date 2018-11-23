@@ -1,33 +1,34 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-
+import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
+import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
 
 /**
- * Process a query for a content provider.
+ * Process a sql query that is not a SELECT.
  */
 @SuppressLint("DefaultLocale")
-public class QueryProcessorContent implements QueryProcessor {
-    private final Context mContext;
+public class QueryProcessorInject implements QueryProcessor {
+    private final SQLiteOpenHelper mSql;
 
-    public QueryProcessorContent(Context context) {
-        mContext = context;
+    public QueryProcessorInject(SQLiteOpenHelper sql) {
+        mSql = sql;
     }
 
     @Override
     public Cursor process(NanoHTTPD.IHTTPSession session, StringBuilder html, String query) throws IOException {
         if (isProcessable(session, query)) {
-            return mContext.getContentResolver().query(Uri.parse(query), null, null, null, null);
+            mSql.getWritableDatabase().execSQL(query);
+            html.append("<b>Executed query: </b>" + TextUtils.htmlEncode(query));
         }
         return null;
     }
 
     private boolean isProcessable(NanoHTTPD.IHTTPSession session, String query) {
-        return "/dbxp/injectQuery".equals(session.getUri()) && query.length() > 0 && query.toLowerCase().startsWith("content:");
+        return "/dbxp/injectQuery".equals(session.getUri()) && query.length() > 0 && !query.toLowerCase().startsWith("select") && !query.toLowerCase().startsWith("content:");
     }
 
     @Override

@@ -1,10 +1,10 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-
+import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
 
 /**

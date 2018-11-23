@@ -1,7 +1,7 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.content.Context;
-
+import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +19,9 @@ public class HtmlResponseUploadDatabase extends BaseDatabaseHtmlResponse {
     @Override
     public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
         html.append("<p><div style='border: 1px solid #000000'><form action='/uploadDb' method='post' enctype='multipart/form-data'>\n" +
-                "    <input type='file' name='file' />Upload Database here\n" +
-                "    <input type='submit' name='submit' value='Upload'/>\n" +
-                "</form></div></p>");
+            "    <input type='file' name='file' />Upload Database here\n" +
+            "    <input type='submit' name='submit' value='Upload'/>\n" +
+            "</form></div></p>");
     }
 
     @Override

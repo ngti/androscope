@@ -1,6 +1,7 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.content.Context;
+import fi.iki.elonen.HtmlResponse;
 
 abstract class BaseDatabaseHtmlResponse implements HtmlResponse {
 

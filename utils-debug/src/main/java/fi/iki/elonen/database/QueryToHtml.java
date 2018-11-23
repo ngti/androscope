@@ -1,7 +1,8 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.database.Cursor;
-
+import fi.iki.elonen.HtmlUtils;
+import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
 import java.util.Set;
 
@@ -25,7 +26,8 @@ public class QueryToHtml {
         }
     }
 
-    static Cursor getCursorFromProcessors(NanoHTTPD.IHTTPSession session, StringBuilder html, String query, Set<QueryProcessor> queryProcessors) throws IOException {
+    static Cursor getCursorFromProcessors(NanoHTTPD.IHTTPSession session, StringBuilder html, String query, Set<QueryProcessor> queryProcessors)
+        throws IOException {
         for (QueryProcessor processor : queryProcessors) {
             Cursor cursor = processor.process(session, html, query);
             if (cursor != null) {
@@ -35,7 +37,8 @@ public class QueryToHtml {
         return null;
     }
 
-    static void showCursor(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, Set<QueryProcessor> queryProcessors) throws IOException {
+    static void showCursor(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, Set<QueryProcessor> queryProcessors)
+        throws IOException {
         int line = 0;
         int columns = 0;
         while (cursor.moveToNext()) {
@@ -45,14 +48,15 @@ public class QueryToHtml {
             }
             showCursorRow(session, html, cursor, columns, queryProcessors, line);
             line++;
-            if(line > 500){
+            if (line > 500) {
                 break;
             }
         }
         cursor.close();
     }
 
-    static void showCursorHeader(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, final int columns, Set<QueryProcessor> queryProcessors) throws IOException {
+    static void showCursorHeader(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, final int columns,
+        Set<QueryProcessor> queryProcessors) throws IOException {
         html.append(HtmlUtils.startRow(""));
         for (int i = 0; i < columns; i++) {
             String name = cursor.getColumnName(i);
@@ -66,7 +70,8 @@ public class QueryToHtml {
         html.append(endRow());
     }
 
-    static void showCursorRow(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, final int columns, Set<QueryProcessor> queryProcessors, int line) throws IOException {
+    static void showCursorRow(NanoHTTPD.IHTTPSession session, final StringBuilder html, final Cursor cursor, final int columns,
+        Set<QueryProcessor> queryProcessors, int line) throws IOException {
         html.append(HtmlUtils.startRow(line % 2 != 0 ? "alt" : ""));
         for (int i = 0; i < columns; i++) {
             final String data = getData(cursor, i);
@@ -91,7 +96,8 @@ public class QueryToHtml {
         return data;
     }
 
-    static String getHtmlRowDataFromProcessors(NanoHTTPD.IHTTPSession session, String data, String columnName, Set<QueryProcessor> queryProcessors) throws IOException {
+    static String getHtmlRowDataFromProcessors(NanoHTTPD.IHTTPSession session, String data, String columnName, Set<QueryProcessor> queryProcessors)
+        throws IOException {
         for (QueryProcessor processor : queryProcessors) {
             String htmlData = processor.formatHtmlData(session, data, columnName);
             if (htmlData != null) {
@@ -101,7 +107,8 @@ public class QueryToHtml {
         return null;
     }
 
-    static String getHtmlColumnNameFromProcessors(NanoHTTPD.IHTTPSession session, String columnName, int column, Set<QueryProcessor> queryProcessors) throws IOException {
+    static String getHtmlColumnNameFromProcessors(NanoHTTPD.IHTTPSession session, String columnName, int column, Set<QueryProcessor> queryProcessors)
+        throws IOException {
         for (QueryProcessor processor : queryProcessors) {
             String htmlData = processor.formatHtmlColumn(session, columnName);
             if (htmlData != null) {

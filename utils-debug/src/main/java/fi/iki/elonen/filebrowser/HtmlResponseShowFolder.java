@@ -23,6 +23,7 @@ import static fi.iki.elonen.DeviceExplorerHttpServer.showHeader;
  */
 public class HtmlResponseShowFolder implements HtmlResponse {
 
+    public static final String FOLDER_SYMBOL = "&#128193;";
     private final Context mContext;
 
     public HtmlResponseShowFolder(Context context) {
@@ -74,25 +75,21 @@ public class HtmlResponseShowFolder implements HtmlResponse {
 
         html.append("<ul class=\"breadcrumb\">");
         html.append("<li><a href=\"/\">Home</a></li>");
-        List<File> parents = new ArrayList<>();
-        File parent = folder.getParentFile();
-        while (parent != null) {
-            parents.add(0, parent);
-            File parentFile = parent.getParentFile();
-            if (!parent.equals(parentFile)) {
-                parent = parentFile;
-            } else {
-                parent = null;
-            }
-        }
+        List<File> parents = getParents(folder);
 
+
+        html.append("<li><a href=\""
+            + getFileExplorerLink("/")
+            + "\">" + FOLDER_SYMBOL + "</a></li>");
         File f;
         for (int i = 0; i < parents.size(); i++) {
             f = parents.get(i);
-            html.append("<li><a href=\""
-                + getFileExplorerLink(f.getAbsolutePath())
-                + "\">" + f.getName()
-                + "</a></li>");
+            if (!f.getName().isEmpty()) {
+                html.append("<li><a href=\""
+                    + getFileExplorerLink(f.getAbsolutePath())
+                    + "\">" + f.getName()
+                    + "</a></li>");
+            }
         }
         html.append("<li>" + folder.getName() + "</li>");
         html.append("</ul>");
@@ -102,7 +99,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         html.append("<table class=\"zebra\">");
         if (folder.getParentFile() != null) {
             html.append("<tr><td>");
-            html.append("&#128193; <a href=\"" + getUrlFolder(folder.getParentFile()) + "\">..</a>");
+            html.append(FOLDER_SYMBOL + " <a href=\"" + getUrlFolder(folder.getParentFile()) + "\">..</a>");
             html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>");
 //            html.append("<p><a href='" + getUrlFolder(folder.getParentFile()) + "'>..</a></p>");
         }
@@ -119,14 +116,14 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                 String absolutePath = file.getAbsolutePath();
                 if (file.isDirectory()) {
                     html.append("<td>");
-                    html.append("&#128193; <a href=\"" + getFileExplorerLink(absolutePath) + "\">" + absolutePath + "</a>");
+                    html.append(FOLDER_SYMBOL + " <a href=\"" + getFileExplorerLink(absolutePath) + "\">" + file.getName() + "</a>");
                     html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
 //                    html.append("<p><a href='"
 //                        + getFileExplorerLink(absolutePath) + "'>" + absolutePath + "</a></p>");
                 } else {
 
                     html.append("<td>");
-                    html.append(absolutePath);
+                    html.append(file.getName());
                     html.append("</td>");
                     html.append("<td>");
                     html.append(file.length() + " bytes");
@@ -155,6 +152,22 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         }
         html.append("</table>");
         html.append("</div>");
+    }
+
+    @NonNull
+    private List<File> getParents(File folder) {
+        List<File> parents = new ArrayList<>();
+        File parent = folder.getParentFile();
+        while (parent != null) {
+            parents.add(0, parent);
+            File parentFile = parent.getParentFile();
+            if (!parent.equals(parentFile)) {
+                parent = parentFile;
+            } else {
+                parent = null;
+            }
+        }
+        return parents;
     }
 
     @NonNull

@@ -1,6 +1,7 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.content.Context;
+import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
 
 import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getUrlDownload;

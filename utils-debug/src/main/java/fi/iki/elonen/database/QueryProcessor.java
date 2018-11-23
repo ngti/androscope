@@ -1,7 +1,7 @@
-package fi.iki.elonen;
+package fi.iki.elonen.database;
 
 import android.database.Cursor;
-
+import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
 
 /**
