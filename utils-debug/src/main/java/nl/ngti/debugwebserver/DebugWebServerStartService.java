@@ -1,13 +1,18 @@
 package nl.ngti.debugwebserver;
 
-import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -53,10 +58,41 @@ public class DebugWebServerStartService extends Service {
 
         NanoHTTPD server = DeviceExplorerHttpServer.newInstance(this, force);
         if (server != null) {
+            showNotification();
+
             IoServerRunner.executeInstance(this, server, new NanoListener());
             sServerStarted = true;
             showToast("Debug Web Server was started");
         }
+    }
+
+    private void showNotification() {
+        final Notification notification = getNotificationBuilder()
+                .setContentText("Androscope is running")
+                .build();
+
+        startForeground(R.id.androscope_notification_id, notification);
+    }
+
+    @NonNull
+    private NotificationCompat.Builder getNotificationBuilder() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final String channelId = getString(R.string.androscope_channel_id);
+            final String channelName = getString(R.string.androscope_channel_name);
+            final NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_MIN);
+            getNotificationManager().createNotificationChannel(channel);
+
+            return new NotificationCompat.Builder(this, channelId);
+        } else {
+            //noinspection deprecation
+            return new NotificationCompat.Builder(this);
+        }
+    }
+
+    @NonNull
+    private NotificationManager getNotificationManager() {
+        //noinspection ConstantConditions
+        return (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     private void showToast(String message) {
