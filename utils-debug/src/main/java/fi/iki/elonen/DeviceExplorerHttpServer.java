@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import fi.iki.elonen.filebrowser.HtmlResponseFileExplorer;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -107,11 +108,11 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
     }
 
 
-    static void showFooter(StringBuilder html) {
+    public static void showFooter(StringBuilder html) {
         html.append("<p>NGTI</p>");
     }
 
-    static void showHeader(IHTTPSession session, StringBuilder html) {
+    public static void showHeader(IHTTPSession session, StringBuilder html) {
         html.append("<h1><a href='/'>Device Explorer</a></h1>");
     }
 
