@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Androscope Test</string>
+    <string name="androscope_activity_label">Androscope DWS</string>
 </resources>

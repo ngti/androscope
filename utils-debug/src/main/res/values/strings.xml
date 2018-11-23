@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Debug Web Server</string>
+    <string name="androscope_activity_label">Launch Androscope</string>
 </resources>

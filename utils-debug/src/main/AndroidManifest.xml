@@ -10,11 +10,11 @@
         <activity
             android:name=".DebugWebServerActivity"
             android:allowTaskReparenting="true"
-            android:taskAffinity="nl.ngti.debugwebserver"
             android:clearTaskOnLaunch="true"
-            android:label="Debug Web Server"
+            android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
-            android:process=":debug_web_server">
+            android:process=":androscope"
+            android:taskAffinity="${applicationId}.nl.ngti.androscope">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
