@@ -57,6 +57,8 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
         } else {
             Log.w(TAG, KEY_IMAGE_CACHE + " and/or " + KEY_IMAGE_CACHE_FILTER + " metadata were not specified. Not showing image cache item");
         }
+
+        mHtmlResponses.add(new HtmlResponseThumbnail(context));
     }
 
     @Nullable

@@ -52,7 +52,7 @@ public class HtmlResponseViewFile implements HtmlResponse {
             return null;
         }
         File file = new File(viewPath);
-        String mime = getMimeType(params, file);
+        String mime = getMimeType(mContext, params, file);
         try {
             NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, mime, new FileInputStream(file));
             response.addHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
@@ -64,11 +64,11 @@ public class HtmlResponseViewFile implements HtmlResponse {
     }
 
     @NonNull
-    private String getMimeType(Map<String, String> params, File file) {
+    public static String getMimeType(Context context, Map<String, String> params, File file) {
         String mime = params.get("mime");
         if (mime == null) {
             Uri uri = Uri.fromFile(file);
-            ContentResolver cR = mContext.getContentResolver();
+            ContentResolver cR = context.getContentResolver();
             mime = cR.getType(uri);
             if (mime == null) {
                 mime = getMimeType2(uri.toString());

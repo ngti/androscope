@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static fi.iki.elonen.DeviceExplorerHttpServer.showFooter;
 import static fi.iki.elonen.DeviceExplorerHttpServer.showHeader;
+import static fi.iki.elonen.filebrowser.HtmlResponseViewFile.getMimeType;
 
 /**
  * Shows a file explorer to access quickly the private file storage of the app.
@@ -53,7 +54,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         String folderPath = parms.get("folder");
         if (folderPath != null) {
             File folder = new File(folderPath);
-            showFolder(html, folder);
+            showFolder(html, folder, parms);
         } else {
             showAndroidFolders(html);
         }
@@ -63,7 +64,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         return new NanoHTTPD.Response(html.toString());
     }
 
-    private void showFolder(StringBuilder html, File folder) {
+    private void showFolder(StringBuilder html, File folder, Map<String, String> parms) {
         if (!folder.exists()) {
             html.append("Folder doesnt exist! " + folder);
             return;
@@ -97,7 +98,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         if (folder.getParentFile() != null) {
             html.append("<tr><td>");
             html.append(FOLDER_SYMBOL + " <a href=\"" + getUrlFolder(folder.getParentFile()) + "\">..</a>");
-            html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>");
+            html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>");
 //            html.append("<p><a href='" + getUrlFolder(folder.getParentFile()) + "'>..</a></p>");
         }
         File[] files = folder.listFiles();
@@ -114,7 +115,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                 if (file.isDirectory()) {
                     html.append("<td>");
                     html.append(FOLDER_SYMBOL + " <a href=\"" + getFileExplorerLink(absolutePath) + "\">" + file.getName() + "</a>");
-                    html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
+                    html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
 //                    html.append("<p><a href='"
 //                        + getFileExplorerLink(absolutePath) + "'>" + absolutePath + "</a></p>");
                 } else {
@@ -124,6 +125,14 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                     html.append("</td>");
                     html.append("<td>");
                     html.append(file.length() + " bytes");
+                    html.append("</td>");
+                    html.append("<td>");
+                    String mime = "" + getMimeType(mContext, parms, file);
+                    if (mime.startsWith("image/") || mime.startsWith("video/")) {
+                        html.append("<img width='100' heigth='100' src=\"/thumbnail?file=" + URLEncoder.encode(absolutePath) + "\" />");
+                    } else {
+                        html.append("&nbsp;");
+                    }
                     html.append("</td>");
                     html.append("<td>");
                     html.append("<button class=\"btn success\""
