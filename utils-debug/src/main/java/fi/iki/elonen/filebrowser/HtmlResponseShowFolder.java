@@ -32,7 +32,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
 
     @Override
     public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-        html.append("<p><a href='/filexp'>File Explorer</a></p>");
+//        html.append("<p><a href='/filexp'>File Explorer</a></p>");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         html.append("<link href=\"" + getAssetsExplorerLink("buttons_outline.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
         html.append("<link href=\"" + getAssetsExplorerLink("table_zebra.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
         html.append("<body>");
-        showHeader(session, html);
+        showHeader(mContext, session, html);
 
 
         String folderPath = parms.get("folder");
@@ -74,7 +74,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         // add menu here
 
         html.append("<ul class=\"breadcrumb\">");
-        html.append("<li><a href=\"/\">Home</a></li>");
         List<File> parents = getParents(folder);
 
 
@@ -176,7 +175,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
     }
 
     @NonNull
-    private String getAssetsExplorerLink(String assetPath) {
+    public static String getAssetsExplorerLink(String assetPath) {
         return "/filexp?view=asset:" + URLEncoder.encode(assetPath);
     }
 
@@ -192,7 +191,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
     }
 
     @NonNull
-    private String getUrlFolder(File folder) {
+    public static String getUrlFolder(File folder) {
         return "/filexp?folder=" + URLEncoder.encode(folder.getAbsolutePath()) + "";
     }
 

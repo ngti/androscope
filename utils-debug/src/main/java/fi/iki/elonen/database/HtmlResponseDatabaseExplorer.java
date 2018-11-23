@@ -52,7 +52,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
                 final StringBuilder html = new StringBuilder();
                 html.append("<html><head><meta charset=\"UTF-8\"></head><body>");
                 showCSS(html);
-                showHeader(session, html);
+                showHeader(mContext, session, html);
 
                 showQueryForm(html, query);
                 try {

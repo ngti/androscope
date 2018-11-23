@@ -2,7 +2,6 @@ package fi.iki.elonen;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class HtmlResponseShowImageCache implements HtmlResponse {
     public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
         String packageName = mContext.getPackageName();
         html.append("<p><a href='/imageCache?folder=%2Fdata%2Fuser%2F0%2F" + packageName
-                + "%2Fcache%2F" + mImageCache + "'>Show Image cache</a></p>");
+            + "%2Fcache%2F" + mImageCache + "'>Show Image cache</a></p>");
     }
 
     @Override
@@ -46,7 +45,7 @@ public class HtmlResponseShowImageCache implements HtmlResponse {
     private NanoHTTPD.Response processShowFolder(NanoHTTPD.IHTTPSession session, Map<String, String> parms) {
         final StringBuilder html = new StringBuilder();
         html.append("<html><body>");
-        showHeader(session, html);
+        showHeader(mContext, session, html);
 
 
         String folderPath = parms.get("folder");
@@ -73,9 +72,11 @@ public class HtmlResponseShowImageCache implements HtmlResponse {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    html.append("<p><a href='/filexp?folder=" + URLEncoder.encode(file.getAbsolutePath()) + "'>" + file.getAbsolutePath() + "</a></p>");
+                    html.append(
+                        "<p><a href='/filexp?folder=" + URLEncoder.encode(file.getAbsolutePath()) + "'>" + file.getAbsolutePath() + "</a></p>");
                 } else {
-                    html.append("<div style='display: table-cell; vertical-align: middle;padding: 5px; bordeR: 1px solid #f00;'>").append(file.getAbsolutePath()).append(" - ").append(file.length()).append(" bytes");
+                    html.append("<div style='display: table-cell; vertical-align: middle;padding: 5px; bordeR: 1px solid #f00;'>").append(
+                        file.getAbsolutePath()).append(" - ").append(file.length()).append(" bytes");
                     if (mImageMatcher.matcher(file.getName()).matches()) {
                         html.append("<br/><img src='/filexp?view=").append(URLEncoder.encode(file.getAbsolutePath())).append("' />");
                     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,11 +13,14 @@ import fi.iki.elonen.database.HtmlResponseDatabaseExplorer;
 import fi.iki.elonen.database.HtmlResponseDownloadDatabase;
 import fi.iki.elonen.database.HtmlResponseUploadDatabase;
 import fi.iki.elonen.filebrowser.HtmlResponseFileExplorer;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static android.text.TextUtils.htmlEncode;
+import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getAssetsExplorerLink;
+import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getUrlFolder;
 
 /**
  * Custom HTTP server. Displays the structure of the database.
@@ -33,9 +37,11 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
     private static final int HTTP_PORT = 8787;
 
     private final Set<HtmlResponse> mHtmlResponses = new LinkedHashSet<>();
+    private final Context mContext;
 
     private DeviceExplorerHttpServer(Context context, String databaseName, String imageCache, String imageFilter, int httpPort) {
         super(httpPort);
+        mContext = context;
 
         if (!TextUtils.isEmpty(databaseName)) {
             mHtmlResponses.add(new HtmlResponseUploadDatabase(context, databaseName));
@@ -90,7 +96,7 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
     private Response getDefaultHtmlResponse(IHTTPSession session) throws IOException {
         final StringBuilder html = new StringBuilder();
         html.append("<html><body>");
-        showHeader(session, html);
+        showHeader(mContext, session, html);
         showHeaderFromHtmlProcessors(session, html);
 
         showFooter(html);
@@ -114,8 +120,28 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
         html.append("<p>NGTI</p>");
     }
 
-    public static void showHeader(IHTTPSession session, StringBuilder html) {
-        html.append("<h1><a href='/'>Device Explorer</a></h1>");
+    public static void showHeader(Context context, IHTTPSession session, StringBuilder html) {
+
+        html.append("<link href=\"" + getAssetsExplorerLink("navbar.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
+        //            + "  <a href=\"#news\">File Explorer</a>\n"
+        StringBuilder builder = html.append("<div class=\"navbar\">\n")
+            .append("  <a href=\"/\">Home</a>\n")
+            .append("  <div class=\"dropdown\">\n")
+            .append(
+                "    <button class=\"dropbtn\">File Explorer \n")
+            .append("      <i class=\"fa fa-caret-down\"></i>\n")
+            .append("    </button>\n")
+            .append("    <div class=\"dropdown-content\">\n");
+
+        builder.append("      <a href=\"" + getUrlFolder(new File(context.getApplicationInfo().dataDir)) + "\">Application Data</a>\n");
+        builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStorageDirectory()) + "\">External Storage</a>\n");
+        builder.append("      <a href=\"" + getUrlFolder(Environment.getRootDirectory()) + "\">Root Directory</a>\n");
+
+        builder
+            .append("    </div>\n")
+            .append("  </div> \n")
+            .append("</div>");
+//        html.append("<h1><a href='/'>Device Explorer</a></h1>");
     }
 
     private void showHeaderFromHtmlProcessors(IHTTPSession session, StringBuilder html) {

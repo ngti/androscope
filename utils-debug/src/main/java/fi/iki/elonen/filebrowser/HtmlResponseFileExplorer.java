@@ -18,7 +18,7 @@ public class HtmlResponseFileExplorer implements HtmlResponse {
 
     @Override
     public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-        html.append("<p><a href='/filexp'>File Explorer</a></p>");
+//        html.append("<p><a href='/filexp'>File Explorer</a></p>");
     }
 
     @Override
