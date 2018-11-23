@@ -3,6 +3,7 @@ package fi.iki.elonen;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -136,6 +137,31 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
         builder.append("      <a href=\"" + getUrlFolder(new File(context.getApplicationInfo().dataDir)) + "\">Application Data</a>\n");
         builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStorageDirectory()) + "\">External Storage</a>\n");
         builder.append("      <a href=\"" + getUrlFolder(Environment.getRootDirectory()) + "\">Root Directory</a>\n");
+        builder.append("      <a>-</a>\n");
+
+        // requires permission approved
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)) + "\">DCIM</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)) + "\">Downloads</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS)) + "\">Alarms</a>\n");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS))
+                + "\">Documents</a>\n");
+        }
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)) + "\">Movies</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)) + "\">Music</a>\n");
+        builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS))
+            + "\">Notifications</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)) + "\">Pictures</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS)) + "\">Podcasts</a>\n");
+        builder.append(
+            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES)) + "\">Ringtones</a>\n");
 
         builder
             .append("    </div>\n")

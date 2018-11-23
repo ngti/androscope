@@ -1,8 +1,6 @@
 package fi.iki.elonen.filebrowser;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import fi.iki.elonen.HtmlResponse;
@@ -198,20 +196,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
     @NonNull
     public static String getUrlDownload(File file) {
         return "/filexp?download=" + URLEncoder.encode(file.getAbsolutePath());
-    }
-
-    @NonNull
-    private String getMimeType(Map<String, String> params, File file) {
-        String mime = params.get("mime");
-        if (mime == null) {
-            Uri uri = Uri.fromFile(file);
-            ContentResolver cR = mContext.getContentResolver();
-            mime = cR.getType(uri);
-            if (mime == null) {
-                mime = "text/plain";
-            }
-        }
-        return mime;
     }
 
 }

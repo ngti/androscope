@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.webkit.MimeTypeMap;
 import fi.iki.elonen.HtmlResponse;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.File;
@@ -70,10 +71,22 @@ public class HtmlResponseViewFile implements HtmlResponse {
             ContentResolver cR = mContext.getContentResolver();
             mime = cR.getType(uri);
             if (mime == null) {
+                mime = getMimeType2(uri.toString());
+            }
+            if (mime == null) {
                 mime = "text/plain";
             }
         }
         return mime;
+    }
+
+    public static String getMimeType2(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
 }
