@@ -3,7 +3,6 @@ package fi.iki.elonen;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -14,13 +13,15 @@ import fi.iki.elonen.database.HtmlResponseDatabaseExplorer;
 import fi.iki.elonen.database.HtmlResponseDownloadDatabase;
 import fi.iki.elonen.database.HtmlResponseUploadDatabase;
 import fi.iki.elonen.filebrowser.HtmlResponseFileExplorer;
+import fi.iki.elonen.menu.Menu;
+import fi.iki.elonen.menu.MenuItem;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static android.text.TextUtils.htmlEncode;
-import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getAssetsExplorerLink;
 import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getUrlFolder;
 
 /**
@@ -125,51 +126,24 @@ public class DeviceExplorerHttpServer extends NanoHTTPD {
 
     public static void showHeader(Context context, IHTTPSession session, StringBuilder html) {
 
-        html.append("<link href=\"" + getAssetsExplorerLink("navbar.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
-        //            + "  <a href=\"#news\">File Explorer</a>\n"
-        StringBuilder builder = html.append("<div class=\"navbar\">\n")
-            .append("  <a href=\"/\">Home</a>\n")
-            .append("  <div class=\"dropdown\">\n")
-            .append(
-                "    <button class=\"dropbtn\">File Explorer \n")
-            .append("      <i class=\"fa fa-caret-down\"></i>\n")
-            .append("    </button>\n")
-            .append("    <div class=\"dropdown-content\">\n");
+        Menu menu = new Menu();
 
-        builder.append("      <a href=\"" + getUrlFolder(new File(context.getApplicationInfo().dataDir)) + "\">Application Data</a>\n");
-        builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStorageDirectory()) + "\">External Storage</a>\n");
-        builder.append("      <a href=\"" + getUrlFolder(Environment.getRootDirectory()) + "\">Root Directory</a>\n");
-        builder.append("      <a>-</a>\n");
+        menu.addItem("Home", "/");
 
-        // requires permission approved
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)) + "\">DCIM</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)) + "\">Downloads</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS)) + "\">Alarms</a>\n");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS))
-                + "\">Documents</a>\n");
-        }
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)) + "\">Movies</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)) + "\">Music</a>\n");
-        builder.append("      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS))
-            + "\">Notifications</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)) + "\">Pictures</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS)) + "\">Podcasts</a>\n");
-        builder.append(
-            "      <a href=\"" + getUrlFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES)) + "\">Ringtones</a>\n");
+        new MenuItem("File Explorer", null)
+            .subItem("Application Data", getUrlFolder(new File(context.getApplicationInfo().dataDir)))
+            .subItem("External Storage", getUrlFolder(Environment.getExternalStorageDirectory()))
+            .subItem("Root Directory", getUrlFolder(Environment.getRootDirectory()))
+            .subItem("-", null)
+            .subItem("Downloads", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)))
+            .subItem("Photos", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)))
+            .subItem("Movies", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)))
+            .subItem("Pictures", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)))
+            .subItem("Music", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)))
+            .addToMenu(menu);
 
-        builder
-            .append("    </div>\n")
-            .append("  </div> \n")
-            .append("</div>");
-//        html.append("<h1><a href='/'>Device Explorer</a></h1>");
+        menu.render(html);
+
     }
 
     private void showHeaderFromHtmlProcessors(IHTTPSession session, StringBuilder html) {
