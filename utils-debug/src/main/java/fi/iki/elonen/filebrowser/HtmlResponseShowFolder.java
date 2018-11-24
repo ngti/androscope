@@ -1,7 +1,6 @@
 package fi.iki.elonen.filebrowser;
 
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import fi.iki.elonen.HtmlResponse;
 import fi.iki.elonen.NanoHTTPD;
@@ -55,8 +54,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         if (folderPath != null) {
             File folder = new File(folderPath);
             showFolder(html, folder, parms);
-        } else {
-            showAndroidFolders(html);
         }
 
         showFooter(html);
@@ -72,27 +69,12 @@ public class HtmlResponseShowFolder implements HtmlResponse {
 
         // add menu here
 
-        html.append("<ul class=\"breadcrumb\">");
-        List<File> parents = getParents(folder);
+        addBreadcumbs(html, folder);
 
+        addTable(html, folder, parms);
+    }
 
-        html.append("<li><a href=\""
-            + getFileExplorerLink("/")
-            + "\">" + FOLDER_SYMBOL + "</a></li>");
-        File f;
-        for (int i = 0; i < parents.size(); i++) {
-            f = parents.get(i);
-            if (!f.getName().isEmpty()) {
-                html.append("<li><a href=\""
-                    + getFileExplorerLink(f.getAbsolutePath())
-                    + "\">" + f.getName()
-                    + "</a></li>");
-            }
-        }
-        html.append("<li>" + folder.getName() + "</li>");
-        html.append("</ul>");
-
-
+    private void addTable(StringBuilder html, File folder, Map<String, String> parms) {
         html.append("<div class=\"zebraborder\">");
         html.append("<table class=\"zebra\">");
         if (folder.getParentFile() != null) {
@@ -160,6 +142,21 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         html.append("</div>");
     }
 
+    private void addBreadcumbs(StringBuilder html, File folder) {
+        List<File> parents = getParents(folder);
+        html.append("<ul class=\"breadcrumb\">");
+        html.append("<li><a href=\"" + getFileExplorerLink("/") + "\">" + FOLDER_SYMBOL + "</a></li>");
+        File f;
+        for (int i = 0; i < parents.size(); i++) {
+            f = parents.get(i);
+            if (!f.getName().isEmpty()) {
+                html.append("<li><a href=\"" + getFileExplorerLink(f.getAbsolutePath()) + "\">" + f.getName() + "</a></li>");
+            }
+        }
+        html.append("<li>" + folder.getName() + "</li>");
+        html.append("</ul>");
+    }
+
     @NonNull
     private List<File> getParents(File folder) {
         List<File> parents = new ArrayList<>();
@@ -184,17 +181,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
     @NonNull
     public static String getAssetsExplorerLink(String assetPath) {
         return "/filexp?view=asset:" + URLEncoder.encode(assetPath);
-    }
-
-    private void showAndroidFolders(StringBuilder html) {
-        showAndroidFolder(html, new File(mContext.getApplicationInfo().dataDir), "Application Data");
-        showAndroidFolder(html, Environment.getDownloadCacheDirectory(), "Environment.getDownloadCacheDirectory()");
-        showAndroidFolder(html, Environment.getExternalStorageDirectory(), "Environment.getExternalStorageDirectory()");
-        showAndroidFolder(html, Environment.getRootDirectory(), "Environment.getRootDirectory()");
-    }
-
-    private void showAndroidFolder(StringBuilder html, File folder, String label) {
-        html.append("<p><a href='" + getUrlFolder(folder) + "'>" + label + ": " + folder + "</a></p>");
     }
 
     @NonNull
