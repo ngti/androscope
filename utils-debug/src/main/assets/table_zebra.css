@@ -17,3 +17,10 @@ tr:nth-child(even) {
      margin-left:2%;
      margin-right:28%;
 }
+
+.zebra img {
+    display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100px;
+}
