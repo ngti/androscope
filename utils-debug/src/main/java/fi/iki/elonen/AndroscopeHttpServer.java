@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import fi.iki.elonen.menu.Menu;
 import fi.iki.elonen.menu.MenuItem;
-import fi.iki.elonen.responses.BaseMainHtmlResponse;
+import fi.iki.elonen.responses.EmptyResponse;
 import fi.iki.elonen.responses.HtmlResponseShowImageCache;
 import fi.iki.elonen.responses.HtmlResponseThumbnail;
 import fi.iki.elonen.responses.database.HtmlResponseDatabaseExplorer;
@@ -97,7 +97,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
                 }
             }
         }
-        return BaseMainHtmlResponse.emptyResponse(mContext, session, menu);
+        return new EmptyResponse(mContext).getResponse(session, menu);
     }
 
 }
