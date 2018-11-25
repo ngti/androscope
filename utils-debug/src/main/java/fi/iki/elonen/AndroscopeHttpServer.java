@@ -6,13 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import fi.iki.elonen.menu.Menu;
 import fi.iki.elonen.menu.MenuItem;
+import fi.iki.elonen.responses.BaseMainHtmlResponse;
 import fi.iki.elonen.responses.HtmlResponseShowImageCache;
 import fi.iki.elonen.responses.HtmlResponseThumbnail;
 import fi.iki.elonen.responses.database.HtmlResponseDatabaseExplorer;
 import fi.iki.elonen.responses.database.HtmlResponseDownloadDatabase;
 import fi.iki.elonen.responses.database.HtmlResponseUploadDatabase;
 import fi.iki.elonen.responses.filebrowser.HtmlResponseFileExplorer;
-import fi.iki.elonen.velocity.VelocityAsset;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -48,6 +48,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
     private AndroscopeHttpServer(Context context, int httpPort, Bundle metadata) {
         super(httpPort);
         mContext = context;
+        this.metadata = metadata;
 
         mHtmlResponses.add(new HtmlResponseUploadDatabase(context));
         mHtmlResponses.add(new HtmlResponseDownloadDatabase(context));
@@ -55,7 +56,6 @@ public class AndroscopeHttpServer extends NanoHTTPD {
         mHtmlResponses.add(new HtmlResponseFileExplorer(context));
         mHtmlResponses.add(new HtmlResponseShowImageCache(context));
         mHtmlResponses.add(new HtmlResponseThumbnail(context));
-        this.metadata = metadata;
     }
 
     @Override
@@ -67,12 +67,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
     @NonNull
     private Response createResponse(IHTTPSession session, Menu menu) {
         try {
-            Response response = getResponseFromHtmlProcessors(session, menu);
-            if (response != null) {
-                return response;
-            } else {
-                return getDefaultHtmlResponse(session, menu);
-            }
+            return getResponseFromHtmlProcessors(session, menu);
         } catch (final Throwable e) {
             e.printStackTrace();
             return new Response(htmlEncode(e.toString()));
@@ -81,9 +76,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
 
     private Menu createMenu() {
         Menu menu = new Menu();
-
         menu.addItem("Home", "/");
-
         for (HttpResponse resp : mHtmlResponses) {
             if (resp.isEnabled(metadata)) {
                 MenuItem menuItem = resp.getMenuItem();
@@ -95,28 +88,16 @@ public class AndroscopeHttpServer extends NanoHTTPD {
         return menu;
     }
 
-    @NonNull
-    private Response getDefaultHtmlResponse(IHTTPSession session, Menu menu) throws IOException {
-        VelocityAsset v = new VelocityAsset();
-        v.initMainAsset(mContext);
-
-        v.put("header", menu.render());
-        v.put("content", "");
-
-        return new Response(v.html());
-    }
-
     private Response getResponseFromHtmlProcessors(IHTTPSession session, Menu menu) throws IOException {
-        Response response = null;
         for (HttpResponse resp : mHtmlResponses) {
             if (resp.isEnabled(metadata)) {
-                response = resp.getResponse(session, menu);
+                Response response = resp.getResponse(session, menu);
                 if (response != null) {
-                    break;
+                    return response;
                 }
             }
         }
-        return response;
+        return BaseMainHtmlResponse.emptyResponse(mContext, session, menu);
     }
 
 }
