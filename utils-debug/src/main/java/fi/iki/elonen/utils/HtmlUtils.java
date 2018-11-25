@@ -1,4 +1,4 @@
-package fi.iki.elonen;
+package fi.iki.elonen.utils;
 
 import android.support.annotation.NonNull;
 

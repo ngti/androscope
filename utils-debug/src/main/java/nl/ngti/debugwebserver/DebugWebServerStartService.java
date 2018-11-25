@@ -17,8 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import fi.iki.elonen.DeviceExplorerHttpServer;
+import fi.iki.elonen.AndroscopeHttpServer;
 import fi.iki.elonen.IoServerRunner;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHttpListener;
@@ -80,7 +79,7 @@ public class DebugWebServerStartService extends Service {
             return;
         }
 
-        mServer = DeviceExplorerHttpServer.newInstance(this, force);
+        mServer = AndroscopeHttpServer.newInstance(this, force);
         if (mServer != null) {
             showNotification();
 

@@ -3,7 +3,7 @@ package fi.iki.elonen.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fi.iki.elonen.filebrowser.HtmlResponseShowFolder.getAssetsExplorerLink;
+import static fi.iki.elonen.responses.filebrowser.HtmlResponseShowFolder.getAssetsExplorerLink;
 
 public class Menu {
 
@@ -20,6 +20,12 @@ public class Menu {
             item.render(html);
         }
         html.append("</div>");
+    }
+
+    public String render() {
+        StringBuilder html = new StringBuilder();
+        render(html);
+        return html.toString();
     }
 
     protected void addItem(MenuItem menuItem) {

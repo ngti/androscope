@@ -1,9 +1,14 @@
-package fi.iki.elonen;
+package fi.iki.elonen.responses;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.os.Bundle;
+import fi.iki.elonen.HttpResponse;
+import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.Menu;
+import fi.iki.elonen.menu.MenuItem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,12 +16,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.provider.MediaStore.Video.Thumbnails.MICRO_KIND;
-import static fi.iki.elonen.filebrowser.HtmlResponseViewFile.getMimeType;
+import static fi.iki.elonen.responses.filebrowser.HtmlResponseViewFile.getMimeType;
 
 /**
  * Shows a file explorer to access quickly the private file storage of the app.
  */
-public class HtmlResponseThumbnail implements HtmlResponse {
+public class HtmlResponseThumbnail implements HttpResponse {
 
     private final Context mContext;
 
@@ -25,11 +30,17 @@ public class HtmlResponseThumbnail implements HtmlResponse {
     }
 
     @Override
-    public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
+    public boolean isEnabled(Bundle metadata) {
+        return true;
     }
 
     @Override
-    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) {
+    public MenuItem getMenuItem() {
+        return null;
+    }
+
+    @Override
+    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session, Menu menu) {
         if (isProcessable(session)) {
             String viewPath = session.getParms().get("file");
             File file = new File(viewPath);

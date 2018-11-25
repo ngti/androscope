@@ -1,12 +1,12 @@
-package fi.iki.elonen.filebrowser;
+package fi.iki.elonen.responses.filebrowser;
 
 import android.content.Context;
-import fi.iki.elonen.HtmlResponse;
+import fi.iki.elonen.HttpResponse;
 import java.util.Map;
 
 public class FileResponseFactory {
 
-    public static HtmlResponse from(Context context, Map<String, String> parms) {
+    public static HttpResponse from(Context context, Map<String, String> parms) {
         if (isView(parms)) {
             return new HtmlResponseViewFile(context);
         } else if (isDownload(parms)) {

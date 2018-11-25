@@ -1,4 +1,4 @@
-package fi.iki.elonen.database;
+package fi.iki.elonen.responses.database;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;

@@ -1,9 +1,11 @@
-package fi.iki.elonen.filebrowser;
+package fi.iki.elonen.responses.filebrowser;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import fi.iki.elonen.HtmlResponse;
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.MenuItem;
+import fi.iki.elonen.responses.BaseMainHtmlResponse;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -12,59 +14,45 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import static fi.iki.elonen.DeviceExplorerHttpServer.showFooter;
-import static fi.iki.elonen.DeviceExplorerHttpServer.showHeader;
-import static fi.iki.elonen.filebrowser.HtmlResponseViewFile.getMimeType;
+import static fi.iki.elonen.responses.filebrowser.HtmlResponseViewFile.getMimeType;
 
 /**
  * Shows a file explorer to access quickly the private file storage of the app.
  */
-public class HtmlResponseShowFolder implements HtmlResponse {
+public class HtmlResponseShowFolder extends BaseMainHtmlResponse {
 
     public static final String FOLDER_SYMBOL = "&#128193;";
-    private final Context mContext;
 
     public HtmlResponseShowFolder(Context context) {
-        mContext = context;
+        super(context);
     }
 
     @Override
-    public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-//        html.append("<p><a href='/filexp'>File Explorer</a></p>");
+    public boolean isEnabled(Bundle metadata) {
+        return true;
     }
 
     @Override
-    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) {
-        return processShowFolder(session, session.getParms());
+    public MenuItem getMenuItem() {
+        return null;
     }
 
-    @NonNull
-    private NanoHTTPD.Response processShowFolder(NanoHTTPD.IHTTPSession session, Map<String, String> parms) {
-        final StringBuilder html = new StringBuilder();
-        html.append("<html>");
-        html.append("<link href=\"" + getAssetsExplorerLink("menu_breadcumbs.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
-        html.append("<link href=\"" + getAssetsExplorerLink("menu_vertical.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
-        html.append("<link href=\"" + getAssetsExplorerLink("buttons_outline.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
-        html.append("<link href=\"" + getAssetsExplorerLink("table_zebra.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
-        html.append("<body>");
-        showHeader(mContext, session, html);
-
-
+    @Override
+    protected String getContent(NanoHTTPD.IHTTPSession session) {
+        Map<String, String> parms = session.getParms();
         String folderPath = parms.get("folder");
         if (folderPath != null) {
             File folder = new File(folderPath);
-            showFolder(html, folder, parms);
+            return showFolder(folder, parms);
         }
-
-        showFooter(html);
-        html.append("</body></html>");
-        return new NanoHTTPD.Response(html.toString());
+        return null;
     }
 
-    private void showFolder(StringBuilder html, File folder, Map<String, String> parms) {
+    private String showFolder(File folder, Map<String, String> parms) {
+        StringBuilder html = new StringBuilder();
         if (!folder.exists()) {
             html.append("Folder doesnt exist! " + folder);
-            return;
+            return html.toString();
         }
 
         // add menu here
@@ -72,6 +60,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
         addBreadcumbs(html, folder);
 
         addTable(html, folder, parms);
+        return html.toString();
     }
 
     private void addTable(StringBuilder html, File folder, Map<String, String> parms) {
@@ -98,8 +87,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                     html.append("<td>");
                     html.append(FOLDER_SYMBOL + " <a href=\"" + getFileExplorerLink(absolutePath) + "\">" + file.getName() + "</a>");
                     html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
-//                    html.append("<p><a href='"
-//                        + getFileExplorerLink(absolutePath) + "'>" + absolutePath + "</a></p>");
                 } else {
 
                     html.append("<td>");
@@ -109,7 +96,7 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                     html.append(file.length() + " bytes");
                     html.append("</td>");
                     html.append("<td>");
-                    String mime = "" + getMimeType(mContext, parms, file);
+                    String mime = "" + getMimeType(getContext(), parms, file);
                     if (mime.startsWith("image/") || mime.startsWith("video/")) {
                         html.append("<img width='100' heigth='100' src=\"/thumbnail?file=" + URLEncoder.encode(absolutePath) + "\" />");
                     } else {
@@ -128,12 +115,6 @@ public class HtmlResponseShowFolder implements HtmlResponse {
                     html.append("</td>");
 
 
-//                    html.append("<p>" + absolutePath + " - " + file.length() + " bytes" +
-//                        " - <a href='" +
-//                        "/filexp?view=" + URLEncoder.encode(absolutePath) + "'>View</a>" +
-//                        " - <a href='" +
-//                        getUrlDownload(file) + "'>Download</a>" +
-//                        "</p>");
                 }
                 html.append("</tr>");
             }

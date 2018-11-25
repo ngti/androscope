@@ -1,4 +1,4 @@
-package fi.iki.elonen.database;
+package fi.iki.elonen.responses.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,13 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.Menu;
+import fi.iki.elonen.menu.MenuItem;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.Set;
-
-import static fi.iki.elonen.DeviceExplorerHttpServer.showFooter;
-import static fi.iki.elonen.DeviceExplorerHttpServer.showHeader;
 
 /**
  * Shows a link to a database explorer.
@@ -22,8 +21,8 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
 
     private Set<QueryProcessor> mQueryProcessors;
 
-    public HtmlResponseDatabaseExplorer(Context context, String databaseName) {
-        super(context, databaseName);
+    public HtmlResponseDatabaseExplorer(Context context) {
+        super(context);
     }
 
     private synchronized Set<QueryProcessor> getQueryProcessors() {
@@ -39,12 +38,12 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
     }
 
     @Override
-    public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-        html.append("<p><a href='/dbxp'>Explore Database</a></p>");
+    public MenuItem getMenuItem() {
+        return new MenuItem("/dbxp", "Explore Datbase");
     }
 
     @Override
-    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) {
+    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session, Menu menu) {
         try {
             if (isProcessable(session)) {
                 final String query = getQuery(session);
@@ -52,7 +51,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
                 final StringBuilder html = new StringBuilder();
                 html.append("<html><head><meta charset=\"UTF-8\"></head><body>");
                 showCSS(html);
-                showHeader(mContext, session, html);
+                html.append(menu.render());
 
                 showQueryForm(html, query);
                 try {
@@ -61,7 +60,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
                     showError(html, e);
                 }
 
-                showFooter(html);
+//                showFooter(html);
                 html.append("</body></html>");
                 return new NanoHTTPD.Response(html.toString());
 

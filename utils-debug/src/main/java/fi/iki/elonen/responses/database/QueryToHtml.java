@@ -1,15 +1,15 @@
-package fi.iki.elonen.database;
+package fi.iki.elonen.responses.database;
 
 import android.database.Cursor;
-import fi.iki.elonen.HtmlUtils;
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.utils.HtmlUtils;
 import java.io.IOException;
 import java.util.Set;
 
 import static android.text.TextUtils.htmlEncode;
-import static fi.iki.elonen.HtmlUtils.cell;
-import static fi.iki.elonen.HtmlUtils.cellHeader;
-import static fi.iki.elonen.HtmlUtils.endRow;
+import static fi.iki.elonen.utils.HtmlUtils.cell;
+import static fi.iki.elonen.utils.HtmlUtils.cellHeader;
+import static fi.iki.elonen.utils.HtmlUtils.endRow;
 
 /**
  * Dumps a Cursor to html.

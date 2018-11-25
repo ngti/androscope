@@ -1,68 +1,66 @@
-package fi.iki.elonen;
+package fi.iki.elonen.responses;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
+import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.MenuItem;
 import java.io.File;
 import java.net.URLEncoder;
-import java.util.Map;
 import java.util.regex.Pattern;
-
-import static fi.iki.elonen.DeviceExplorerHttpServer.showFooter;
-import static fi.iki.elonen.DeviceExplorerHttpServer.showHeader;
 
 /**
  * Shows a file explorer to access quickly the private file storage of the app.
  */
-public class HtmlResponseShowImageCache implements HtmlResponse {
+public class HtmlResponseShowImageCache extends BaseMainHtmlResponse {
 
-    private final Context mContext;
-    private final String mImageCache;
-    private final Pattern mImageMatcher;
+    private static final String KEY_IMAGE_CACHE = "nl.ngti.debugwebserver.IMAGE_CACHE";
+    private static final String KEY_IMAGE_CACHE_FILTER = "nl.ngti.debugwebserver.IMAGE_CACHE.filter";
 
-    public HtmlResponseShowImageCache(Context context, String imageCache, String imageFilter) {
-        mContext = context;
-        mImageCache = imageCache;
-        mImageMatcher = Pattern.compile(imageFilter);
+    private String mImageCache;
+    private Pattern mImageMatcher;
+
+    public HtmlResponseShowImageCache(Context context) {
+        super(context);
     }
 
     @Override
-    public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-        String packageName = mContext.getPackageName();
-        html.append("<p><a href='/imageCache?folder=%2Fdata%2Fuser%2F0%2F" + packageName
-            + "%2Fcache%2F" + mImageCache + "'>Show Image cache</a></p>");
+    public boolean isEnabled(Bundle metadata) {
+        mImageCache = metadata.getString(KEY_IMAGE_CACHE);
+        String imageFilter = metadata.getString(KEY_IMAGE_CACHE_FILTER);
+        boolean enabled = !TextUtils.isEmpty(mImageCache) && !TextUtils.isEmpty(imageFilter);
+        if (enabled) {
+            mImageMatcher = Pattern.compile(imageFilter);
+        } else {
+            Log.w("androscope", KEY_IMAGE_CACHE + " and/or " + KEY_IMAGE_CACHE_FILTER + " metadata were not specified. Not showing image cache item");
+        }
+        return enabled;
     }
 
     @Override
-    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) {
-        if (isProcessable(session)) {
-            final Map<String, String> parms = session.getParms();
-            return processShowFolder(session, parms);
+    public MenuItem getMenuItem() {
+        String packageName = getContext().getPackageName();
+        return new MenuItem("/imageCache?folder=%2Fdata%2Fuser%2F0%2F" + packageName + "%2Fcache%2F" + mImageCache, "Show Image cache");
+    }
+
+    @Override
+    protected String getContent(NanoHTTPD.IHTTPSession session) {
+
+        String folderPath = session.getParms().get("folder");
+        if (folderPath != null) {
+            File folder = new File(folderPath);
+            return showFolder(folder);
         }
         return null;
     }
 
-    @NonNull
-    private NanoHTTPD.Response processShowFolder(NanoHTTPD.IHTTPSession session, Map<String, String> parms) {
-        final StringBuilder html = new StringBuilder();
-        html.append("<html><body>");
-        showHeader(mContext, session, html);
-
-
-        String folderPath = parms.get("folder");
-        if (folderPath != null) {
-            File folder = new File(folderPath);
-            showFolder(html, folder);
-        }
-
-        showFooter(html);
-        html.append("</body></html>");
-        return new NanoHTTPD.Response(html.toString());
-    }
-
-    private void showFolder(StringBuilder html, File folder) {
+    private String showFolder(File folder) {
+        StringBuilder html = new StringBuilder();
         if (!folder.exists()) {
             html.append("Folder doesnt exist! " + folder);
-            return;
+            return html.toString();
         }
         html.append("<p>" + folder.getAbsolutePath() + "</p>");
         if (folder.getParentFile() != null) {
@@ -86,6 +84,7 @@ public class HtmlResponseShowImageCache implements HtmlResponse {
                 }
             }
         }
+        return html.toString();
     }
 
     @NonNull

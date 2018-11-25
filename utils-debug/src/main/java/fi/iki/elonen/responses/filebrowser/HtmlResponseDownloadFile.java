@@ -1,8 +1,11 @@
-package fi.iki.elonen.filebrowser;
+package fi.iki.elonen.responses.filebrowser;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import fi.iki.elonen.HtmlResponse;
+import fi.iki.elonen.HttpResponse;
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.Menu;
+import fi.iki.elonen.menu.MenuItem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,15 +14,20 @@ import java.util.Map;
 /**
  * Shows a file explorer to access quickly the private file storage of the app.
  */
-public class HtmlResponseDownloadFile implements HtmlResponse {
+public class HtmlResponseDownloadFile implements HttpResponse {
 
     @Override
-    public void showHtmlHeader(NanoHTTPD.IHTTPSession session, StringBuilder html) {
-//        html.append("<p><a href='/filexp'>File Explorer</a></p>");
+    public boolean isEnabled(Bundle metadata) {
+        return true;
     }
 
     @Override
-    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) {
+    public MenuItem getMenuItem() {
+        return null;
+    }
+
+    @Override
+    public NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session, Menu menu) {
         return processDownloadFile(session.getParms());
     }
 
