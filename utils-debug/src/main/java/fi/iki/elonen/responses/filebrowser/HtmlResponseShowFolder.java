@@ -3,9 +3,8 @@ package fi.iki.elonen.responses.filebrowser;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.menu.MenuItem;
-import fi.iki.elonen.responses.BaseMainHtmlResponse;
+import android.text.format.Formatter;
+
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -13,6 +12,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.menu.MenuItem;
+import fi.iki.elonen.responses.BaseMainHtmlResponse;
 
 import static fi.iki.elonen.responses.filebrowser.HtmlResponseViewFile.getMimeType;
 
@@ -72,6 +75,7 @@ public class HtmlResponseShowFolder extends BaseMainHtmlResponse {
             html.append("</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>");
 //            html.append("<p><a href='" + getUrlFolder(folder.getParentFile()) + "'>..</a></p>");
         }
+        final Context context = getContext();
         File[] files = folder.listFiles();
         if (files != null) {
             Arrays.sort(files, new Comparator<File>() {
@@ -92,11 +96,11 @@ public class HtmlResponseShowFolder extends BaseMainHtmlResponse {
                     html.append("<td>");
                     html.append(file.getName());
                     html.append("</td>");
-                    html.append("<td>");
-                    html.append(file.length() + " bytes");
+                    html.append("<td align=\"right\">");
+                    html.append(Formatter.formatFileSize(context, file.length()));
                     html.append("</td>");
                     html.append("<td>");
-                    String mime = "" + getMimeType(getContext(), parms, file);
+                    String mime = "" + getMimeType(context, parms, file);
                     if (mime.startsWith("image/") || mime.startsWith("video/")) {
                         html.append("<img width='100' heigth='100' src=\"/thumbnail?file=" + URLEncoder.encode(absolutePath) + "\" />");
                     } else {
