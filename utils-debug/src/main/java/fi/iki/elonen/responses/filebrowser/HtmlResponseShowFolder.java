@@ -81,7 +81,13 @@ public class HtmlResponseShowFolder extends BaseMainHtmlResponse {
             Arrays.sort(files, new Comparator<File>() {
                 @Override
                 public int compare(File o1, File o2) {
-                    return Boolean.valueOf(o2.isDirectory()).compareTo(o1.isDirectory());
+                    int result = Boolean.valueOf(o2.isDirectory()).compareTo(o1.isDirectory());
+
+                    if (result == 0) {
+                        result = o1.getName().compareTo(o2.getName());
+                    }
+
+                    return result;
                 }
             });
             for (File file : files) {
