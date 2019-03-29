@@ -20,7 +20,7 @@ public class HtmlResponseDownloadDatabase extends BaseDatabaseHtmlResponse {
     @Override
     public MenuItem getMenuItem() {
         File dbFile = mContext.getDatabasePath(mDatabaseName).getAbsoluteFile();
-        return new MenuItem(getUrlDownload(dbFile), "Download Database");
+        return new MenuItem("Download Database", getUrlDownload(dbFile));
     }
 
     @Override

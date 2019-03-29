@@ -20,7 +20,7 @@ public class HtmlResponseUploadDatabase extends BaseDatabaseHtmlResponse {
 
     @Override
     public MenuItem getMenuItem() {
-        return new MenuItem("/uploadDb", "Upload Database");
+        return new MenuItem("Upload Database", "/uploadDb");
     }
 
     @Override

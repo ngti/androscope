@@ -42,7 +42,7 @@ public class HtmlResponseShowImageCache extends BaseMainHtmlResponse {
     @Override
     public MenuItem getMenuItem() {
         String packageName = getContext().getPackageName();
-        return new MenuItem("/imageCache?folder=%2Fdata%2Fuser%2F0%2F" + packageName + "%2Fcache%2F" + mImageCache, "Show Image cache");
+        return new MenuItem("Show Image cache", "/imageCache?folder=%2Fdata%2Fuser%2F0%2F" + packageName + "%2Fcache%2F" + mImageCache);
     }
 
     @Override

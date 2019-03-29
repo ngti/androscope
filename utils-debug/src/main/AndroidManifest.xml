@@ -11,6 +11,7 @@
         android:label="@string/app_name">
         <activity
             android:name=".AndroscopeActivity"
+            android:icon="@drawable/androscope_ic_launcher"
             android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
             android:process=":androscope"
