@@ -126,6 +126,9 @@ public class AndroscopeService extends Service {
         final Notification notification = getNotificationBuilder()
                 .setSmallIcon(R.drawable.androscope_notification_icon)
                 .setContentText("Androscope is running")
+                .setContentIntent(PendingIntent.getActivity(this,
+                        R.id.androscope_notification_request_code_open_androscope_activity,
+                        new Intent(this, AndroscopeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
                 .addAction(action)
                 .build();
 

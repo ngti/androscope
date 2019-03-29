@@ -2,4 +2,5 @@
 <resources>
     <item name="androscope_notification_id" type="id" />
     <item name="androscope_notification_request_code_stop_server" type="id" />
+    <item name="androscope_notification_request_code_open_androscope_activity" type="id" />
 </resources>
