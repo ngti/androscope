@@ -8,9 +8,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -29,15 +31,24 @@ public class AndroscopeService extends Service {
 
     private static final String ACTION_START_WEB_SERVER = "nl.ngti.androscope.action.START_WEB_SERVER";
     private static final String ACTION_STOP_WEB_SERVER = "nl.ngti.androscope.action.STOP_WEB_SERVER";
+
     private static final String KEY_FORCE = "nl.ngti.androscope.key.FORCE";
+    private static final String KEY_CALLBACK = "nl.ngti.androscope.key.CALLBACK";
+
+    private static final String RESULT_MESSAGE = "nl.ngti.androscope.result.MESSAGE";
 
     private NanoHTTPD mServer;
 
-    public static void startServer(Context context, boolean force) {
+    public static void startServer(Context context, boolean force, @Nullable ResultReceiver callback) {
         Intent intent = new Intent(context, AndroscopeService.class);
         intent.setAction(ACTION_START_WEB_SERVER);
         intent.putExtra(KEY_FORCE, force);
+        intent.putExtra(KEY_CALLBACK, callback);
         ContextCompat.startForegroundService(context, intent);
+    }
+
+    public static String getResultMessage(Bundle bundle) {
+        return bundle != null ? bundle.getString(RESULT_MESSAGE) : null;
     }
 
     @Override
@@ -47,8 +58,9 @@ public class AndroscopeService extends Service {
             if (action != null) {
                 switch (action) {
                     case ACTION_START_WEB_SERVER:
-                        boolean force = intent.getBooleanExtra(KEY_FORCE, false);
-                        handleServerStart(force);
+                        final boolean force = intent.getBooleanExtra(KEY_FORCE, false);
+                        final ResultReceiver callback = intent.getParcelableExtra(KEY_CALLBACK);
+                        handleServerStart(force, callback);
                         break;
                     case ACTION_STOP_WEB_SERVER:
                         handleServerStop();
@@ -74,10 +86,10 @@ public class AndroscopeService extends Service {
         return false;
     }
 
-    private void handleServerStart(boolean force) {
+    private void handleServerStart(boolean force, @Nullable ResultReceiver callback) {
         if (mServer != null && mServer.isAlive()) {
             showToast("Androscope is already running");
-            IoServerRunner.notifyServerStarted(this, mServer, new NanoListener());
+            IoServerRunner.notifyServerStarted(this, mServer, new NanoListener(callback));
             return;
         }
 
@@ -87,7 +99,7 @@ public class AndroscopeService extends Service {
 
             if (IoServerRunner.executeInstance(mServer)) {
                 showToast("Androscope was started");
-                IoServerRunner.notifyServerStarted(this, mServer, new NanoListener());
+                IoServerRunner.notifyServerStarted(this, mServer, new NanoListener(callback));
             } else {
                 showToast("Error starting Androscope");
             }
@@ -153,10 +165,27 @@ public class AndroscopeService extends Service {
 
     private static final class NanoListener implements NanoHttpListener {
 
+        @Nullable
+        private final ResultReceiver mCallback;
+
+        NanoListener(@Nullable ResultReceiver callback) {
+            mCallback = callback;
+        }
+
         @Override
         public void serverReady(final String ip, final String port) {
-            Log.d(TAG, "Androscope is available at [ http://" + ip + ":" + port + " ]  Local server at [ http://127.0.0.1:" + port + " ]" +
-                    " For GENYMOTION this ip doesnt work, use the ip of the emulator returned by 'adb devices'");
+            final String message =
+                    "Androscope is running!\n" +
+                            "Address: [ http://" + ip + ":" + port + " ]\n\n" +
+                            "Local server at [ http://127.0.0.1:" + port + " ]\n\n" +
+                            "For GENYMOTION this ip doesn't work, use the ip of the emulator returned by 'adb devices'";
+            Log.d(TAG, message);
+
+            if (mCallback != null) {
+                final Bundle result = new Bundle(1);
+                result.putString(RESULT_MESSAGE, message);
+                mCallback.send(0, result);
+            }
         }
     }
 

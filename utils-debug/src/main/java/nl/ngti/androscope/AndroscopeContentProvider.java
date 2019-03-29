@@ -11,7 +11,7 @@ public class AndroscopeContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        AndroscopeService.startServer(getContext(), false);
+        AndroscopeService.startServer(getContext(), false, null);
         return false;
     }
 

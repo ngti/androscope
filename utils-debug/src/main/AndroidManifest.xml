@@ -14,6 +14,7 @@
             android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
             android:process=":androscope"
+            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|smallestScreenSize"
             android:taskAffinity="${applicationId}.nl.ngti.androscope">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
