@@ -1,4 +1,4 @@
-package nl.ngti.debugwebserver;
+package nl.ngti.androscope;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -7,11 +7,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class DebugWebServerContentProvider extends ContentProvider {
-    
+public class AndroscopeContentProvider extends ContentProvider {
+
     @Override
     public boolean onCreate() {
-        DebugWebServerStartService.startServer(getContext(), false);
+        AndroscopeService.startServer(getContext(), false);
         return false;
     }
 

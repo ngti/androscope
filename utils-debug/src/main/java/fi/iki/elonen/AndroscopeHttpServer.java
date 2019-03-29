@@ -27,8 +27,8 @@ public class AndroscopeHttpServer extends NanoHTTPD {
 
     private static final String TAG = AndroscopeHttpServer.class.getSimpleName();
 
-    private static final String KEY_HTTP_PORT = "nl.ngti.debugwebserver.HTTP_PORT";
-    private static final String KEY_AUTO_START = "nl.ngti.debugwebserver.AUTO_START";
+    private static final String KEY_HTTP_PORT = "nl.ngti.androscope.HTTP_PORT";
+    private static final String KEY_AUTO_START = "nl.ngti.androscope.AUTO_START";
     private static final int HTTP_PORT = 8787;
 
     private final Set<HttpResponse> mHtmlResponses = new LinkedHashSet<>();

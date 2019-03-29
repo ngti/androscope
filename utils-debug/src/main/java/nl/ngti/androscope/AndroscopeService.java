@@ -1,4 +1,4 @@
-package nl.ngti.debugwebserver;
+package nl.ngti.androscope;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -22,18 +22,18 @@ import fi.iki.elonen.IoServerRunner;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHttpListener;
 
-public class DebugWebServerStartService extends Service {
+public class AndroscopeService extends Service {
 
-    private static final String TAG = DebugWebServerStartService.class.getSimpleName();
+    private static final String TAG = AndroscopeService.class.getSimpleName();
 
-    private static final String ACTION_START_WEB_SERVER = "nl.ngti.debugwebserver.action.START_WEB_SERVER";
-    private static final String ACTION_STOP_WEB_SERVER = "nl.ngti.debugwebserver.action.STOP_WEB_SERVER";
-    private static final String KEY_FORCE = "nl.ngti.debugwebserver.key.FORCE";
+    private static final String ACTION_START_WEB_SERVER = "nl.ngti.androscope.action.START_WEB_SERVER";
+    private static final String ACTION_STOP_WEB_SERVER = "nl.ngti.androscope.action.STOP_WEB_SERVER";
+    private static final String KEY_FORCE = "nl.ngti.androscope.key.FORCE";
 
     private NanoHTTPD mServer;
 
     public static void startServer(Context context, boolean force) {
-        Intent intent = new Intent(context, DebugWebServerStartService.class);
+        Intent intent = new Intent(context, AndroscopeService.class);
         intent.setAction(ACTION_START_WEB_SERVER);
         intent.putExtra(KEY_FORCE, force);
         ContextCompat.startForegroundService(context, intent);
@@ -95,7 +95,7 @@ public class DebugWebServerStartService extends Service {
     }
 
     private void showNotification() {
-        final Intent intent = new Intent(this, DebugWebServerStartService.class);
+        final Intent intent = new Intent(this, AndroscopeService.class);
         intent.setAction(ACTION_STOP_WEB_SERVER);
 
         final PendingIntent pendingIntent = PendingIntent.getService(this,

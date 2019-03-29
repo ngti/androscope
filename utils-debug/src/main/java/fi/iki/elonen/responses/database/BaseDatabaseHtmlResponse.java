@@ -8,7 +8,7 @@ import fi.iki.elonen.HttpResponse;
 
 abstract class BaseDatabaseHtmlResponse implements HttpResponse {
 
-    private static final String KEY_DATABASE_NAME = "nl.ngti.debugwebserver.DATABASE_NAME";
+    private static final String KEY_DATABASE_NAME = "nl.ngti.androscope.DATABASE_NAME";
 
     protected final Context mContext;
     protected String mDatabaseName;

@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
  */
 public class HtmlResponseShowImageCache extends BaseMainHtmlResponse {
 
-    private static final String KEY_IMAGE_CACHE = "nl.ngti.debugwebserver.IMAGE_CACHE";
-    private static final String KEY_IMAGE_CACHE_FILTER = "nl.ngti.debugwebserver.IMAGE_CACHE.filter";
+    private static final String KEY_IMAGE_CACHE = "nl.ngti.androscope.IMAGE_CACHE";
+    private static final String KEY_IMAGE_CACHE_FILTER = "nl.ngti.androscope.IMAGE_CACHE.filter";
 
     private String mImageCache;
     private Pattern mImageMatcher;

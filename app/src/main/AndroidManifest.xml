@@ -18,10 +18,10 @@
         </activity>
 
         <meta-data
-            android:name="nl.ngti.debugwebserver.HTTP_PORT"
+            android:name="nl.ngti.androscope.HTTP_PORT"
             android:value="8791"/>
         <meta-data
-            android:name="nl.ngti.debugwebserver.AUTO_START"
+            android:name="nl.ngti.androscope.AUTO_START"
             android:value="true" />
     </application>
 
