@@ -15,26 +15,25 @@ public class IoServerRunner {
     private static final int MAX_WATING_TIME = 5000;
     private static final int WAITING_STEP = 100;
 
-    public static void executeInstance(final Context context, @NonNull final NanoHTTPD server, final NanoHttpListener nanoHttpListener) {
+    public static boolean executeInstance(@NonNull final NanoHTTPD server) {
         try {
             server.start();
             waitForServer(server);
-            notifyServerStarted(context, server, nanoHttpListener);
+            return true;
         } catch (final IOException ioe) {
             ioe.printStackTrace();
-            nanoHttpListener.serverReady("COULD NOT START SERVER! " + ioe, "");
+            return false;
         }
     }
 
-    private static void notifyServerStarted(final Context context, final NanoHTTPD server, final NanoHttpListener nanoHttpListener) {
+    public static void notifyServerStarted(final Context context, final NanoHTTPD server, final NanoHttpListener nanoHttpListener) {
         if (server.isAlive()) {
             final WifiManager myWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            //noinspection ConstantConditions
             final WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
             final int myIp = myWifiInfo.getIpAddress();
             final String ip = Formatter.formatIpAddress(myIp);
             nanoHttpListener.serverReady(ip, "" + server.getListeningPort());
-        } else {
-            nanoHttpListener.serverReady("COULD NOT START SERVER", "");
         }
     }
 

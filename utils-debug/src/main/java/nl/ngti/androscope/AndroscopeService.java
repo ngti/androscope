@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
+
 import fi.iki.elonen.AndroscopeHttpServer;
 import fi.iki.elonen.IoServerRunner;
 import fi.iki.elonen.NanoHTTPD;
@@ -75,7 +76,8 @@ public class AndroscopeService extends Service {
 
     private void handleServerStart(boolean force) {
         if (mServer != null && mServer.isAlive()) {
-            showToast("Debug Web Server is already running");
+            showToast("Androscope is already running");
+            IoServerRunner.notifyServerStarted(this, mServer, new NanoListener());
             return;
         }
 
@@ -83,8 +85,12 @@ public class AndroscopeService extends Service {
         if (mServer != null) {
             showNotification();
 
-            IoServerRunner.executeInstance(this, mServer, new NanoListener());
-            showToast("Debug Web Server was started");
+            if (IoServerRunner.executeInstance(mServer)) {
+                showToast("Androscope was started");
+                IoServerRunner.notifyServerStarted(this, mServer, new NanoListener());
+            } else {
+                showToast("Error starting Androscope");
+            }
         }
     }
 
@@ -149,7 +155,7 @@ public class AndroscopeService extends Service {
 
         @Override
         public void serverReady(final String ip, final String port) {
-            Log.d(TAG, "Http server ready at [ http://" + ip + ":" + port + " ]  Local server at [ http://127.0.0.1:" + port + " ]" +
+            Log.d(TAG, "Androscope is available at [ http://" + ip + ":" + port + " ]  Local server at [ http://127.0.0.1:" + port + " ]" +
                     " For GENYMOTION this ip doesnt work, use the ip of the emulator returned by 'adb devices'");
         }
     }
