@@ -113,10 +113,14 @@ public class HtmlResponseShowFolder extends BaseMainHtmlResponse {
                         html.append("&nbsp;");
                     }
                     html.append("</td>");
-                    html.append("<td>");
-                    html.append("<button class=\"btn success\""
-                        + " onclick=\"window.location.href='" + "/filexp?view=" + URLEncoder.encode(absolutePath) + "'\""
-                        + ">View</button>");
+//                    html.append("<td>");
+//                    html.append("<button class=\"btn success\""
+//                        + " onclick=\"window.location.href='" + "/filexp?view=" + URLEncoder.encode(absolutePath) + "'\""
+//                        + ">View</button>");
+                    html.append("<td align=\"center\">");
+                    html.append("<a class=\"link\""
+                        + " href='" + "/filexp?view=" + URLEncoder.encode(absolutePath) + "'\""
+                        + ">View</a>");
                     html.append("</td>");
                     html.append("<td>");
                     html.append("<button class=\"btn info\""
