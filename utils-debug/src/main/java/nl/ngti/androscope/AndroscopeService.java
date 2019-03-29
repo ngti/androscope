@@ -182,7 +182,14 @@ public class AndroscopeService extends Service {
                             "Address: [ http://" + ip + ":" + port + " ]\n\n" +
                             "Local server at [ http://127.0.0.1:" + port + " ]\n\n" +
                             "For GENYMOTION this ip doesn't work, use the ip of the emulator returned by 'adb devices'";
-            Log.d(TAG, message);
+            // Logs on some devices are polluted when activity is started, here we add some delay,
+            // so the IP address will be logged in the end and user will not need to scroll up.
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, message);
+                }
+            }, 200);
 
             if (mCallback != null) {
                 final Bundle result = new Bundle(1);
