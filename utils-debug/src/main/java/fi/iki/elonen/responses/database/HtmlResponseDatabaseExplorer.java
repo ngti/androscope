@@ -39,7 +39,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
 
     @Override
     public MenuItem getMenuItem() {
-        return new MenuItem("Explore Datbase", "/dbxp");
+        return new MenuItem("Explore Database", "/dbxp");
     }
 
     @Override
