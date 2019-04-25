@@ -1,11 +1,13 @@
 package fi.iki.elonen.responses;
 
 import android.content.Context;
+
+import java.io.IOException;
+
 import fi.iki.elonen.HttpResponse;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.menu.Menu;
 import fi.iki.elonen.velocity.VelocityAsset;
-import java.io.IOException;
 
 public abstract class BaseVelocityResponse implements HttpResponse {
 
@@ -22,7 +24,7 @@ public abstract class BaseVelocityResponse implements HttpResponse {
 
         prepareVelocityVariables(v, session, menu);
 
-        return new NanoHTTPD.Response(v.html());
+        return NanoHTTPD.newFixedLengthResponse(v.html());
     }
 
     protected void prepareVelocityVariables(VelocityAsset v, NanoHTTPD.IHTTPSession session, Menu menu) {

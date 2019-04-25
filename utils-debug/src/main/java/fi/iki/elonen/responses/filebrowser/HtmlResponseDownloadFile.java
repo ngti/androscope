@@ -37,7 +37,7 @@ public class HtmlResponseDownloadFile implements HttpResponse {
         File file = new File(viewPath);
         String mime = "application/octet-stream";
         try {
-            NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, mime, new FileInputStream(file));
+            NanoHTTPD.Response response = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, new FileInputStream(file));
             response.addHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
             return response;
         } catch (FileNotFoundException e) {

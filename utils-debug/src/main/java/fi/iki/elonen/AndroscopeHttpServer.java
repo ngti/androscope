@@ -70,7 +70,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
             return getResponseFromHtmlProcessors(session, menu);
         } catch (final Throwable e) {
             e.printStackTrace();
-            return new Response(htmlEncode(e.toString()));
+            return NanoHTTPD.newFixedLengthResponse(htmlEncode(e.toString()));
         }
     }
 

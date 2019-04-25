@@ -51,7 +51,7 @@ public class HtmlResponseViewFile implements HttpResponse {
             String assetPath = viewPath.substring("asset:".length());
             NanoHTTPD.Response response = null;
             try {
-                response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, null, mContext.getAssets().open(assetPath));
+                response = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, null, mContext.getAssets().open(assetPath));
 //                response.addHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
                 return response;
             } catch (IOException e) {
@@ -62,7 +62,7 @@ public class HtmlResponseViewFile implements HttpResponse {
         File file = new File(viewPath);
         String mime = getMimeType(mContext, params, file);
         try {
-            NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, mime, new FileInputStream(file));
+            NanoHTTPD.Response response = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, new FileInputStream(file));
             response.addHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
             return response;
         } catch (FileNotFoundException e) {

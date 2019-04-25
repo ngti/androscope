@@ -55,7 +55,7 @@ public class HtmlResponseThumbnail implements HttpResponse {
                 if (bmp != null) {
                     File tempFile = File.createTempFile("_thumbnail_", "");
                     bmp.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(tempFile));
-                    NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, "image/jpeg", new FileInputStream(tempFile));
+                    NanoHTTPD.Response response = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, "image/jpeg", new FileInputStream(tempFile));
                     response.addHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
                     return response;
                 }

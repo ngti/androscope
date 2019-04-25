@@ -37,7 +37,7 @@ public class HtmlResponseUploadDatabase extends BaseDatabaseHtmlResponse {
                         "    <input type='submit' name='submit' value='Upload'/>\n" +
                         "</form></div></p>"
                 );
-                return new NanoHTTPD.Response(html.toString());
+                return NanoHTTPD.newFixedLengthResponse(html.toString());
 
             } else {
 
@@ -57,7 +57,7 @@ public class HtmlResponseUploadDatabase extends BaseDatabaseHtmlResponse {
                             tempFile.renameTo(dbFile);
                         }
 
-                        return new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT,
+                        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT,
                             "Database uploaded! Restart application");
 
                     } catch (Throwable e) {

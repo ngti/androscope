@@ -62,7 +62,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
 
 //                showFooter(html);
                 html.append("</body></html>");
-                return new NanoHTTPD.Response(html.toString());
+                return NanoHTTPD.newFixedLengthResponse(html.toString());
 
             }
         } catch (IOException exc) {
