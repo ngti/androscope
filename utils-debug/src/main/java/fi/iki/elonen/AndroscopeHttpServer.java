@@ -2,8 +2,8 @@ package fi.iki.elonen;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import fi.iki.elonen.menu.Menu;
 import fi.iki.elonen.menu.MenuItem;
 import fi.iki.elonen.responses.EmptyResponse;

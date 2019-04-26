@@ -2,7 +2,7 @@ package fi.iki.elonen.responses;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import fi.iki.elonen.NanoHTTPD;

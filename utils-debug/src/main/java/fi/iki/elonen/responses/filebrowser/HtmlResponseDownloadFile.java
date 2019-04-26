@@ -1,7 +1,7 @@
 package fi.iki.elonen.responses.filebrowser;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import fi.iki.elonen.HttpResponse;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.menu.Menu;

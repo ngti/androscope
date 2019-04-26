@@ -1,6 +1,6 @@
 package fi.iki.elonen.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Shortcuts for generating html.
