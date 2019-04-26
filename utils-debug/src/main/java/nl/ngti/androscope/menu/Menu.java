@@ -1,5 +1,7 @@
 package nl.ngti.androscope.menu;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class Menu {
     }
 
     public void render(StringBuilder html) {
-        html.append("<link href=\"" + getAssetsExplorerLink("navbar.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
+        //html.append("<link href=\"" + getAssetsExplorerLink("navbar.css") + "\" rel=\"stylesheet\" type=\"text/css\">");
         html.append("<div class=\"navbar\">");
         for (MenuItem item : items) {
             item.render(html);
@@ -28,7 +30,7 @@ public class Menu {
         return html.toString();
     }
 
-    protected void addItem(MenuItem menuItem) {
+    public void addItem(@NonNull MenuItem menuItem) {
         items.add(menuItem);
     }
 }

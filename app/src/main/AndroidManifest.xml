@@ -23,6 +23,9 @@
         <meta-data
             android:name="nl.ngti.androscope.AUTO_START"
             android:value="true" />
+        <meta-data
+            android:name="nl.ngti.androscope.DATABASE_NAME"
+            android:value="androidx.work.workdb" />
     </application>
 
 </manifest>
