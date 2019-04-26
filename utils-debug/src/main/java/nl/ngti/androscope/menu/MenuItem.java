@@ -20,7 +20,7 @@ public class MenuItem {
             html.append("<div class=\"dropdown\">")
                 .append("<button class=\"dropbtn\">")
                 .append(name)
-                .append("<i class=\"fa fa-caret-down\"></i>")
+                .append("&nbsp;&#x25BE;")
                 .append("</button>\n")
                 .append("<div class=\"dropdown-content\">");
             for (MenuItem item : items) {
