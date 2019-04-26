@@ -1,11 +1,13 @@
 package nl.ngti.androscope.menu;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuItem {
+public class MenuItem implements IMenuItem {
 
-    List<MenuItem> items = new ArrayList<>();
+    List<IMenuItem> items = new ArrayList<>();
 
     private final String name;
     private final String uri;
@@ -15,6 +17,7 @@ public class MenuItem {
         this.uri = uri;
     }
 
+    @Override
     public void render(StringBuilder html) {
         if (!items.isEmpty()) {
             html.append("<div class=\"dropdown\">")
@@ -23,7 +26,7 @@ public class MenuItem {
                 .append("&nbsp;&#x25BE;")
                 .append("</button>\n")
                 .append("<div class=\"dropdown-content\">");
-            for (MenuItem item : items) {
+            for (IMenuItem item : items) {
                 item.render(html);
             }
             html.append("</div>");
@@ -37,7 +40,13 @@ public class MenuItem {
         }
     }
 
+    @NonNull
+    public MenuItem separator() {
+        items.add(new Separator());
+        return this;
+    }
 
+    @NonNull
     public MenuItem subItem(String name, String uri) {
         items.add(new MenuItem(name, uri));
         return this;

@@ -36,7 +36,7 @@ public class HtmlResponseFileExplorer implements HttpResponse {
             .subItem("Application Data", getUrlFolder(new File(mContext.getApplicationInfo().dataDir)))
             .subItem("External Storage", getUrlFolder(Environment.getExternalStorageDirectory()))
             .subItem("Root Directory", getUrlFolder(Environment.getRootDirectory()))
-            .subItem("-", null)
+            .separator()
             .subItem("Downloads", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)))
             .subItem("Photos", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)))
             .subItem("Movies", getUrlFolder(getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)))
