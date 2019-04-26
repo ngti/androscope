@@ -1,18 +1,27 @@
 package nl.ngti.androscope;
 
-import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.ResultReceiver;
-import androidx.annotation.Nullable;
+import android.os.IBinder;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 
-public class AndroscopeActivity extends Activity {
+import nl.ngti.androscope.service.AndroscopeService;
+import nl.ngti.androscope.service.AndroscopeServiceStatus;
+
+public final class AndroscopeActivity extends FragmentActivity
+        implements ServiceConnection, Observer<AndroscopeServiceStatus>, View.OnClickListener {
 
     private TextView mInfoView;
+    private Button mRestartButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,30 +30,52 @@ public class AndroscopeActivity extends Activity {
         setContentView(R.layout.activity_androscope);
 
         mInfoView = findViewById(R.id.text_androscope_info);
+        mRestartButton = findViewById(R.id.button_androscope_restart);
+        mRestartButton.setOnClickListener(this);
+
+        startAndroscope();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        AndroscopeService.startServer(this, true, new ServiceCallback(this));
+    protected void onStart() {
+        super.onStart();
+
+        final Intent intent = new Intent(getApplication(), AndroscopeService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
-    private static final class ServiceCallback extends ResultReceiver {
+    @Override
+    protected void onStop() {
+        super.onStop();
 
-        private final WeakReference<AndroscopeActivity> mActivityRef;
+        unbindService(this);
+    }
 
-        ServiceCallback(AndroscopeActivity activity) {
-            super(new Handler(Looper.getMainLooper()));
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        final AndroscopeService.LocalBinder localBinder = (AndroscopeService.LocalBinder) service;
+        final AndroscopeService androscopeService = localBinder.getService();
+        androscopeService.getStatusLiveData().observe(this, this);
+    }
 
-            mActivityRef = new WeakReference<>(activity);
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+    }
+
+    @Override
+    public void onChanged(AndroscopeServiceStatus status) {
+        mInfoView.setText(status.getMessage());
+        mRestartButton.setVisibility(status.isRestartNeeded() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_androscope_restart) {
+            startAndroscope();
         }
+    }
 
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            final AndroscopeActivity activity = mActivityRef.get();
-            if (activity != null) {
-                activity.mInfoView.setText(AndroscopeService.getResultMessage(resultData));
-            }
-        }
+    private void startAndroscope() {
+        AndroscopeService.startServer(this, true);
     }
 }

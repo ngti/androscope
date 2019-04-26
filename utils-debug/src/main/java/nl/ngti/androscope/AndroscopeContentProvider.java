@@ -4,14 +4,17 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class AndroscopeContentProvider extends ContentProvider {
+import nl.ngti.androscope.service.AndroscopeService;
+
+public final class AndroscopeContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        AndroscopeService.startServer(getContext(), false, null);
+        AndroscopeService.startServer(getContext(), false);
         return false;
     }
 

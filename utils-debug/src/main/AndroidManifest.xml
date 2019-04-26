@@ -32,7 +32,7 @@
         </provider>
 
         <service
-            android:name=".AndroscopeService"
+            android:name=".service.AndroscopeService"
             android:exported="false"
             android:process=":androscope">
         </service>
