@@ -1,7 +1,7 @@
 package nl.ngti.androscope.responses.database;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import fi.iki.elonen.NanoHTTPD;
 import java.net.URLEncoder;
@@ -27,13 +27,13 @@ public class QueryProcessorTable implements QueryProcessor {
         SUPPORTED_DB_TYPES = Collections.unmodifiableSet(supportedDbTypes);
     }
 
-    private final SQLiteOpenHelper mSql;
+    private final SQLiteDatabase mDatabase;
     private String mTable;
     private String mSort;
     private String mType;
 
-    QueryProcessorTable(SQLiteOpenHelper sql) {
-        mSql = sql;
+    QueryProcessorTable(SQLiteDatabase database) {
+        mDatabase = database;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class QueryProcessorTable implements QueryProcessor {
                 mSort = "rowid DESC";
             }
             html.append("Table: ").append(TextUtils.htmlEncode(mTable)).append("<br>");
-            return mSql.getReadableDatabase().rawQuery("SELECT rowid, * FROM " + mTable + " order by " + mSort, null);
+            return mDatabase.rawQuery("SELECT rowid, * FROM " + mTable + " order by " + mSort, null);
         }
         return null;
     }

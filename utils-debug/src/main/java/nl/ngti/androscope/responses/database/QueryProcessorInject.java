@@ -2,7 +2,7 @@ package nl.ngti.androscope.responses.database;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import fi.iki.elonen.NanoHTTPD;
 import java.io.IOException;
@@ -12,16 +12,16 @@ import java.io.IOException;
  */
 @SuppressLint("DefaultLocale")
 public class QueryProcessorInject implements QueryProcessor {
-    private final SQLiteOpenHelper mSql;
+    private final SQLiteDatabase mDatabase;
 
-    public QueryProcessorInject(SQLiteOpenHelper sql) {
-        mSql = sql;
+    public QueryProcessorInject(SQLiteDatabase database) {
+        mDatabase = database;
     }
 
     @Override
     public Cursor process(NanoHTTPD.IHTTPSession session, StringBuilder html, String query) throws IOException {
         if (isProcessable(session, query)) {
-            mSql.getWritableDatabase().execSQL(query);
+            mDatabase.execSQL(query);
             html.append("<b>Executed query: </b>" + TextUtils.htmlEncode(query));
         }
         return null;

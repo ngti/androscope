@@ -3,12 +3,12 @@ package nl.ngti.androscope.responses.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import fi.iki.elonen.NanoHTTPD;
 import nl.ngti.androscope.menu.Menu;
 import nl.ngti.androscope.menu.MenuItem;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.HashSet;
@@ -27,12 +27,13 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
 
     private synchronized Set<QueryProcessor> getQueryProcessors() {
         if (mQueryProcessors == null) {
-            SQLiteOpenHelper sqLiteOpenHelper = new SQLiteOpenHelperImpl(mContext, mDatabaseName);
+            final SQLiteDatabase database = mContext.openOrCreateDatabase(mDatabaseName, 0, null);
+
             mQueryProcessors = new HashSet<>();
-            mQueryProcessors.add(new QueryProcessorTable(sqLiteOpenHelper));
-            mQueryProcessors.add(new QueryProcessorSelect(sqLiteOpenHelper));
+            mQueryProcessors.add(new QueryProcessorTable(database));
+            mQueryProcessors.add(new QueryProcessorSelect(database));
             mQueryProcessors.add(new QueryProcessorContent(mContext));
-            mQueryProcessors.add(new QueryProcessorInject(sqLiteOpenHelper));
+            mQueryProcessors.add(new QueryProcessorInject(database));
         }
         return mQueryProcessors;
     }
@@ -50,7 +51,7 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
 
                 final StringBuilder html = new StringBuilder();
                 html.append("<html><head><meta charset=\"UTF-8\"></head><body>");
-                //showCSS(html);
+                showCSS(html);
                 html.append(menu.render());
 
                 showQueryForm(html, query);
@@ -216,22 +217,5 @@ public class HtmlResponseDatabaseExplorer extends BaseDatabaseHtmlResponse {
             "\tborder-width:0px 0px 1px 1px;\n" +
             "}");
         html.append("</style>");
-    }
-
-    private static class SQLiteOpenHelperImpl extends SQLiteOpenHelper {
-
-        public SQLiteOpenHelperImpl(Context context, String name) {
-            super(context, name, null, 1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            // Do nothing
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // Do nothing
-        }
     }
 }
