@@ -2,19 +2,29 @@ package nl.ngti.androscope;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import nl.ngti.androscope.server.AndroscopeHttpServer;
 import nl.ngti.androscope.service.AndroscopeService;
+import nl.ngti.androscope.utils.AppUtils;
 
 public final class AndroscopeContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        AndroscopeService.startServer(getContext(), false);
+        //noinspection ConstantConditions
+        @NonNull final Context context = getContext();
+
+        final Bundle metadata = AppUtils.getMetadata(context);
+        if (metadata.getBoolean(AndroscopeHttpServer.KEY_AUTO_START)) {
+            AndroscopeService.startServer(context);
+        }
         return false;
     }
 

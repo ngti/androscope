@@ -76,6 +76,6 @@ public final class AndroscopeActivity extends FragmentActivity
     }
 
     private void startAndroscope() {
-        AndroscopeService.startServer(this, true);
+        AndroscopeService.startServer(this);
     }
 }

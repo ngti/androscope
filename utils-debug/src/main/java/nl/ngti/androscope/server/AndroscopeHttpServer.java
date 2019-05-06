@@ -9,7 +9,6 @@ import android.text.format.Formatter;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -22,8 +21,9 @@ import static nl.ngti.androscope.utils.AppUtils.getMetadata;
  */
 public class AndroscopeHttpServer extends NanoHTTPD {
 
+    public static final String KEY_AUTO_START = "nl.ngti.androscope.AUTO_START";
+
     private static final String KEY_HTTP_PORT = "nl.ngti.androscope.HTTP_PORT";
-    private static final String KEY_AUTO_START = "nl.ngti.androscope.AUTO_START";
     private static final int HTTP_PORT = 8787;
 
     //private final Set<HttpResponse> mHtmlResponses = new LinkedHashSet<>();
@@ -49,13 +49,10 @@ public class AndroscopeHttpServer extends NanoHTTPD {
 //        mHtmlResponses.add(new HtmlResponseThumbnail(context));
     }
 
-    @Nullable
-    public static AndroscopeHttpServer newInstance(Context context, boolean force) {
-        Bundle metadata = getMetadata(context);
-        if (!force && !metadata.getBoolean(KEY_AUTO_START, false)) {
-            return null;
-        }
-        int httpPort = metadata.getInt(KEY_HTTP_PORT, HTTP_PORT);
+    @NonNull
+    public static AndroscopeHttpServer newInstance(Context context) {
+        final Bundle metadata = getMetadata(context);
+        final int httpPort = metadata.getInt(KEY_HTTP_PORT, HTTP_PORT);
         return new AndroscopeHttpServer(context, httpPort, metadata);
     }
 
