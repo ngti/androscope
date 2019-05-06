@@ -21,14 +21,11 @@ final class AndroscopeServerHelper {
         mCallback = callback;
     }
 
-    @Nullable
+    @NonNull
     static AndroscopeServerHelper newInstance(@NonNull Context context,
-                                              boolean force, @NonNull Callback callback) {
+                                              @NonNull Callback callback) {
 
-        final AndroscopeHttpServer server = AndroscopeHttpServer.newInstance(context, force);
-        if (server == null) {
-            return null;
-        }
+        final AndroscopeHttpServer server = AndroscopeHttpServer.newInstance(context);
         return new AndroscopeServerHelper(server, callback);
     }
 

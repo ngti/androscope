@@ -38,8 +38,6 @@ public final class AndroscopeService extends Service {
     private static final String ACTION_START_WEB_SERVER = "nl.ngti.androscope.action.START_WEB_SERVER";
     private static final String ACTION_STOP_WEB_SERVER = "nl.ngti.androscope.action.STOP_WEB_SERVER";
 
-    private static final String KEY_FORCE = "nl.ngti.androscope.key.FORCE";
-
     private final LocalBinder mLocalBinder = new LocalBinder();
 
     private final MutableLiveData<AndroscopeServiceStatus> mStatusLiveData = new MutableLiveData<>();
@@ -51,10 +49,9 @@ public final class AndroscopeService extends Service {
     @Nullable
     private AndroscopeServerHelper mServerHelper;
 
-    public static void startServer(Context context, boolean force) {
+    public static void startServer(Context context) {
         final Intent intent = new Intent(context, AndroscopeService.class);
         intent.setAction(ACTION_START_WEB_SERVER);
-        intent.putExtra(KEY_FORCE, force);
 
         ContextCompat.startForegroundService(context, intent);
     }
@@ -104,8 +101,7 @@ public final class AndroscopeService extends Service {
         if (action != null) {
             switch (action) {
                 case ACTION_START_WEB_SERVER:
-                    final boolean force = intent.getBooleanExtra(KEY_FORCE, false);
-                    handleServerStart(force);
+                    handleServerStart();
                     break;
                 case ACTION_STOP_WEB_SERVER:
                     handleServerStop();
@@ -120,13 +116,11 @@ public final class AndroscopeService extends Service {
         }
     }
 
-    private synchronized void handleServerStart(boolean force) {
+    private synchronized void handleServerStart() {
         if (mServerHelper == null) {
-            mServerHelper = AndroscopeServerHelper.newInstance(this, force, new ServerStartCallback());
+            mServerHelper = AndroscopeServerHelper.newInstance(this, new ServerStartCallback());
         }
-        if (mServerHelper != null) {
-            mServerHelper.start();
-        }
+        mServerHelper.start();
     }
 
     private void handleServerStop() {
