@@ -10,7 +10,13 @@ class BuildTemplateTask extends Exec {
         println "Output: $outputPath"
 
         workingDir(templatePath)
-        commandLine("ng", "build", "--output-path", "$outputPath", "--prod")
+        commandLine("ng", "build",
+                "--output-path", "$outputPath",
+                "--prod",
+                "--output-hashing", "none",
+                "--aot",
+                "--optimization"
+        )
 
         super.exec()
     }
