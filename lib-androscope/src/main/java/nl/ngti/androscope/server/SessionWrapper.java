@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import fi.iki.elonen.NanoHTTPD;
 
+// TODO remove?
 public final class SessionWrapper {
 
     private static final String PATH_SEPARATOR = "/";

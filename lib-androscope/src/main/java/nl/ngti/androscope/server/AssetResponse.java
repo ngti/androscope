@@ -1,39 +1,33 @@
 package nl.ngti.androscope.server;
 
 import android.util.Log;
-import android.webkit.MimeTypeMap;
-
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 
 import fi.iki.elonen.NanoHTTPD;
+import nl.ngti.androscope.common.AndroscopeConstants;
+import nl.ngti.androscope.utils.AppUtils;
 
-public class AssetResponse extends BaseResponse {
+public final class AssetResponse extends BaseAndroscopeResponse {
+
+    private static final boolean LOG = AndroscopeConstants.LOG;
+    private static final String TAG = AssetResponse.class.getSimpleName();
 
     @Override
     protected NanoHTTPD.Response getResponse(SessionWrapper session) throws IOException {
         String assetToOpen;
 
         if (session.getRootPath().isEmpty()) {
-            assetToOpen = "index.html";
+            assetToOpen = AndroscopeConstants.HOME_PAGE;
         } else {
             assetToOpen = session.getRootPath();
         }
 
-        final String extension = FilenameUtils.getExtension(assetToOpen);
+        final String mimeType = AppUtils.getMimeType(assetToOpen);
 
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        if (LOG) Log.d(TAG, "assetToOpen = " + assetToOpen + ", mimeType = " + mimeType);
 
-        if (mimeType == null) {
-            if ("js".equals(extension)) {
-                mimeType = "application/javascript";
-            }
-        }
-
-        Log.d("AssetResponse", "assetToOpen = " + assetToOpen + ", mimeType = " + mimeType);
-
-        assetToOpen = "www/" + assetToOpen;
+        assetToOpen = AndroscopeConstants.WEB_CONTENT_ROOT + assetToOpen;
 
         return NanoHTTPD.newChunkedResponse(
                 NanoHTTPD.Response.Status.OK, mimeType,

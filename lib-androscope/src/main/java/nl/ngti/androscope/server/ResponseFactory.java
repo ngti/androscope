@@ -1,62 +1,37 @@
 package nl.ngti.androscope.server;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.util.Map;
-
 import fi.iki.elonen.NanoHTTPD;
+import nl.ngti.androscope.common.AndroscopeConstants;
 
-public final class ResponseFactory {
+final class ResponseFactory {
 
-    private final Context mContext;
-//    private final HashMap<String, BaseResponse> mResponses = new HashMap<>();
+    private static final boolean LOG = AndroscopeConstants.LOG;
+    private static final String TAG = ResponseFactory.class.getSimpleName();
 
-    private final EmptyResponse mEmptyResponse = new EmptyResponse();
+    private final NotFoundResponse mNotFoundResponse = new NotFoundResponse();
     private final AssetResponse mAssetResponse = new AssetResponse();
 
-    public ResponseFactory(Context context) {
-        mContext = context;
-
-        mEmptyResponse.init(context);
-        mAssetResponse.init(context);
-
-//        addResponses(mResponses);
-//        mResponses.put(null, mEmptyResponse);
-
-//        for (BaseResponse response : mResponses.values()) {
-//            response.init(mContext);
-//        }
-    }
-
-    private static void addResponses(Map<String, BaseResponse> responses) {
-        // HTML responses
-        responses.put("", new AssetResponse());
-
-        // System responses
-        responses.put("asset", new AssetResponse());
+    ResponseFactory(Context context, Bundle metadata) {
+        mNotFoundResponse.init(context, metadata);
+        mAssetResponse.init(context, metadata);
     }
 
     @NonNull
-    public BaseResponse getResponse(NanoHTTPD.IHTTPSession session) {
+    BaseAndroscopeResponse getResponse(NanoHTTPD.IHTTPSession session) {
         final String uri = session.getUri();
-        Log.d("ResponseFactory", "getResponse " + uri);
+        if (LOG) Log.d(TAG, "getResponse " + uri);
+
         if (uri.startsWith("/")) {
             return mAssetResponse;
         }
-        Log.w("ResponseFactory", "No response to handle " + uri);
-        return mEmptyResponse;
-    }
 
-//    @NonNull
-//    public BaseResponse getResponse(String path) {
-//        Log.d("ResponseFactory", "getResponse " + path);
-//        BaseResponse response = mResponses.get(path);
-//        if (response == null) {
-//            response = mEmptyResponse;
-//        }
-//        return response;
-//    }
+        if (LOG) Log.w(TAG, "No response to handle " + uri);
+        return mNotFoundResponse;
+    }
 }
