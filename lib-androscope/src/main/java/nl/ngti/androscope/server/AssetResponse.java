@@ -2,7 +2,9 @@ package nl.ngti.androscope.server;
 
 import android.util.Log;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import fi.iki.elonen.NanoHTTPD;
 import nl.ngti.androscope.common.AndroscopeConstants;
@@ -14,23 +16,23 @@ public final class AssetResponse extends BaseAndroscopeResponse {
     private static final String TAG = AssetResponse.class.getSimpleName();
 
     @Override
-    protected NanoHTTPD.Response getResponse(SessionWrapper session) throws IOException {
-        String assetToOpen;
+    protected NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) throws IOException {
+        final String assetToOpen = AndroscopeConstants.WEB_CONTENT_ROOT + session.getUri();
 
-        if (session.getRootPath().isEmpty()) {
-            assetToOpen = AndroscopeConstants.HOME_PAGE;
-        } else {
-            assetToOpen = session.getRootPath();
+        InputStream inputStream;
+        String mimeType;
+        try {
+            inputStream = getContext().getAssets().open(assetToOpen);
+            mimeType = AppUtils.getMimeType(assetToOpen);
+        } catch (FileNotFoundException ignore) {
+            inputStream = getContext().getAssets().open(AndroscopeConstants.HOME_PAGE);
+            mimeType = "text/html";
         }
-
-        final String mimeType = AppUtils.getMimeType(assetToOpen);
 
         if (LOG) Log.d(TAG, "assetToOpen = " + assetToOpen + ", mimeType = " + mimeType);
 
-        assetToOpen = AndroscopeConstants.WEB_CONTENT_ROOT + assetToOpen;
-
         return NanoHTTPD.newChunkedResponse(
                 NanoHTTPD.Response.Status.OK, mimeType,
-                getContext().getAssets().open(assetToOpen));
+                inputStream);
     }
 }

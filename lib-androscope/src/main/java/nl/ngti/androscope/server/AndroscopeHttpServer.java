@@ -70,9 +70,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
 
     @NonNull
     private Response createResponse(IHTTPSession session) throws IOException {
-        final SessionWrapper sessionWrapper = new SessionWrapper(session);
-
         final BaseAndroscopeResponse response = mResponseFactory.getResponse(session);
-        return response.getResponse(sessionWrapper);
+        return response.getResponse(session);
     }
 }

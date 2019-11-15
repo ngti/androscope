@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Androscope Demo</string>
     <string name="androscope_activity_label">Androscope DWS</string>
-    <string name="grant_storage_permission">Grant storage permission</string>
+    <string name="welcome_message">Welcome to Androscope!</string>
+    <string name="grant_storage_permission">Grant Storage Permission</string>
+    <string name="grant_contacts_permission">Grant Contacts Permission</string>
 </resources>

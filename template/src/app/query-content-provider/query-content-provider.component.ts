@@ -4,29 +4,29 @@ import {NgForm} from '@angular/forms';
 import {Uri} from './uri';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
 import {
-  ContentProviderContentDatasource,
-  ContentProviderContentItem
-} from '../content-provider-content/content-provider-content-datasource';
+  ContentProviderContentDataSource
+} from './content-provider-content-data-source';
+import {RestService} from './rest.service';
 
 @Component({
   selector: 'app-query-content-provider',
   templateUrl: './query-content-provider.component.html',
+  providers: [ RestService ],
   styleUrls: ['./query-content-provider.component.css']
 })
 export class QueryContentProviderComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
-  @ViewChild(MatTable, {static: false}) table: MatTable<ContentProviderContentItem>;
-  dataSource: ContentProviderContentDatasource;
-
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  @ViewChild(MatTable, {static: false}) table: MatTable<[]>;
+  dataSource: ContentProviderContentDataSource;
 
   uri: Uri;
 
   constructor(activeRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private restService: RestService) {
 
+    console.log('QueryContentProviderComponent created');
     let uriContent = activeRoute.snapshot.params.uri;
     if (uriContent != null) {
       uriContent = decodeURIComponent(uriContent);
@@ -37,14 +37,26 @@ export class QueryContentProviderComponent implements AfterViewInit, OnInit {
   }
 
   submitUri(newUri: Uri) {
-    this.router.navigate([encodeURIComponent(newUri.content.trim())]);
+    console.log('submitUri ' + newUri.content);
+    this.router.navigate(['provider/' + encodeURIComponent(newUri.content.trim())]);
+    this.uri = newUri;
+    this.recreateDataSource();
+    this.updateDataSource();
   }
 
   ngOnInit() {
-    this.dataSource = new ContentProviderContentDatasource();
+    this.recreateDataSource();
   }
 
   ngAfterViewInit() {
+    this.updateDataSource();
+  }
+
+  private recreateDataSource() {
+    this.dataSource = new ContentProviderContentDataSource(this.restService, this.uri);
+  }
+
+  private updateDataSource() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;

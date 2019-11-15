@@ -4,8 +4,9 @@ import {QueryContentProviderComponent} from './query-content-provider/query-cont
 
 
 const routes: Routes = [
-  {path: '', component: QueryContentProviderComponent},
-  {path: ':uri', component: QueryContentProviderComponent},
+  {path: '', redirectTo: '/provider', pathMatch: 'full'},
+  {path: 'provider', component: QueryContentProviderComponent},
+  {path: 'provider/:uri', component: QueryContentProviderComponent},
 ];
 
 @NgModule({

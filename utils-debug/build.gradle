@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -27,4 +29,5 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd-webserver:2.3.1'
 
     implementation 'org.apache.velocity:velocity-engine-core:2.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

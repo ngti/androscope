@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import fi.iki.elonen.NanoHTTPD;
 
-abstract class BaseAndroscopeResponse {
+public abstract class BaseAndroscopeResponse {
 
     private Context mContext;
 
@@ -28,5 +28,5 @@ abstract class BaseAndroscopeResponse {
         // Override in ancestors if needed
     }
 
-    protected abstract NanoHTTPD.Response getResponse(SessionWrapper session) throws IOException;
+    protected abstract NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) throws IOException;
 }

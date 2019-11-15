@@ -16,16 +16,22 @@ final class ResponseFactory {
 
     private final NotFoundResponse mNotFoundResponse = new NotFoundResponse();
     private final AssetResponse mAssetResponse = new AssetResponse();
+    private final RestResponse mRestResponse = new RestResponse();
 
     ResponseFactory(Context context, Bundle metadata) {
         mNotFoundResponse.init(context, metadata);
         mAssetResponse.init(context, metadata);
+        mRestResponse.init(context, metadata);
     }
 
     @NonNull
     BaseAndroscopeResponse getResponse(NanoHTTPD.IHTTPSession session) {
         final String uri = session.getUri();
-        if (LOG) Log.d(TAG, "getResponse " + uri);
+        if (LOG) Log.d(TAG, "getResponse " + uri + ", params " + session.getParameters());
+
+        if (uri.startsWith(AndroscopeConstants.PATH_REST)) {
+            return mRestResponse;
+        }
 
         if (uri.startsWith("/")) {
             return mAssetResponse;
