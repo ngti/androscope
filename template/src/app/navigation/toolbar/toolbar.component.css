@@ -1,0 +1,7 @@
+.mat-toolbar-single-row {
+  min-height: 56px;
+  height: auto;
+  padding-left: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

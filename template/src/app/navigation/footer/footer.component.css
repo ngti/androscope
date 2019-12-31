@@ -1,0 +1,13 @@
+p.copyright {
+  font-size: 14px;
+}
+
+a.copyright {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+a:hover.copyright {
+  text-decoration: underline;
+}
