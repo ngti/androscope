@@ -71,6 +71,8 @@ public class AndroscopeHttpServer extends NanoHTTPD {
     @NonNull
     private Response createResponse(IHTTPSession session) throws IOException {
         final BaseAndroscopeResponse response = mResponseFactory.getResponse(session);
-        return response.getResponse(session);
+        final Response result = response.getResponse(session);
+        result.addHeader("Access-Control-Allow-Origin", "*");
+        return result;
     }
 }

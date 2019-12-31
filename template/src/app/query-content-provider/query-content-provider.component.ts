@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {Uri} from './uri';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
@@ -38,7 +38,7 @@ export class QueryContentProviderComponent implements AfterViewInit, OnInit {
 
   submitUri(newUri: Uri) {
     console.log('submitUri ' + newUri.content);
-    this.router.navigate(['provider/' + encodeURIComponent(newUri.content.trim())]);
+    this.router.navigate(['provider', newUri.content.trim()]);
     this.uri = newUri;
     this.recreateDataSource();
     this.updateDataSource();
