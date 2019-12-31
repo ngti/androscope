@@ -18,6 +18,10 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { ToolbarComponent } from './navigation/toolbar/toolbar.component';
 import { FooterComponent } from './navigation/footer/footer.component';
+import { HomeComponent } from './home/home.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,7 @@ import { FooterComponent } from './navigation/footer/footer.component';
     QueryContentProviderComponent,
     ToolbarComponent,
     FooterComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +47,9 @@ import { FooterComponent } from './navigation/footer/footer.component';
     MatIconModule,
     MatMenuModule,
     MatDividerModule,
+    MatGridListModule,
+    MatCardModule,
+    LayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
