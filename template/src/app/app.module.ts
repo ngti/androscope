@@ -10,7 +10,7 @@ import { MatSortModule } from '@angular/material/sort';
 import {
   MatButtonModule, MatDividerModule,
   MatFormFieldModule, MatIconModule,
-  MatInputModule, MatListModule, MatMenuModule,
+  MatInputModule, MatListModule, MatMenuModule, MatProgressSpinnerModule,
   MatToolbarModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
@@ -67,6 +67,7 @@ import {ProviderDataComponent} from './provider/provider-data/provider-data.comp
     MatCardModule,
     LayoutModule,
     MatListModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

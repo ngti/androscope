@@ -5,6 +5,7 @@ import {MatSort, SortDirection} from '@angular/material/sort';
 import {RestService} from '../rest/rest.service';
 import {Uri} from '../query-model/uri';
 import {Injectable} from '@angular/core';
+import {finalize} from 'rxjs/operators';
 
 export class QueryDataSource extends DataSource<[]> {
 
@@ -13,8 +14,9 @@ export class QueryDataSource extends DataSource<[]> {
   private rowCount$ = new BehaviorSubject<number>(0);
   rowCount = this.rowCount$.asObservable();
   private data$ = new BehaviorSubject<[][]>(null);
-  paginator: MatPaginator;
-  sort: MatSort;
+
+  private loading$ = new BehaviorSubject<boolean>(false);
+  loading = this.loading$.asObservable();
 
   constructor(private restService: RestService, private uri: Uri) {
     super();
@@ -36,12 +38,20 @@ export class QueryDataSource extends DataSource<[]> {
     this.columnNames$.complete();
     this.rowCount$.complete();
     this.data$.complete();
+    this.loading$.complete();
   }
 
   loadData(pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string) {
     console.log('Load data');
-    this.restService.getData(this.uri, pageSize, pageNumber, sortOrder, sortColumn).subscribe(data =>
-      this.data$.next(data)
-    );
+
+    this.loading$.next(true);
+
+    this.restService.getData(this.uri, pageSize, pageNumber, sortOrder, sortColumn)
+      .pipe(
+        finalize(() => this.loading$.next(false))
+      )
+      .subscribe(data =>
+        this.data$.next(data)
+      );
   }
 }

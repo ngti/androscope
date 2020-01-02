@@ -1,4 +1,8 @@
 <div class="mat-elevation-z8">
+  <div class="spinner-container" *ngIf="dataSource.loading | async">
+    <mat-spinner color="accent"></mat-spinner>
+  </div>
+
   <table mat-table class="full-width-table" matSort aria-label="Content" [dataSource]="dataSource">
     <ng-container *ngFor="let disCol of dataSource.columnNames | async; let colIndex = index" matColumnDef="{{disCol}}">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>{{disCol}}</th>
@@ -9,8 +13,7 @@
     <tr mat-row *matRowDef="let row; columns: dataSource.columnNames | async;"></tr>
   </table>
 
-  <mat-paginator #paginator
-                 showFirstLastButtons
+  <mat-paginator showFirstLastButtons
                  [length]="dataSource.rowCount | async"
                  [pageIndex]="0"
                  [pageSize]="50"
