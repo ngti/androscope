@@ -10,9 +10,10 @@
   </table>
 
   <mat-paginator #paginator
+                 showFirstLastButtons
                  [length]="dataSource.rowCount | async"
                  [pageIndex]="0"
-                 [pageSize]="250"
+                 [pageSize]="50"
                  [pageSizeOptions]="[25, 50, 100, 250]">
   </mat-paginator>
 </div>
