@@ -2,7 +2,7 @@ import {DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, SortDirection} from '@angular/material/sort';
-import {RestService} from '../../query-content-provider/rest.service';
+import {RestService} from '../rest/rest.service';
 import {Uri} from '../query-model/uri';
 import {Injectable} from '@angular/core';
 

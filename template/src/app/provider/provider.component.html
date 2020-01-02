@@ -1,12 +1,12 @@
 <div class="basic-container">
   <div class="uri-input">
-    <form novalidate (ngSubmit)="submitUri(model.uri)">
+    <form novalidate (ngSubmit)="submitUri(uri)">
       <mat-form-field>
         <mat-label>Content provider URI</mat-label>
-        <input matInput placeholder="content://..." name="uri" [(ngModel)]="model.uri.content" required>
+        <input matInput placeholder="content://..." name="uri" [(ngModel)]="uri.content" required>
       </mat-form-field>
 
-      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="model.uri.isEmpty()">Display</button>
+      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="uri.isEmpty()">Display</button>
     </form>
   </div>
 

@@ -13,7 +13,6 @@ import {
   MatInputModule, MatMenuModule,
   MatToolbarModule
 } from '@angular/material';
-import { QueryContentProviderComponent } from './query-content-provider/query-content-provider.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { ToolbarComponent } from './navigation/toolbar/toolbar.component';
@@ -35,7 +34,6 @@ import {ProviderDataComponent} from './provider/provider-data/provider-data.comp
 @NgModule({
   declarations: [
     AppComponent,
-    QueryContentProviderComponent,
     ToolbarComponent,
     FooterComponent,
     HomeComponent,

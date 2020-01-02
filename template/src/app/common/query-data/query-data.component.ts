@@ -1,21 +1,23 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {QueryModelService} from '../query-model/query-model.service';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
-import {RestService} from '../../query-content-provider/rest.service';
+import {RestService} from '../rest/rest.service';
 import {QueryDataSource} from './query-data-source';
-import {merge} from 'rxjs';
+import {merge, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-query-data',
   templateUrl: './query-data.component.html',
   styleUrls: ['./query-data.component.css']
 })
-export class QueryDataComponent implements OnInit, AfterViewInit {
+export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatTable, {static: false}) table: MatTable<[]>;
   dataSource: QueryDataSource;
+
+  private uriSubscription: Subscription;
 
   constructor(
     private model: QueryModelService,
@@ -25,7 +27,7 @@ export class QueryDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.model.uriObserver.subscribe(newUri => {
+    this.uriSubscription = this.model.uriObserver.subscribe(newUri => {
       console.log('New uri ' + newUri.content);
       this.dataSource = new QueryDataSource(this.restService, newUri);
       if (this.paginator != null) {
@@ -59,6 +61,11 @@ export class QueryDataComponent implements OnInit, AfterViewInit {
         this.sort.active
       );
     }
+  }
+
+  ngOnDestroy(): void {
+    console.log('QueryDataComponent - onDestroy');
+    this.uriSubscription.unsubscribe();
   }
 
 }

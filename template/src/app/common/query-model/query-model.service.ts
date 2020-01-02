@@ -7,7 +7,7 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class QueryModelService {
 
-  private uri$: BehaviorSubject<Uri> = new BehaviorSubject<Uri>(new Uri(''));
+  private uri$: BehaviorSubject<Uri> = new BehaviorSubject<Uri>(new Uri());
 
   uriObserver = this.uri$.asObservable();
 

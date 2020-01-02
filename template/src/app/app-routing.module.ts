@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {QueryContentProviderComponent} from './query-content-provider/query-content-provider.component';
 import {HomeComponent} from './home/home.component';
 import {ProviderComponent} from './provider/provider.component';
-import {QueryDataComponent} from './common/query-data/query-data.component';
 import {ProviderSuggestionsComponent} from './provider/provider-suggestions/provider-suggestions.component';
 import {DatabaseListComponent} from './database/database-list/database-list.component';
 import {DatabaseComponent} from './database/database.component';
@@ -28,7 +26,6 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
   {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
-  // {path: 'provider/:uri', component: QueryContentProviderComponent},
 ];
 
 @NgModule({

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {QueryModelService} from '../../common/query-model/query-model.service';
+import {Uri} from '../../common/query-model/uri';
 
 @Component({
   selector: 'app-provider-suggestions',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProviderSuggestionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private model: QueryModelService) {
+    model.uri = new Uri();
+  }
 
   ngOnInit() {
   }

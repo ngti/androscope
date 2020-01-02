@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {Uri} from '../common/query-model/uri';
+import {Uri} from '../query-model/uri';
 import {RowCount} from './row-count';
 import {SortDirection} from '@angular/material';
 
@@ -11,7 +10,7 @@ import {SortDirection} from '@angular/material';
 })
 export class RestService {
 
-  private static BASE_URL = 'rest/';
+  private static BASE_URL = 'http://10.10.4.88:8791/rest/';
 
   constructor(private http: HttpClient) {
   }
