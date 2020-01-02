@@ -1,20 +1,12 @@
 import {DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {map, retry} from 'rxjs/operators';
-import {Observable, of as observableOf, merge, Subscriber, BehaviorSubject} from 'rxjs';
+import {MatSort, SortDirection} from '@angular/material/sort';
+import {RestService} from '../../query-content-provider/rest.service';
+import {Uri} from '../query-model/uri';
 import {Injectable} from '@angular/core';
-import {RestService} from './rest.service';
-import {Uri} from '../common/query-model/uri';
-import {RowCount} from './row-count';
 
-/**
- * Data source for the ContentProviderContent view. This class should
- * encapsulate all logic for fetching and manipulating the displayed data
- * (including sorting, pagination, and filtering).
- */
-@Injectable()
-export class ContentProviderContentDataSource extends DataSource<[]> {
+export class QueryDataSource extends DataSource<[]> {
 
   private columnNames$ = new BehaviorSubject<[]>(null);
   columnNames = this.columnNames$.asObservable();
@@ -33,8 +25,6 @@ export class ContentProviderContentDataSource extends DataSource<[]> {
     restService.getRowCount(uri).subscribe(rowCount =>
       this.rowCount$.next(rowCount.count)
     );
-
-    this.loadData();
   }
 
   connect(): Observable<[][]> {
@@ -48,8 +38,9 @@ export class ContentProviderContentDataSource extends DataSource<[]> {
     this.data$.complete();
   }
 
-  private loadData() {
-    this.restService.getData(this.uri, 0, 0, '', '').subscribe(data =>
+  loadData(pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string) {
+    console.log('Load data');
+    this.restService.getData(this.uri, pageSize, pageNumber, sortOrder, sortColumn).subscribe(data =>
       this.data$.next(data)
     );
   }

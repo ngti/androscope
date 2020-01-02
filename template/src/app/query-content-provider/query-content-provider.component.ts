@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
-import {Uri} from './uri';
+import {Uri} from '../common/query-model/uri';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
 import {
   ContentProviderContentDataSource

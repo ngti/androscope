@@ -16,8 +16,8 @@ public final class AssetResponse extends BaseAndroscopeResponse {
     private static final String TAG = AssetResponse.class.getSimpleName();
 
     @Override
-    protected NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) throws IOException {
-        final String assetToOpen = AndroscopeConstants.WEB_CONTENT_ROOT + session.getUri();
+    protected NanoHTTPD.Response getResponse(SessionParams session) throws IOException {
+        final String assetToOpen = AndroscopeConstants.WEB_CONTENT_ROOT + session.getPath();
 
         InputStream inputStream;
         String mimeType;

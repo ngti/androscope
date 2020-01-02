@@ -22,6 +22,15 @@ import { HomeComponent } from './home/home.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { LayoutModule } from '@angular/cdk/layout';
+import { ProviderComponent } from './provider/provider.component';
+import { QueryDataComponent } from './common/query-data/query-data.component';
+import { DatabaseComponent } from './database/database.component';
+import { ProviderSuggestionsComponent } from './provider/provider-suggestions/provider-suggestions.component';
+import { DatabaseListComponent } from './database/database-list/database-list.component';
+import { DatabaseMetadataComponent } from './database/database-metadata/database-metadata.component';
+import { DatabaseQueryComponent } from './database/database-query/database-query.component';
+import { DatabaseTableComponent } from './database/database-table/database-table.component';
+import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +39,15 @@ import { LayoutModule } from '@angular/cdk/layout';
     ToolbarComponent,
     FooterComponent,
     HomeComponent,
+    ProviderComponent,
+    QueryDataComponent,
+    DatabaseComponent,
+    ProviderSuggestionsComponent,
+    DatabaseListComponent,
+    DatabaseMetadataComponent,
+    DatabaseQueryComponent,
+    DatabaseTableComponent,
+    ProviderDataComponent,
   ],
   imports: [
     BrowserModule,

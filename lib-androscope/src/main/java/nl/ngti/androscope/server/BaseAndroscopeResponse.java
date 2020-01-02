@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -28,5 +29,6 @@ public abstract class BaseAndroscopeResponse {
         // Override in ancestors if needed
     }
 
-    protected abstract NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) throws IOException;
+    @Nullable
+    protected abstract NanoHTTPD.Response getResponse(SessionParams session) throws IOException;
 }

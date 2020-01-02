@@ -1,0 +1,7 @@
+.full-width-table {
+  min-width: 100%;
+}
+
+mat-cell, .mat-cell {
+  padding-right: 24px;
+}

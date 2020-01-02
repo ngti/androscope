@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.io.IOException;
 
 import fi.iki.elonen.NanoHTTPD;
 import nl.ngti.androscope.common.AndroscopeConstants;
@@ -24,20 +26,20 @@ final class ResponseFactory {
         mRestResponse.init(context, metadata);
     }
 
-    @NonNull
-    BaseAndroscopeResponse getResponse(NanoHTTPD.IHTTPSession session) {
+    @Nullable
+    NanoHTTPD.Response getResponse(NanoHTTPD.IHTTPSession session) throws IOException {
         final String uri = session.getUri();
         if (LOG) Log.d(TAG, "getResponse " + uri + ", params " + session.getParameters());
 
         if (uri.startsWith(AndroscopeConstants.PATH_REST)) {
-            return mRestResponse;
+            return mRestResponse.getResponse(new SessionParams(session, AndroscopeConstants.PATH_REST));
         }
 
         if (uri.startsWith("/")) {
-            return mAssetResponse;
+            return mAssetResponse.getResponse(new SessionParams(session, "/"));
         }
 
         if (LOG) Log.w(TAG, "No response to handle " + uri);
-        return mNotFoundResponse;
+        return mNotFoundResponse.getResponse(new SessionParams(session, "/"));
     }
 }

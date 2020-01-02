@@ -10,6 +10,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -51,7 +52,13 @@ public class AndroscopeHttpServer extends NanoHTTPD {
     @Override
     public Response serve(final IHTTPSession session) {
         try {
-            return createResponse(session);
+            Response response = createResponse(session);
+            if (response == null) {
+                response = super.serve(session);
+            } else {
+                response.addHeader("Access-Control-Allow-Origin", "*");
+            }
+            return response;
         } catch (IOException e) {
             Log.e(TAG, "Error creating response", e);
             return NanoHTTPD.newFixedLengthResponse(TextUtils.htmlEncode(e.toString()));
@@ -68,11 +75,8 @@ public class AndroscopeHttpServer extends NanoHTTPD {
         return Formatter.formatIpAddress(myIp);
     }
 
-    @NonNull
+    @Nullable
     private Response createResponse(IHTTPSession session) throws IOException {
-        final BaseAndroscopeResponse response = mResponseFactory.getResponse(session);
-        final Response result = response.getResponse(session);
-        result.addHeader("Access-Control-Allow-Origin", "*");
-        return result;
+        return mResponseFactory.getResponse(session);
     }
 }

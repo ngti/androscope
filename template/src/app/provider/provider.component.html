@@ -1,0 +1,14 @@
+<div class="basic-container">
+  <div class="uri-input">
+    <form novalidate (ngSubmit)="submitUri(model.uri)">
+      <mat-form-field>
+        <mat-label>Content provider URI</mat-label>
+        <input matInput placeholder="content://..." name="uri" [(ngModel)]="model.uri.content" required>
+      </mat-form-field>
+
+      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="model.uri.isEmpty()">Display</button>
+    </form>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
