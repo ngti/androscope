@@ -7,20 +7,20 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class QueryModelService {
 
-  private uri$: BehaviorSubject<Uri> = new BehaviorSubject<Uri>(new Uri());
+  private uriSubject: BehaviorSubject<Uri> = new BehaviorSubject<Uri>(new Uri());
 
-  uriObserver = this.uri$.asObservable();
+  uri$ = this.uriSubject.asObservable();
 
   constructor() {
     console.log('QueryModelService created');
   }
 
   get uri(): Uri {
-    return this.uri$.value;
+    return this.uriSubject.value;
   }
 
   set uri(newUri: Uri) {
     console.log('Set uri: ' + newUri.content);
-    this.uri$.next(newUri);
+    this.uriSubject.next(newUri);
   }
 }

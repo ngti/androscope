@@ -24,7 +24,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uriSubscription = this.model.uriObserver.subscribe(newUri => this.uri = Object.assign(new Uri(), newUri));
+    this.uriSubscription = this.model.uri$.subscribe(newUri => this.uri = Object.assign(new Uri(), newUri));
   }
 
   ngOnDestroy(): void {

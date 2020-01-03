@@ -17,6 +17,8 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatTable, {static: false}) table: MatTable<[]>;
   dataSource: QueryDataSource;
 
+  defaultPageSize = QueryDataSource.DEFAULT_PAGE_SIZE;
+
   private uriSubscription: Subscription;
 
   constructor(
@@ -27,9 +29,8 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uriSubscription = this.model.uriObserver.subscribe(newUri => {
-      console.log('New uri ' + newUri.content);
-      this.dataSource = new QueryDataSource(this.restService, newUri);
+    this.uriSubscription = this.model.uri$.subscribe(newUri => {
+      // Reset pagination & sorting
       if (this.paginator != null) {
         this.paginator.pageIndex = 0;
       }
@@ -37,34 +38,22 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sort.active = null;
         this.sort.direction = '';
       }
-      this.reloadData();
+
+      this.dataSource = new QueryDataSource(this.restService, newUri);
+      this.dataSource.updatePagination(this.paginator);
+      this.dataSource.reloadDataIfNeeded();
     });
   }
 
   ngAfterViewInit(): void {
     merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
-      console.log(`Page: ${this.paginator.pageIndex}, size: ${this.paginator.pageSize}, sort column:
-      ${this.sort.active}, sort direction: ${this.sort.direction}`);
-
-      this.reloadData();
+      this.dataSource.updatePagination(this.paginator);
+      this.dataSource.updateSorting(this.sort);
+      this.dataSource.reloadDataIfNeeded();
     });
-
-    this.reloadData();
-  }
-
-  private reloadData() {
-    if (this.paginator != null && this.sort != null) {
-      this.dataSource.loadData(
-        this.paginator.pageSize,
-        this.paginator.pageIndex,
-        this.sort.direction,
-        this.sort.active
-      );
-    }
   }
 
   ngOnDestroy(): void {
-    console.log('QueryDataComponent - onDestroy');
     this.uriSubscription.unsubscribe();
   }
 
