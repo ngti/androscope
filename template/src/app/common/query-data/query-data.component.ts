@@ -3,7 +3,7 @@ import {QueryModelService} from '../query-model/query-model.service';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
 import {RestService} from '../rest/rest.service';
 import {QueryDataSource} from './query-data-source';
-import {merge, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-query-data',
@@ -18,6 +18,12 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSource: QueryDataSource;
 
   defaultPageSize = QueryDataSource.DEFAULT_PAGE_SIZE;
+
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading$ = this.loadingSubject.asObservable();
+
+  private errorSubject = new BehaviorSubject<string>(null);
+  error$ = this.errorSubject.asObservable();
 
   private uriSubscription: Subscription;
 
@@ -39,7 +45,12 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sort.direction = '';
       }
 
-      this.dataSource = new QueryDataSource(this.restService, newUri);
+      this.dataSource = new QueryDataSource(
+        this.restService,
+        newUri,
+        this.loadingSubject,
+        this.errorSubject
+      );
       this.dataSource.updatePagination(this.paginator);
       this.dataSource.reloadDataIfNeeded();
     });
@@ -55,6 +66,10 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.uriSubscription.unsubscribe();
+  }
+
+  showTable(): boolean {
+    return this.dataSource != null && this.dataSource.showTable();
   }
 
 }

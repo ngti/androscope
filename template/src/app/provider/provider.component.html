@@ -1,12 +1,9 @@
 <div class="basic-container">
   <div class="uri-input">
     <form novalidate (ngSubmit)="submitUri(uri)">
-      <mat-form-field>
+      <mat-form-field hideRequiredMarker>
         <mat-label>Content provider URI</mat-label>
         <input matInput placeholder="content://..." name="uri" [(ngModel)]="uri.content" required>
-        <button mat-button *ngIf="uri.content" matSuffix mat-icon-button aria-label="Clear" (click)="uri.content=''">
-          <mat-icon>close</mat-icon>
-        </button>
       </mat-form-field>
 
       <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="uri.isEmpty()">Display</button>

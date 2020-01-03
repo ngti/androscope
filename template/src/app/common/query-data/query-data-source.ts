@@ -15,9 +15,7 @@ export class QueryDataSource extends DataSource<[]> {
   private rowCountSubject = new BehaviorSubject<number>(0);
   rowCount$ = this.rowCountSubject.asObservable();
   private dataSubject = new BehaviorSubject<[][]>(null);
-
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  loading$ = this.loadingSubject.asObservable();
+  private metadataLoaded: boolean;
 
   private pageSize: number = QueryDataSource.DEFAULT_PAGE_SIZE;
   private pageNumber = 0;
@@ -26,12 +24,19 @@ export class QueryDataSource extends DataSource<[]> {
 
   private changed = true;
 
-  constructor(private restService: RestService, private uri: Uri) {
+  constructor(
+    private restService: RestService,
+    private uri: Uri,
+    private loadingSubject,
+    private errorSubject
+  ) {
     super();
 
     restService.getUriMetadata(uri).subscribe(metadata => {
       this.columnNamesSubject.next(metadata.columns);
       this.rowCountSubject.next(metadata.rowCount);
+      this.errorSubject.next(metadata.errorMessage);
+      this.metadataLoaded = true;
     });
   }
 
@@ -43,7 +48,6 @@ export class QueryDataSource extends DataSource<[]> {
     this.columnNamesSubject.complete();
     this.rowCountSubject.complete();
     this.dataSubject.complete();
-    this.loadingSubject.complete();
   }
 
   updatePagination(paginator?: MatPaginator) {
@@ -73,6 +77,10 @@ export class QueryDataSource extends DataSource<[]> {
       this.reloadData();
       this.changed = false;
     }
+  }
+
+  showTable(): boolean {
+    return this.metadataLoaded && this.errorSubject.value == null;
   }
 
   private reloadData() {
