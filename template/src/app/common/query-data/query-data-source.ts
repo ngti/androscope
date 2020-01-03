@@ -1,57 +1,55 @@
 import {DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort, SortDirection} from '@angular/material/sort';
+import {SortDirection} from '@angular/material/sort';
 import {RestService} from '../rest/rest.service';
 import {Uri} from '../query-model/uri';
-import {Injectable} from '@angular/core';
 import {finalize} from 'rxjs/operators';
 
 export class QueryDataSource extends DataSource<[]> {
 
-  private columnNames$ = new BehaviorSubject<[]>(null);
-  columnNames = this.columnNames$.asObservable();
-  private rowCount$ = new BehaviorSubject<number>(0);
-  rowCount = this.rowCount$.asObservable();
-  private data$ = new BehaviorSubject<[][]>(null);
+  private columnNamesSubject = new BehaviorSubject<string[]>(null);
+  columnNames = this.columnNamesSubject.asObservable();
+  private rowCountSubject = new BehaviorSubject<number>(0);
+  rowCount = this.rowCountSubject.asObservable();
+  private dataSubject = new BehaviorSubject<[][]>(null);
 
-  private loading$ = new BehaviorSubject<boolean>(false);
-  loading = this.loading$.asObservable();
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading = this.loadingSubject.asObservable();
 
   constructor(private restService: RestService, private uri: Uri) {
     super();
 
-    restService.getColumns(uri).subscribe(columnNames =>
-      this.columnNames$.next(columnNames)
-    );
-    restService.getRowCount(uri).subscribe(rowCount =>
-      this.rowCount$.next(rowCount.count)
-    );
+    restService.getUriMetadata(uri).subscribe(metadata => {
+        this.columnNamesSubject.next(metadata.columns);
+        this.rowCountSubject.next(metadata.rowCount);
+    });
+
+    this.loading.subscribe(loading => console.log(`Loading: ${loading}`));
   }
 
   connect(): Observable<[][]> {
     console.log('Connected to data');
-    return this.data$.asObservable();
+    return this.dataSubject.asObservable();
   }
 
   disconnect() {
-    this.columnNames$.complete();
-    this.rowCount$.complete();
-    this.data$.complete();
-    this.loading$.complete();
+    this.columnNamesSubject.complete();
+    this.rowCountSubject.complete();
+    this.dataSubject.complete();
+    this.loadingSubject.complete();
   }
 
   loadData(pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string) {
     console.log('Load data');
 
-    this.loading$.next(true);
+    this.loadingSubject.next(true);
 
-    this.restService.getData(this.uri, pageSize, pageNumber, sortOrder, sortColumn)
+    this.restService.getUriData(this.uri, pageSize, pageNumber, sortOrder, sortColumn)
       .pipe(
-        finalize(() => this.loading$.next(false))
+        finalize(() => this.loadingSubject.next(false))
       )
       .subscribe(data =>
-        this.data$.next(data)
+        this.dataSubject.next(data)
       );
   }
 }

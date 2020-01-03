@@ -5,7 +5,7 @@ import android.util.Log
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
-import nl.ngti.androscope.responses.RowCountResponse
+import nl.ngti.androscope.responses.MetadataResponse
 import java.io.IOException
 
 class RestResponse : BaseAndroscopeResponse() {
@@ -23,9 +23,8 @@ class RestResponse : BaseAndroscopeResponse() {
 
         val json =
                 when (restUrl) {
-                    "columns" -> getColumns(uri)
                     "data" -> getData(uri, session)
-                    "row-count" -> getRowCount(uri)
+                    "metadata" -> getMetadata(uri)
                     else -> null
                 } ?: throw IOException("Unknown path: ${session.path}")
 
@@ -37,14 +36,12 @@ class RestResponse : BaseAndroscopeResponse() {
     private fun getCursor(uri: Uri, sortOrder: String? = null) =
             context.contentResolver.query(uri, null, null, null, sortOrder)
 
-    private fun getColumns(uri: Uri) =
+    private fun getMetadata(uri: Uri) =
             getCursor(uri)?.use {
-                gson.toJson(it.columnNames)
-            }
-
-    private fun getRowCount(uri: Uri) =
-            getCursor(uri)?.use {
-                gson.toJson(RowCountResponse(it.count))
+                gson.toJson(MetadataResponse(
+                        it.columnNames,
+                        it.count
+                ))
             }
 
     private fun getData(uri: Uri, session: SessionParams): String? {
