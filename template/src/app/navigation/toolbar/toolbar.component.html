@@ -4,15 +4,15 @@
   <a mat-button routerLink="/database">Databases</a>
   <button mat-button [matMenuTriggerFor]="fileExplorerMenu">File Explorer<mat-icon>arrow_drop_down</mat-icon></button>
   <mat-menu #fileExplorerMenu="matMenu">
-    <button mat-menu-item>Application Data</button>
-    <button mat-menu-item>External Storage</button>
-    <button mat-menu-item>Root Directory</button>
+    <button mat-menu-item routerLink="/file-explorer/application-data">Application Data</button>
+    <button mat-menu-item routerLink="/file-explorer/external-storage">External Storage</button>
+    <button mat-menu-item routerLink="/file-explorer/phone-root">Root Directory</button>
     <mat-divider></mat-divider>
-    <button mat-menu-item>Downloads</button>
-    <button mat-menu-item>Photos</button>
-    <button mat-menu-item>Movies</button>
-    <button mat-menu-item>Pictures</button>
-    <button mat-menu-item>Music</button>
+    <button mat-menu-item routerLink="/file-explorer/downloads">Downloads</button>
+    <button mat-menu-item routerLink="/file-explorer/photos">Photos</button>
+    <button mat-menu-item routerLink="/file-explorer/movies">Movies</button>
+    <button mat-menu-item routerLink="/file-explorer/pictures">Pictures</button>
+    <button mat-menu-item routerLink="/file-explorer/music">Music</button>
   </mat-menu>
   <a mat-button>Image cache</a>
 </mat-toolbar>

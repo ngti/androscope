@@ -9,6 +9,7 @@ import {DatabaseMetadataComponent} from './database/database-metadata/database-m
 import {DatabaseQueryComponent} from './database/database-query/database-query.component';
 import {DatabaseTableComponent} from './database/database-table/database-table.component';
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
+import {FileExplorerComponent} from './file-explorer/file-explorer.component';
 
 const providerChildRoutes: Routes = [
   {path: ':uri', component: ProviderDataComponent},
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
   {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
+  {path: 'file-explorer/:type', component: FileExplorerComponent},
 ];
 
 @NgModule({

@@ -30,6 +30,7 @@ import { DatabaseMetadataComponent } from './database/database-metadata/database
 import { DatabaseQueryComponent } from './database/database-query/database-query.component';
 import { DatabaseTableComponent } from './database/database-table/database-table.component';
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
+import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {ProviderDataComponent} from './provider/provider-data/provider-data.comp
     DatabaseQueryComponent,
     DatabaseTableComponent,
     ProviderDataComponent,
+    FileExplorerComponent,
   ],
   imports: [
     BrowserModule,
