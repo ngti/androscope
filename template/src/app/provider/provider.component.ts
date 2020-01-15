@@ -20,7 +20,6 @@ export class ProviderComponent implements OnInit, OnDestroy {
     private router: Router,
     private model: QueryModelService
   ) {
-    console.log('ProviderComponent created');
   }
 
   ngOnInit() {

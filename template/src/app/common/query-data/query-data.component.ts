@@ -31,7 +31,6 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
     private model: QueryModelService,
     private restService: RestService
   ) {
-    console.log('QueryDataComponent created');
   }
 
   ngOnInit() {

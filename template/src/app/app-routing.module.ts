@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './home/home.component';
 import {ProviderComponent} from './provider/provider.component';
 import {ProviderSuggestionsComponent} from './provider/provider-suggestions/provider-suggestions.component';
@@ -28,10 +28,12 @@ const routes: Routes = [
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
   {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
   {path: 'file-explorer/:type', component: FileExplorerComponent},
+  {path: 'file-explorer/:type/:path', component: FileExplorerComponent},
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

@@ -6,7 +6,10 @@ import android.util.Log
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
+import nl.ngti.androscope.responses.FileSystemCount
+import nl.ngti.androscope.responses.FileSystemEntry
 import nl.ngti.androscope.responses.MetadataResponse
+import java.io.File
 import java.io.IOException
 
 class RestResponse : BaseAndroscopeResponse() {
@@ -18,14 +21,15 @@ class RestResponse : BaseAndroscopeResponse() {
     override fun getResponse(session: SessionParams): NanoHTTPD.Response? {
         val restUrl = session.relativePath
 
-        val uri = Uri.parse(session["uri"] ?: throw IOException("No uri provided"))
-
-        if (LOG) Log.d(tag, "Rest url: $restUrl, uri: $uri")
+        if (LOG) Log.d(tag, "Rest url: $restUrl")
 
         val responseObject: Any? =
                 when (restUrl) {
-                    "data" -> getData(uri, session)
-                    "metadata" -> getMetadata(uri)
+                    "provider/data" -> getData(session)
+                    "provider/metadata" -> getMetadata(session)
+                    "file-system/list" -> getFileSystemList(session)
+                    "file-system/breadcrumbs" -> getFileSystemList(session)
+                    "file-system/count" -> getFileSystemCount(session)
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
 
@@ -36,13 +40,17 @@ class RestResponse : BaseAndroscopeResponse() {
         return NanoHTTPD.newFixedLengthResponse(json)
     }
 
+    private fun getUri(session: SessionParams): Uri =
+            Uri.parse(session["uri"] ?: throw IOException("No uri provided"))
+
     private fun <R> processCursor(
-            uri: Uri,
+            session: SessionParams,
             sortOrder: String? = null,
             onSuccess: (Cursor) -> R?,
             onError: ((Throwable) -> R?)? = null
     ): R? {
         return try {
+            val uri = getUri(session)
             context.contentResolver.query(uri, null, null, null, sortOrder)?.use(onSuccess)
                     ?: throw IllegalStateException("Cannot query uri: $uri")
         } catch (e: Throwable) {
@@ -50,8 +58,8 @@ class RestResponse : BaseAndroscopeResponse() {
         }
     }
 
-    private fun getMetadata(uri: Uri): MetadataResponse? {
-        return processCursor(uri,
+    private fun getMetadata(session: SessionParams): MetadataResponse? {
+        return processCursor(session,
                 onSuccess = {
                     MetadataResponse(
                             columns = it.columnNames,
@@ -66,7 +74,7 @@ class RestResponse : BaseAndroscopeResponse() {
         )
     }
 
-    private fun getData(uri: Uri, session: SessionParams): ArrayList<ArrayList<String>>? {
+    private fun getData(session: SessionParams): ArrayList<ArrayList<String>>? {
         val pageSize = session["pageSize"]?.toInt()
                 ?: throw IllegalArgumentException("Missing page number")
         val pageNumber = session["pageNumber"]?.toInt() ?: 0
@@ -76,7 +84,7 @@ class RestResponse : BaseAndroscopeResponse() {
             }
         }
 
-        return processCursor(uri,
+        return processCursor(session,
                 sortOrder = sortOrder,
                 onSuccess = {
                     if (!it.moveToPosition(pageSize * pageNumber)) {
@@ -102,5 +110,25 @@ class RestResponse : BaseAndroscopeResponse() {
                     }
                 }
         )
+    }
+
+    private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
+        val root = File(context.applicationInfo.dataDir)
+        val list = root.list()
+
+        val result = ArrayList<FileSystemEntry>(list?.size ?: 0)
+
+        root.list()?.forEach {
+            result += FileSystemEntry(context, root, it)
+        }
+
+        return result
+    }
+
+    private fun getFileSystemCount(session: SessionParams): FileSystemCount {
+        val root = File(context.applicationInfo.dataDir)
+        val list = root.list()
+
+        return FileSystemCount(list?.size ?: 0)
     }
 }

@@ -1,26 +1,27 @@
-<div class="spinner-container" *ngIf="loading$ | async">
+<div *ngIf="loading$ | async" class="spinner-container">
   <mat-spinner color="accent"></mat-spinner>
 </div>
 
-<div class="alert alert-danger" role="alert" *ngIf="error$ | async">
+<div *ngIf="error$ | async" class="alert alert-danger" role="alert">
   <p>{{error$ | async}}</p>
 </div>
 
-<div class="mat-elevation-z8" [hidden]="!showTable()">
-  <table mat-table class="full-width-table" matSort aria-label="Content" [dataSource]="dataSource">
-    <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index" matColumnDef="{{disCol}}">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{disCol}}</th>
-      <td mat-cell *matCellDef="let element ">{{element[colIndex]}}</td>
+<div [hidden]="!showTable()" class="mat-elevation-z8">
+  <table [dataSource]="dataSource" aria-label="Content" class="full-width-table" mat-table matSort>
+    <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index"
+                  matColumnDef="{{disCol}}">
+      <th *matHeaderCellDef mat-header-cell mat-sort-header>{{disCol}}</th>
+      <td *matCellDef="let element " mat-cell>{{element[colIndex]}}</td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="dataSource.columnNames$ | async; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: dataSource.columnNames$ | async;"></tr>
+    <tr *matHeaderRowDef="dataSource.columnNames$ | async; sticky: true" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: dataSource.columnNames$ | async;" mat-row></tr>
   </table>
 
-  <mat-paginator showFirstLastButtons
-                 [length]="dataSource.rowCount$ | async"
+  <mat-paginator [length]="dataSource.rowCount$ | async"
                  [pageIndex]="0"
+                 [pageSizeOptions]="[25, 50, 100, 250]"
                  [pageSize]="defaultPageSize"
-                 [pageSizeOptions]="[25, 50, 100, 250]">
+                 showFirstLastButtons>
   </mat-paginator>
 </div>
