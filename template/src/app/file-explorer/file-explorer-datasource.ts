@@ -13,11 +13,13 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
   constructor(
     private restService: RestService,
-    private fileSystemType: FileSystemType,
-    private path: string,
+    public readonly fileSystemType: FileSystemType,
+    public readonly path: string,
     loadingSubject: BehaviorSubject<boolean>
   ) {
     super(FileExplorerDataSource.DEFAULT_PAGE_SIZE, loadingSubject);
+
+    console.log('FileExplorerDataSource created');
 
     restService.getFileCount(fileSystemType, path).subscribe(fileSystemCount => {
       this.rowCountSubject.next(fileSystemCount.totalEntries);
@@ -29,9 +31,16 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     this.rowCountSubject.complete();
   }
 
+  getSubPath(path: string): string {
+    if (this.path == null) {
+      return path;
+    }
+    return this.path + '/' + path;
+  }
+
   protected onGenerateNetworkRequest(
     pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
   ): Observable<FileSystemEntry[]> {
-    return this.restService.getFileList(this.fileSystemType, null, pageSize, pageNumber, sortOrder, sortColumn);
+    return this.restService.getFileList(this.fileSystemType, this.path, pageSize, pageNumber, sortOrder, sortColumn);
   }
 }

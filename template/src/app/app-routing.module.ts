@@ -27,8 +27,7 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
   {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
-  {path: 'file-explorer/:type', component: FileExplorerComponent},
-  {path: 'file-explorer/:type/:path', component: FileExplorerComponent},
+  {path: 'file-explorer/:type', component: FileExplorerComponent}
 ];
 
 @NgModule({

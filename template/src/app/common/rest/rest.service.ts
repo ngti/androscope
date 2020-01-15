@@ -16,9 +16,10 @@ class ParamsBuilder {
   }
 
   addFileSystemParams(type: FileSystemType, path?: string): ParamsBuilder {
-    this.httpParams = this.httpParams
-      .set('type', type)
-      .set('path', path);
+    this.httpParams = this.httpParams.set('type', type);
+    if (path != null) {
+      this.httpParams = this.httpParams.set('path', path);
+    }
     return this;
   }
 

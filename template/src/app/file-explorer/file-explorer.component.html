@@ -11,7 +11,10 @@
       <ng-container matColumnDef="type">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Type</th>
         <td *matCellDef="let row" mat-cell>
-          <mat-icon color="accent" mat-list-icon>{{getIcon(row)}}</mat-icon>
+          <mat-icon *ngIf="row.isFolder; else file" color="accent" mat-list-icon>folder</mat-icon>
+          <ng-template #file>
+            <mat-icon color="primary" mat-list-icon>subject</mat-icon>
+          </ng-template>
         </td>
       </ng-container>
 
@@ -40,7 +43,8 @@
       </ng-container>
 
       <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
-      <tr (mouseout)="row.hovered = false" (mouseover)="row.hovered = true"
+      <tr (mouseout)="onMouseOut(row)" (mouseover)="onMouseOver(row)"
+          (mouseup)="onMouseClick(row, $event)"
           *matRowDef="let row; columns: displayedColumns;"
           [ngClass]="{hovered: row.hovered}" mat-row></tr>
     </table>

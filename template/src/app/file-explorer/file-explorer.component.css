@@ -15,4 +15,5 @@
 
 .mat-row.hovered {
   background: #eee;
+  cursor: pointer;
 }

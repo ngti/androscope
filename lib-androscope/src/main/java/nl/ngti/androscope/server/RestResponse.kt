@@ -28,7 +28,7 @@ class RestResponse : BaseAndroscopeResponse() {
                     "provider/data" -> getData(session)
                     "provider/metadata" -> getMetadata(session)
                     "file-system/list" -> getFileSystemList(session)
-                    "file-system/breadcrumbs" -> getFileSystemList(session)
+                    "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
                     "file-system/count" -> getFileSystemCount(session)
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
@@ -113,12 +113,13 @@ class RestResponse : BaseAndroscopeResponse() {
     }
 
     private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
-        val root = File(context.applicationInfo.dataDir)
+        val root = getRootFile(session)
+        Log.d("Test", "Root file: $root")
         val list = root.list()
 
         val result = ArrayList<FileSystemEntry>(list?.size ?: 0)
 
-        root.list()?.forEach {
+        list?.forEach {
             result += FileSystemEntry(context, root, it)
         }
 
@@ -126,9 +127,24 @@ class RestResponse : BaseAndroscopeResponse() {
     }
 
     private fun getFileSystemCount(session: SessionParams): FileSystemCount {
-        val root = File(context.applicationInfo.dataDir)
+        val root = getRootFile(session)
         val list = root.list()
 
         return FileSystemCount(list?.size ?: 0)
     }
+
+    private fun getRootFile(session: SessionParams): File {
+        val dataDir = context.applicationInfo.dataDir
+        return session["path"]?.let {
+            Log.d("Test", "Path: $it")
+            File(dataDir, it).also {
+                Log.d("Test", "Created file 1 $it")
+            }
+        } ?: File(dataDir).also {
+            Log.d("Test", "Created file 2 $it")
+        }
+    }
+
+    // FIXME
+    private fun getFileSystemBreadcrumbs(session: SessionParams) = null
 }

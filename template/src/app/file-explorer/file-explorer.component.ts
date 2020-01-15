@@ -4,7 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
 import {FileExplorerDataSource} from './file-explorer-datasource';
 import {RestService} from '../common/rest/rest.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FileSystemEntry} from '../common/rest/file-system-data';
 import {BehaviorSubject, merge} from 'rxjs';
 
@@ -29,20 +29,27 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
 
   constructor(
     private restService: RestService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
-    route.url.subscribe(newUrl => {
-      console.log(`FileExplorerComponent new url: ${newUrl}`);
-      // TODO
-    });
+    console.log('FileExplorerComponent created');
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      console.log(`FileExplorerComponent new params: ${params.type}, ${params.path}`);
-      this.dataSource = new FileExplorerDataSource(this.restService, params.type, params.path, this.loadingSubject);
-      this.dataSource.updatePagination(this.paginator);
-      this.dataSource.reloadDataIfNeeded();
+    // this.route.queryParams.subscribe(queryParams => {
+    merge(this.route.queryParams, this.route.params).subscribe(() => {
+      const snapshot = this.route.snapshot;
+      const newFileSystem = snapshot.params.type;
+      const newPath = snapshot.queryParams.path;
+      console.log(`FileExplorerComponent new params: ${newFileSystem}, ${newPath}`);
+      if (this.dataSource == null
+        || this.dataSource.fileSystemType !== newFileSystem
+        || this.dataSource.path !== newPath) {
+        this.dataSource = new FileExplorerDataSource(
+          this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject);
+        this.dataSource.updatePagination(this.paginator);
+        this.dataSource.reloadDataIfNeeded();
+      }
     });
   }
 
@@ -54,10 +61,30 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
   }
 
-  getIcon(entry: FileSystemEntry): string {
+  onMouseOver(entry: FileSystemEntry) {
     if (entry.isFolder) {
-      return 'folder';
+      entry.hovered = true;
     }
-    return 'file';
+  }
+
+  onMouseOut(entry: FileSystemEntry) {
+    if (entry.isFolder) {
+      entry.hovered = false;
+    }
+  }
+
+  onMouseClick(entry: FileSystemEntry, event: MouseEvent) {
+    if (entry.isFolder) {
+      const subPath = this.dataSource.getSubPath(entry.name);
+      const navigationExtras = {
+        queryParams: {path: subPath}
+      };
+      if (event.button === 1) {
+        const url = this.router.createUrlTree([], navigationExtras).toString();
+        window.open(url);
+      } else {
+        this.router.navigate([], navigationExtras);
+      }
+    }
   }
 }
