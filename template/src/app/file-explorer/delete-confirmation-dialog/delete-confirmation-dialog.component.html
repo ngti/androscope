@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Confirmation</h1>
+<div mat-dialog-content>
+  <p>Are you sure you want to delete {{getEntryType()}} <b>{{getEntryName()}}</b>?</p>
+  <p *ngIf="($error | async) != null" style="color: red">Failed to perform delete request: &laquo;{{$error | async}}&raquo;.</p>
+</div>
+<div mat-dialog-actions>
+  <button (click)="onCancelClick()" mat-button>Cancel</button>
+  <button #deleteButton (click)="onDeleteClick()" cdkFocusInitial mat-button>Delete</button>
+</div>

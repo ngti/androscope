@@ -59,11 +59,7 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
     }
   }
 
-  protected abstract onGenerateNetworkRequest(
-    pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
-  ): Observable<T[]>;
-
-  private reloadData() {
+  reloadData() {
     this.loadingSubject.next(true);
 
     this.onGenerateNetworkRequest(this.pageSize, this.pageNumber, this.sortOrder, this.sortColumn)
@@ -74,4 +70,8 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
         this.dataSubject.next(data)
       );
   }
+
+  protected abstract onGenerateNetworkRequest(
+    pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
+  ): Observable<T[]>;
 }

@@ -7,6 +7,11 @@ import {RestService} from '../common/rest/rest.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {FileSystemEntry} from '../common/rest/file-system-data';
 import {BehaviorSubject, merge} from 'rxjs';
+import {
+  DeleteConfirmationDialogComponent,
+  DeleteConfirmationDialogData
+} from './delete-confirmation-dialog/delete-confirmation-dialog.component';
+import {MatDialog, MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-file-explorer',
@@ -30,7 +35,9 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   constructor(
     private restService: RestService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     console.log('FileExplorerComponent created');
   }
@@ -72,6 +79,25 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
       const url = this.router.createUrlTree([], this.getNavigationExtras(entry)).toString();
       window.open(url);
     }
+  }
+
+  onDelete(entry: FileSystemEntry) {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      data: new DeleteConfirmationDialogData(
+        this.dataSource.fileSystemType,
+        entry,
+        this.dataSource.path)
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.snackBar.open(`«${result}» has been deleted`, null, {
+          duration: 2000,
+        });
+        this.dataSource.reloadData();
+      }
+      console.log('The dialog was closed ' + result);
+    });
   }
 
   private getNavigationExtras(entry: FileSystemEntry): NavigationExtras {

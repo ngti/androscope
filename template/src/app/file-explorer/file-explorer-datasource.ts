@@ -26,16 +26,20 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     });
   }
 
+  static concatPaths(parent: string, path: string): string {
+    if (parent == null) {
+      return path;
+    }
+    return parent + '/' + path;
+  }
+
   disconnect() {
     super.disconnect();
     this.rowCountSubject.complete();
   }
 
   getSubPath(path: string): string {
-    if (this.path == null) {
-      return path;
-    }
-    return this.path + '/' + path;
+    return FileExplorerDataSource.concatPaths(this.path, path);
   }
 
   protected onGenerateNetworkRequest(

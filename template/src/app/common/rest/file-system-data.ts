@@ -14,3 +14,8 @@ export class FileSystemEntry {
 export class FileSystemCount {
   totalEntries: number;
 }
+
+export class FileDeleteResult {
+  success: boolean;
+  errorMessage?: string;
+}

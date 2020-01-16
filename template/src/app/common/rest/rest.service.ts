@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Uri} from '../query-model/uri';
 import {SortDirection} from '@angular/material';
 import {UriMetadata} from './uri-metadata';
-import {FileSystemCount, FileSystemEntry} from './file-system-data';
+import {FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 
 class ParamsBuilder {
 
@@ -96,6 +96,14 @@ export class RestService {
 
   getFileCount(type: FileSystemType, path?: string): Observable<FileSystemCount> {
     return this.http.get<FileSystemCount>(RestService.BASE_URL + 'file-system/count', {
+      params: new ParamsBuilder()
+        .addFileSystemParams(type, path)
+        .build()
+    });
+  }
+
+  deleteFile(type: FileSystemType, path?: string): Observable<FileDeleteResult> {
+    return this.http.delete<FileDeleteResult>(RestService.BASE_URL + 'file-system/delete', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
         .build()

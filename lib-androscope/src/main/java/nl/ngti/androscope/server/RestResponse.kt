@@ -31,6 +31,7 @@ class RestResponse : BaseAndroscopeResponse() {
                     "file-system/list" -> getFileSystemList(session)
                     "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
                     "file-system/count" -> getFileSystemCount(session)
+                    "file-system/delete" -> null
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
 

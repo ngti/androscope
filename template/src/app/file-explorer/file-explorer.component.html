@@ -59,7 +59,7 @@
               <mat-icon>launch</mat-icon>
               <span>View</span>
             </button>
-            <button *ngIf="row.isFolder" mat-menu-item>
+            <button (click)="onDelete(row)" mat-menu-item>
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>
