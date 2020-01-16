@@ -33,7 +33,7 @@
       <!-- Extension Column -->
       <ng-container matColumnDef="date">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Date</th>
-        <td *matCellDef="let row" mat-cell>{{row.date | date:'d.MM.y hh:mm:ss'}}</td>
+        <td *matCellDef="let row" mat-cell>{{row.date}}</td>
       </ng-container>
 
       <!-- Size Column -->
@@ -51,15 +51,15 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngIf="!row.isFolder">
+            <button *ngIf="!row.isFolder" mat-menu-item>
               <mat-icon>cloud_download</mat-icon>
               <span>Download</span>
             </button>
-            <button mat-menu-item *ngIf="!row.isFolder">
+            <button *ngIf="!row.isFolder" mat-menu-item>
               <mat-icon>launch</mat-icon>
               <span>View</span>
             </button>
-            <button mat-menu-item *ngIf="row.isFolder">
+            <button *ngIf="row.isFolder" mat-menu-item>
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>

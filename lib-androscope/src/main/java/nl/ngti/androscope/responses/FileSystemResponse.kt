@@ -6,25 +6,34 @@ import android.content.Context
 import android.text.format.Formatter
 import org.apache.commons.io.FilenameUtils
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Breadcrumb(
         val name: String,
         val path: String
 )
 
+internal interface IFormatter {
+
+    fun formatFileSize(size: Long): String
+
+    fun formatDate(timestamp: Long): String
+}
+
 class FileSystemEntry {
     val name: String
     val extension: String?
     val isFolder: Boolean
-    val date: Date
+    val date: String
     val size: String?
 
-    constructor(context: Context, root: File, itemName: String) {
+    internal constructor(root: File, itemName: String, formatter: IFormatter) {
         val file = File(root, itemName)
         isFolder = file.isDirectory
-        date = Date(file.lastModified())
-        size = if (isFolder) null else Formatter.formatFileSize(context, file.length())
+        date = formatter.formatDate(file.lastModified())
+        size = if (isFolder) null else formatter.formatFileSize(file.length())
 
         if (isFolder) {
             name = itemName
@@ -40,6 +49,29 @@ class FileSystemEntry {
             }
         }
     }
+}
+
+class FileSystemListResponseFactory(
+        private val context: Context
+) : IFormatter {
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+
+    fun generate(root: File): List<FileSystemEntry> {
+        val list = root.list()
+
+        val result = ArrayList<FileSystemEntry>(list?.size ?: 0)
+
+        list?.forEach {
+            result += FileSystemEntry(root, it, this)
+        }
+
+        return result
+    }
+
+    override fun formatFileSize(size: Long) = Formatter.formatFileSize(context, size)
+
+    override fun formatDate(timestamp: Long) = dateFormat.format(Date(timestamp))
+
 }
 
 class FileSystemCount(

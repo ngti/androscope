@@ -8,6 +8,7 @@ import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
 import nl.ngti.androscope.responses.FileSystemCount
 import nl.ngti.androscope.responses.FileSystemEntry
+import nl.ngti.androscope.responses.FileSystemListResponseFactory
 import nl.ngti.androscope.responses.MetadataResponse
 import java.io.File
 import java.io.IOException
@@ -114,16 +115,8 @@ class RestResponse : BaseAndroscopeResponse() {
 
     private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
         val root = getRootFile(session)
-        Log.d("Test", "Root file: $root")
-        val list = root.list()
 
-        val result = ArrayList<FileSystemEntry>(list?.size ?: 0)
-
-        list?.forEach {
-            result += FileSystemEntry(context, root, it)
-        }
-
-        return result
+        return FileSystemListResponseFactory(context).generate(root)
     }
 
     private fun getFileSystemCount(session: SessionParams): FileSystemCount {
@@ -136,13 +129,8 @@ class RestResponse : BaseAndroscopeResponse() {
     private fun getRootFile(session: SessionParams): File {
         val dataDir = context.applicationInfo.dataDir
         return session["path"]?.let {
-            Log.d("Test", "Path: $it")
-            File(dataDir, it).also {
-                Log.d("Test", "Created file 1 $it")
-            }
-        } ?: File(dataDir).also {
-            Log.d("Test", "Created file 2 $it")
-        }
+            File(dataDir, it)
+        } ?: File(dataDir)
     }
 
     // FIXME

@@ -7,7 +7,7 @@ export class FileSystemEntry {
   name: string;
   extension?: string;
   isFolder: boolean;
-  date: Date;
+  date: string;
   size: string;
 }
 
