@@ -6,10 +6,10 @@
   <p>Breadcrumbs placeholder</p>
 
   <div class="mat-elevation-z8">
-    <table [dataSource]="dataSource" aria-label="Elements" class="full-width-table" mat-table matSort>
+    <table [dataSource]="dataSource" class="full-width-table" mat-table matSort>
       <!-- Type Icon Column -->
       <ng-container matColumnDef="type">
-        <th *matHeaderCellDef mat-header-cell mat-sort-header>Type</th>
+        <th *matHeaderCellDef mat-header-cell style="width: 48px">Type</th>
         <td *matCellDef="let row" mat-cell>
           <mat-icon *ngIf="row.isFolder; else file" color="accent" mat-list-icon>folder</mat-icon>
           <ng-template #file>
@@ -42,11 +42,35 @@
         <td *matCellDef="let row" mat-cell>{{row.size}}</td>
       </ng-container>
 
+      <!-- Menu Column -->
+      <ng-container matColumnDef="menu">
+        <th *matHeaderCellDef mat-header-cell style="width: 24px"></th>
+        <td (click)="$event.stopPropagation()" *matCellDef="let row" mat-cell>
+          <button [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="!row.isFolder">
+              <mat-icon>cloud_download</mat-icon>
+              <span>Download</span>
+            </button>
+            <button mat-menu-item *ngIf="!row.isFolder">
+              <mat-icon>launch</mat-icon>
+              <span>View</span>
+            </button>
+            <button mat-menu-item *ngIf="row.isFolder">
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
       <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
-      <tr (mouseout)="onMouseOut(row)" (mouseover)="onMouseOver(row)"
-          (mouseup)="onMouseClick(row, $event)"
+      <tr (click)="onMouseClick(row)" (mouseup)="onMouseUp(row, $event)"
           *matRowDef="let row; columns: displayedColumns;"
-          [ngClass]="{hovered: row.hovered}" mat-row></tr>
+          [ngClass]="{'highlightable-row': row.isFolder}" mat-row></tr>
     </table>
 
     <mat-paginator [length]="dataSource.rowCount$ | async"

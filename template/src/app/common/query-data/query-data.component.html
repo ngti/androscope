@@ -7,7 +7,7 @@
 </div>
 
 <div [hidden]="!showTable()" class="mat-elevation-z8">
-  <table [dataSource]="dataSource" aria-label="Content" class="full-width-table" mat-table matSort>
+  <table [dataSource]="dataSource" class="full-width-table" mat-table matSort>
     <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index"
                   matColumnDef="{{disCol}}">
       <th *matHeaderCellDef mat-header-cell mat-sort-header>{{disCol}}</th>

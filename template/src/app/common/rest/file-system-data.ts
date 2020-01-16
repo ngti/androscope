@@ -9,7 +9,6 @@ export class FileSystemEntry {
   isFolder: boolean;
   date: Date;
   size: string;
-  hovered?: boolean;
 }
 
 export class FileSystemCount {

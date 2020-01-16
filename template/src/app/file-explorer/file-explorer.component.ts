@@ -4,7 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
 import {FileExplorerDataSource} from './file-explorer-datasource';
 import {RestService} from '../common/rest/rest.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {FileSystemEntry} from '../common/rest/file-system-data';
 import {BehaviorSubject, merge} from 'rxjs';
 
@@ -22,7 +22,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
 
   defaultPageSize = FileExplorerDataSource.DEFAULT_PAGE_SIZE;
 
-  displayedColumns = ['type', 'name', 'extension', 'date', 'size'];
+  displayedColumns = ['type', 'name', 'extension', 'date', 'size', 'menu'];
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
@@ -61,30 +61,23 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
   }
 
-  onMouseOver(entry: FileSystemEntry) {
+  onMouseClick(entry: FileSystemEntry) {
     if (entry.isFolder) {
-      entry.hovered = true;
+      this.router.navigate([], this.getNavigationExtras(entry));
     }
   }
 
-  onMouseOut(entry: FileSystemEntry) {
-    if (entry.isFolder) {
-      entry.hovered = false;
+  onMouseUp(entry: FileSystemEntry, event: MouseEvent) {
+    if (entry.isFolder && event.button === 1) {
+      const url = this.router.createUrlTree([], this.getNavigationExtras(entry)).toString();
+      window.open(url);
     }
   }
 
-  onMouseClick(entry: FileSystemEntry, event: MouseEvent) {
-    if (entry.isFolder) {
-      const subPath = this.dataSource.getSubPath(entry.name);
-      const navigationExtras = {
-        queryParams: {path: subPath}
-      };
-      if (event.button === 1) {
-        const url = this.router.createUrlTree([], navigationExtras).toString();
-        window.open(url);
-      } else {
-        this.router.navigate([], navigationExtras);
-      }
-    }
+  private getNavigationExtras(entry: FileSystemEntry): NavigationExtras {
+    const subPath = this.dataSource.getSubPath(entry.name);
+    return {
+      queryParams: {path: subPath}
+    };
   }
 }
