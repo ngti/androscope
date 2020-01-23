@@ -13,6 +13,7 @@ class SessionParams(
     private val rootPath: String
 
     init {
+        val path = path
         val length = path.length
         var end = length
         for (i in 1 until length) {
