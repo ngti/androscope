@@ -3,7 +3,14 @@
 </div>
 
 <div class="basic-container">
-  <p>Breadcrumbs placeholder</p>
+  <ol *ngIf="breadcrumbs.length > 0" class="breadcrumb">
+    <li *ngFor="let item of breadcrumbs; let first = first; let last = last"
+        [class.active]="last"
+        class="breadcrumb-item">
+      <a *ngIf="!last; else noLink" href="{{item.path}}">{{item.name}}</a>
+      <ng-template #noLink>{{item.name}}</ng-template>
+    </li>
+  </ol>
 
   <div class="mat-elevation-z8">
     <table [dataSource]="dataSource" class="full-width-table" mat-table matSort>
@@ -51,11 +58,11 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button *ngIf="!row.isFolder" (click)="onDownload(row)" mat-menu-item>
+            <button (click)="onDownload(row)" *ngIf="!row.isFolder" mat-menu-item>
               <mat-icon>cloud_download</mat-icon>
               <span>Download</span>
             </button>
-            <button *ngIf="!row.isFolder" (click)="onView(row)" mat-menu-item>
+            <button (click)="onView(row)" *ngIf="!row.isFolder" mat-menu-item>
               <mat-icon>launch</mat-icon>
               <span>View</span>
             </button>

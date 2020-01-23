@@ -1,8 +1,3 @@
-export class Breadcrumb {
-  name: string;
-  path: string;
-}
-
 export class FileSystemEntry {
   name: string;
   extension?: string;

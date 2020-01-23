@@ -29,7 +29,6 @@ class RestResponse : BaseAndroscopeResponse() {
                     "provider/data" -> getData(session)
                     "provider/metadata" -> getMetadata(session)
                     "file-system/list" -> getFileSystemList(session)
-                    "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
                     "file-system/count" -> getFileSystemCount(session)
                     "file-system/delete" -> null
                     else -> throw IOException("Unknown path: ${session.path}")
@@ -126,7 +125,4 @@ class RestResponse : BaseAndroscopeResponse() {
 
         return FileSystemCount(list?.size ?: 0)
     }
-
-    // FIXME
-    private fun getFileSystemBreadcrumbs(session: SessionParams) = null
 }

@@ -10,11 +10,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Breadcrumb(
-        val name: String,
-        val path: String
-)
-
 internal interface IFormatter {
 
     fun formatFileSize(size: Long): String

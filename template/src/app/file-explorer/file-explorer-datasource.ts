@@ -4,6 +4,15 @@ import {FileSystemType, RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SortDirection} from '@angular/material';
 
+export class Breadcrumb {
+  constructor(
+    public name: string,
+    public path: string
+  ) {
+  }
+}
+
+
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
   static DEFAULT_PAGE_SIZE = 250;
