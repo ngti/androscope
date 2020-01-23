@@ -10,7 +10,7 @@ import nl.ngti.androscope.responses.FileSystemCount
 import nl.ngti.androscope.responses.FileSystemEntry
 import nl.ngti.androscope.responses.FileSystemListResponseFactory
 import nl.ngti.androscope.responses.MetadataResponse
-import java.io.File
+import nl.ngti.androscope.utils.getRootFile
 import java.io.IOException
 
 class RestResponse : BaseAndroscopeResponse() {
@@ -115,23 +115,16 @@ class RestResponse : BaseAndroscopeResponse() {
     }
 
     private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
-        val root = getRootFile(session)
+        val root = getRootFile(context, session)
 
         return FileSystemListResponseFactory(context).generate(root)
     }
 
     private fun getFileSystemCount(session: SessionParams): FileSystemCount {
-        val root = getRootFile(session)
+        val root = getRootFile(context, session)
         val list = root.list()
 
         return FileSystemCount(list?.size ?: 0)
-    }
-
-    private fun getRootFile(session: SessionParams): File {
-        val dataDir = context.applicationInfo.dataDir
-        return session["path"]?.let {
-            File(dataDir, it)
-        } ?: File(dataDir)
     }
 
     // FIXME

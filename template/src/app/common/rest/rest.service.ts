@@ -59,13 +59,23 @@ export declare type FileSystemType =
 })
 export class RestService {
 
-  private static BASE_URL = 'http://10.10.4.88:8791/rest/';
+  private static ROOT = 'http://10.10.5.127:8791/';
+
+  private static REST_URL = `${RestService.ROOT}rest/`;
+
+  private static VIEW_URL = `${RestService.ROOT}view`;
+
+  private static DOWNLOAD_URL = `${RestService.ROOT}download`;
 
   constructor(private http: HttpClient) {
   }
 
+  private static getFileUrlParams(type: FileSystemType, path?: string): string {
+    return '?' + new ParamsBuilder().addFileSystemParams(type, path).build().toString();
+  }
+
   getUriMetadata(uri: Uri): Observable<UriMetadata> {
-    return this.http.get<UriMetadata>(RestService.BASE_URL + 'provider/metadata', {
+    return this.http.get<UriMetadata>(RestService.REST_URL + 'provider/metadata', {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -73,7 +83,7 @@ export class RestService {
   }
 
   getUriData(uri: Uri, pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string): Observable<[][]> {
-    return this.http.get<[][]>(RestService.BASE_URL + 'provider/data', {
+    return this.http.get<[][]>(RestService.REST_URL + 'provider/data', {
       params: new ParamsBuilder()
         .addUri(uri)
         .addPaginationParams(pageSize, pageNumber)
@@ -85,7 +95,7 @@ export class RestService {
   getFileList(
     type: FileSystemType, path: string, pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
   ): Observable<FileSystemEntry[]> {
-    return this.http.get<FileSystemEntry[]>(RestService.BASE_URL + 'file-system/list', {
+    return this.http.get<FileSystemEntry[]>(RestService.REST_URL + 'file-system/list', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
         .addPaginationParams(pageSize, pageNumber)
@@ -95,7 +105,7 @@ export class RestService {
   }
 
   getFileCount(type: FileSystemType, path?: string): Observable<FileSystemCount> {
-    return this.http.get<FileSystemCount>(RestService.BASE_URL + 'file-system/count', {
+    return this.http.get<FileSystemCount>(RestService.REST_URL + 'file-system/count', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
         .build()
@@ -103,10 +113,18 @@ export class RestService {
   }
 
   deleteFile(type: FileSystemType, path?: string): Observable<FileDeleteResult> {
-    return this.http.delete<FileDeleteResult>(RestService.BASE_URL + 'file-system/delete', {
+    return this.http.delete<FileDeleteResult>(RestService.REST_URL + 'file-system/delete', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
         .build()
     });
+  }
+
+  getFileViewUrl(type: FileSystemType, path?: string): string {
+    return RestService.VIEW_URL + RestService.getFileUrlParams(type, path);
+  }
+
+  getFileDownloadUrl(type: FileSystemType, path?: string): string {
+    return RestService.DOWNLOAD_URL + RestService.getFileUrlParams(type, path);
   }
 }

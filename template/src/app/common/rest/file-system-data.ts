@@ -9,6 +9,14 @@ export class FileSystemEntry {
   isFolder: boolean;
   date: string;
   size: string;
+
+  static getFullName(entry: FileSystemEntry): string {
+    let name = entry.name;
+    if (entry.extension != null) {
+      name += '.' + entry.extension;
+    }
+    return name;
+  }
 }
 
 export class FileSystemCount {

@@ -51,11 +51,11 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button *ngIf="!row.isFolder" mat-menu-item>
+            <button *ngIf="!row.isFolder" (click)="onDownload(row)" mat-menu-item>
               <mat-icon>cloud_download</mat-icon>
               <span>Download</span>
             </button>
-            <button *ngIf="!row.isFolder" mat-menu-item>
+            <button *ngIf="!row.isFolder" (click)="onView(row)" mat-menu-item>
               <mat-icon>launch</mat-icon>
               <span>View</span>
             </button>

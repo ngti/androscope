@@ -100,8 +100,19 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
   }
 
+  onDownload(entry: FileSystemEntry) {
+    const path = this.dataSource.getSubPath(entry);
+    window.location.href = this.restService.getFileDownloadUrl(this.dataSource.fileSystemType, path);
+  }
+
+  onView(entry: FileSystemEntry) {
+    const path = this.dataSource.getSubPath(entry);
+    const url = this.restService.getFileViewUrl(this.dataSource.fileSystemType, path);
+    window.open(url);
+  }
+
   private getNavigationExtras(entry: FileSystemEntry): NavigationExtras {
-    const subPath = this.dataSource.getSubPath(entry.name);
+    const subPath = this.dataSource.getSubPath(entry);
     return {
       queryParams: {path: subPath}
     };

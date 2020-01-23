@@ -30,5 +30,5 @@ public abstract class BaseAndroscopeResponse {
     }
 
     @Nullable
-    protected abstract NanoHTTPD.Response getResponse(SessionParams session) throws IOException;
+    public abstract NanoHTTPD.Response getResponse(SessionParams session) throws IOException;
 }

@@ -34,12 +34,7 @@ export class DeleteConfirmationDialogComponent {
   }
 
   getEntryName(): string {
-    const entry = this.data.entry;
-    let name = entry.name;
-    if (entry.extension != null) {
-      name += '.' + entry.extension;
-    }
-    return name;
+    return FileSystemEntry.getFullName(this.data.entry);
   }
 
   getEntryType(): string {

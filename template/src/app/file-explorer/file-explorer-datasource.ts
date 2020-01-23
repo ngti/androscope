@@ -38,8 +38,8 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     this.rowCountSubject.complete();
   }
 
-  getSubPath(path: string): string {
-    return FileExplorerDataSource.concatPaths(this.path, path);
+  getSubPath(entry: FileSystemEntry): string {
+    return FileExplorerDataSource.concatPaths(this.path, FileSystemEntry.getFullName(entry));
   }
 
   protected onGenerateNetworkRequest(
