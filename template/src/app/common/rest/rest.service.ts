@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Uri} from '../query-model/uri';
 import {SortDirection} from '@angular/material';
 import {UriMetadata} from './uri-metadata';
-import {FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
+import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 
 class ParamsBuilder {
 
@@ -59,7 +59,7 @@ export declare type FileSystemType =
 })
 export class RestService {
 
-  private static ROOT = 'http://10.10.5.127:8791/';
+  private static ROOT = 'http://localhost:62414/';
 
   private static REST_URL = `${RestService.ROOT}rest/`;
 
@@ -106,6 +106,14 @@ export class RestService {
 
   getFileCount(type: FileSystemType, path?: string): Observable<FileSystemCount> {
     return this.http.get<FileSystemCount>(RestService.REST_URL + 'file-system/count', {
+      params: new ParamsBuilder()
+        .addFileSystemParams(type, path)
+        .build()
+    });
+  }
+
+  getBreadcrumbs(type: FileSystemType, path?: string): Observable<Breadcrumb[]> {
+    return this.http.get<Breadcrumb[]>(RestService.REST_URL + 'file-system/breadcrumbs', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
         .build()

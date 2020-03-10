@@ -3,11 +3,11 @@
 </div>
 
 <div class="basic-container">
-  <ol *ngIf="breadcrumbs.length > 0" class="breadcrumb">
-    <li *ngFor="let item of breadcrumbs; let first = first; let last = last"
+  <ol class="breadcrumb">
+    <li *ngFor="let item of dataSource.breadcrumbs$ | async; let first = first; let last = last"
         [class.active]="last"
         class="breadcrumb-item">
-      <a *ngIf="!last; else noLink" href="{{item.path}}">{{item.name}}</a>
+      <a *ngIf="!last; else noLink" href="{{getBreadcrumbPath(item.path)}}">{{item.name}}</a>
       <ng-template #noLink>{{item.name}}</ng-template>
     </li>
   </ol>

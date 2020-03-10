@@ -1,17 +1,8 @@
 import {BaseDataSource} from '../common/base/base-data-source';
-import {FileSystemEntry} from '../common/rest/file-system-data';
+import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
 import {FileSystemType, RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SortDirection} from '@angular/material';
-
-export class Breadcrumb {
-  constructor(
-    public name: string,
-    public path: string
-  ) {
-  }
-}
-
 
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
@@ -19,6 +10,9 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
   private rowCountSubject = new BehaviorSubject<number>(0);
   rowCount$ = this.rowCountSubject.asObservable();
+
+  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>(null);
+  breadcrumbs$ = this.breadcrumbsSubject.asObservable();
 
   constructor(
     private restService: RestService,
@@ -32,6 +26,10 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
     restService.getFileCount(fileSystemType, path).subscribe(fileSystemCount => {
       this.rowCountSubject.next(fileSystemCount.totalEntries);
+    });
+
+    restService.getBreadcrumbs(fileSystemType, path).subscribe(breadcrumbs => {
+      this.breadcrumbsSubject.next(breadcrumbs);
     });
   }
 

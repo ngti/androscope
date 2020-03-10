@@ -6,11 +6,9 @@ import android.util.Log
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
-import nl.ngti.androscope.responses.FileSystemCount
-import nl.ngti.androscope.responses.FileSystemEntry
-import nl.ngti.androscope.responses.FileSystemListResponseFactory
-import nl.ngti.androscope.responses.MetadataResponse
+import nl.ngti.androscope.responses.*
 import nl.ngti.androscope.utils.getRootFile
+import nl.ngti.androscope.utils.resolveFileSystemType
 import java.io.IOException
 
 class RestResponse : BaseAndroscopeResponse() {
@@ -30,6 +28,7 @@ class RestResponse : BaseAndroscopeResponse() {
                     "provider/metadata" -> getMetadata(session)
                     "file-system/list" -> getFileSystemList(session)
                     "file-system/count" -> getFileSystemCount(session)
+                    "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
                     "file-system/delete" -> null
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
@@ -124,5 +123,20 @@ class RestResponse : BaseAndroscopeResponse() {
         val list = root.list()
 
         return FileSystemCount(list?.size ?: 0)
+    }
+
+    private fun getFileSystemBreadcrumbs(session: SessionParams): List<Breadcrumb> {
+        val root = resolveFileSystemType(context, session)
+        val result = ArrayList<Breadcrumb>()
+        result += Breadcrumb(root.absolutePath, "")
+        session["path"]?.run {
+            var relativePath = ""
+            split('/').forEach {
+                relativePath += it
+                result += Breadcrumb(it, relativePath)
+                relativePath += it
+            }
+        }
+        return result
     }
 }

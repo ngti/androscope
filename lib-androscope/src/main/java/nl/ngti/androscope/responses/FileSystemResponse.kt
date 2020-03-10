@@ -32,7 +32,7 @@ class FileSystemEntry internal constructor(root: File, itemName: String, formatt
             extension = null
         } else {
             val extensionIndex = FilenameUtils.indexOfExtension(itemName)
-            if (extensionIndex == -1) {
+            if (extensionIndex < 1) {
                 name = itemName
                 extension = null
             } else {
@@ -68,4 +68,9 @@ class FileSystemListResponseFactory(
 
 class FileSystemCount(
         val totalEntries: Int
+)
+
+class Breadcrumb(
+        val name: String,
+        val path: String
 )

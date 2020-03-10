@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTable} from '@angular/material/table';
-import {Breadcrumb, FileExplorerDataSource} from './file-explorer-datasource';
+import {FileExplorerDataSource} from './file-explorer-datasource';
 import {RestService} from '../common/rest/rest.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {FileSystemEntry} from '../common/rest/file-system-data';
@@ -25,8 +25,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatTable, {static: false}) table: MatTable<FileSystemEntry>;
   dataSource: FileExplorerDataSource;
-
-  breadcrumbs: Breadcrumb[] = [];
 
   defaultPageSize = FileExplorerDataSource.DEFAULT_PAGE_SIZE;
 
@@ -59,7 +57,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
           this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject);
         this.dataSource.updatePagination(this.paginator);
         this.dataSource.reloadDataIfNeeded();
-        this.updateBreadcrumbs();
       }
     });
   }
@@ -115,6 +112,13 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     window.open(url);
   }
 
+  getBreadcrumbPath(relativePath: string) {
+    if (relativePath.length === 0) {
+      return this.router.createUrlTree([]).toString();
+    }
+    return this.router.createUrlTree([], this.getNavigationExtras(relativePath)).toString();
+  }
+
   private getNavigationExtras(entry: FileSystemEntry | string): NavigationExtras {
     let subPath: string;
     if (isString(entry)) {
@@ -125,21 +129,5 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     return {
       queryParams: {path: subPath}
     };
-  }
-
-  private updateBreadcrumbs() {
-    this.breadcrumbs = [];
-    if (this.dataSource.path != null) {
-      this.breadcrumbs.push(new Breadcrumb('Home', this.router.createUrlTree([]).toString()));
-      let relativePath = '';
-      this.dataSource.path.split('/').forEach(subPath => {
-        relativePath += subPath;
-        const url = this.router.createUrlTree([], this.getNavigationExtras(relativePath)).toString();
-        const breadcrumb = new Breadcrumb(subPath, url);
-        this.breadcrumbs.push(breadcrumb);
-        relativePath += '/';
-      });
-    }
-    console.log('breadcrumbs: ' + this.breadcrumbs);
   }
 }

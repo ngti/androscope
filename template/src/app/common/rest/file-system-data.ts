@@ -22,3 +22,8 @@ export class FileDeleteResult {
   success: boolean;
   errorMessage?: string;
 }
+
+export class Breadcrumb {
+  name: string;
+  path: string;
+}
