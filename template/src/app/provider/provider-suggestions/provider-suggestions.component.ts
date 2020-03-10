@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {QueryModelService} from '../../common/query-model/query-model.service';
 import {Uri} from '../../common/query-model/uri';
 
@@ -32,7 +32,12 @@ export class ProviderSuggestionsComponent {
       'content://com.android.contacts/contacts',
       'Displays phone contacts, requires READ_CONTACTS permission',
       'contacts'
-    )
+    ),
+    new UriSuggestion(
+      'content://media/none/media_scanner',
+      'Displays phone contacts, requires READ_CONTACTS permission',
+      'scanner'
+    ),
   ];
 
   constructor(private model: QueryModelService) {
