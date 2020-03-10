@@ -22,11 +22,19 @@ class FileSystemEntry internal constructor(root: File, itemName: String, formatt
     val date: String
     val size: String?
 
+    @Transient
+    val dateInternal: Long
+
+    @Transient
+    val sizeInternal: Long
+
     init {
         val file = File(root, itemName)
         isFolder = file.isDirectory
-        date = formatter.formatDate(file.lastModified())
-        size = if (isFolder) null else formatter.formatFileSize(file.length())
+        dateInternal = file.lastModified()
+        date = formatter.formatDate(dateInternal)
+        sizeInternal = if (isFolder) -1 else file.length()
+        size = if (isFolder) null else formatter.formatFileSize(sizeInternal)
         if (isFolder) {
             name = itemName
             extension = null

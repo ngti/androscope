@@ -45,9 +45,13 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
     if (sort == null) {
       return;
     }
-    if (this.sortOrder !== sort.direction || this.sortColumn !== sort.active) {
-      this.sortOrder = sort.direction;
-      this.sortColumn = sort.active;
+    this.setSorting(sort.direction, sort.active);
+  }
+
+  setSorting(sortOrder: SortDirection = '', sortColumn?: string) {
+    if (this.sortOrder !== sortOrder || this.sortColumn !== sortColumn) {
+      this.sortOrder = sortOrder;
+      this.sortColumn = sortColumn;
       this.changed = true;
     }
   }

@@ -10,6 +10,10 @@ import nl.ngti.androscope.responses.*
 import nl.ngti.androscope.utils.getRootFile
 import nl.ngti.androscope.utils.resolveFileSystemType
 import java.io.IOException
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+import kotlin.math.min
 
 class RestResponse : BaseAndroscopeResponse() {
 
@@ -114,8 +118,35 @@ class RestResponse : BaseAndroscopeResponse() {
 
     private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
         val root = getRootFile(context, session)
+        val pageSize = session["pageSize"]?.toInt()
+                ?: throw IllegalArgumentException("Missing page number")
+        val pageNumber = session["pageNumber"]?.toInt() ?: 0
 
-        return FileSystemListResponseFactory(context).generate(root)
+        val folderComparator = Comparator<FileSystemEntry> { entry1, entry2 ->
+            entry2.isFolder.compareTo(entry1.isFolder)
+        }
+        val comparator = session["sortOrder"]?.let { order ->
+            session["sortColumn"]?.let { column ->
+                val compareFunction: (FileSystemEntry, FileSystemEntry) -> Int = when (column) {
+                    "name" -> { entry1, entry2 -> entry1.name.compareTo(entry2.name) }
+                    "extension" -> { entry1, entry2 -> entry1.extension.orEmpty().compareTo(entry2.extension.orEmpty()) }
+                    "date" -> { entry1, entry2 -> entry1.dateInternal.compareTo(entry2.dateInternal) }
+                    "size" -> { entry1, entry2 -> entry1.sizeInternal.compareTo(entry2.sizeInternal) }
+                    else -> throw IllegalArgumentException("Illegal sort column: $column")
+                }
+                Comparator<FileSystemEntry>(compareFunction).let {
+                    if (order == "desc") Collections.reverseOrder(it) else it
+                }
+            }
+        }?.let {
+            folderComparator.then(it)
+        } ?: folderComparator
+
+        return FileSystemListResponseFactory(context).generate(root).sortedWith(comparator).run {
+            val fromIndex = pageSize * pageNumber
+            val toIndex = min(fromIndex + pageSize, size)
+            subList(fromIndex, toIndex)
+        }
     }
 
     private fun getFileSystemCount(session: SessionParams): FileSystemCount {
@@ -134,7 +165,7 @@ class RestResponse : BaseAndroscopeResponse() {
             split('/').forEach {
                 relativePath += it
                 result += Breadcrumb(it, relativePath)
-                relativePath += it
+                relativePath += '/'
             }
         }
         return result

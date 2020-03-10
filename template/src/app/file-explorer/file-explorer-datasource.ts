@@ -43,6 +43,7 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
   disconnect() {
     super.disconnect();
     this.rowCountSubject.complete();
+    this.breadcrumbsSubject.complete();
   }
 
   getSubPath(entry: FileSystemEntry): string {

@@ -13,7 +13,8 @@
   </ol>
 
   <div class="mat-elevation-z8">
-    <table [dataSource]="dataSource" class="full-width-table" mat-table matSort matSortActive="name" matSortDirection="asc">
+    <table [dataSource]="dataSource" [matSortActive]="defaultSortColumn" [matSortDirection]="defaultSortOrder"
+           class="full-width-table" mat-table matSort>
       <!-- Type Icon Column -->
       <ng-container matColumnDef="type">
         <th *matHeaderCellDef mat-header-cell style="width: 48px">Type</th>
