@@ -14,7 +14,7 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
   private dataSubject = new BehaviorSubject<T[]>(null);
   private changed = true;
 
-  constructor(
+  protected constructor(
     defaultPageSize: number,
     private loadingSubject: BehaviorSubject<boolean>
   ) {

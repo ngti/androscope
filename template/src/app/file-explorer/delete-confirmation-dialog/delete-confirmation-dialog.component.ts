@@ -56,8 +56,12 @@ export class DeleteConfirmationDialogComponent {
     this.restService.deleteFile(this.data.fileSystemType, fullPath)
       .subscribe({
         next: value => {
-          this.clearError();
-          this.dialogRef.close(entryName);
+          if (value.success) {
+            this.clearError();
+            this.dialogRef.close(entryName);
+          } else {
+            this.reportError(value.errorMessage);
+          }
         },
         error: err => {
           this.reportError(err.message);

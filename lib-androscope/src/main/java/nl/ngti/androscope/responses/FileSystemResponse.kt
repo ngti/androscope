@@ -1,5 +1,3 @@
-@file:Suppress("MemberVisibilityCanBePrivate")
-
 package nl.ngti.androscope.responses
 
 import android.content.Context
@@ -17,19 +15,18 @@ internal interface IFormatter {
     fun formatDate(timestamp: Long): String
 }
 
-class FileSystemEntry {
+class FileSystemEntry internal constructor(root: File, itemName: String, formatter: IFormatter) {
     val name: String
     val extension: String?
     val isFolder: Boolean
     val date: String
     val size: String?
 
-    internal constructor(root: File, itemName: String, formatter: IFormatter) {
+    init {
         val file = File(root, itemName)
         isFolder = file.isDirectory
         date = formatter.formatDate(file.lastModified())
         size = if (isFolder) null else formatter.formatFileSize(file.length())
-
         if (isFolder) {
             name = itemName
             extension = null
@@ -49,7 +46,7 @@ class FileSystemEntry {
 class FileSystemListResponseFactory(
         private val context: Context
 ) : IFormatter {
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
 
     fun generate(root: File): List<FileSystemEntry> {
         val list = root.list()
@@ -63,9 +60,9 @@ class FileSystemListResponseFactory(
         return result
     }
 
-    override fun formatFileSize(size: Long) = Formatter.formatFileSize(context, size)
+    override fun formatFileSize(size: Long): String = Formatter.formatFileSize(context, size)
 
-    override fun formatDate(timestamp: Long) = dateFormat.format(Date(timestamp))
+    override fun formatDate(timestamp: Long): String = dateFormat.format(Date(timestamp))
 
 }
 
