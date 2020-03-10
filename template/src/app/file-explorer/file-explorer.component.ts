@@ -33,6 +33,8 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
+  private viewInitialized = false;
+
   constructor(
     private restService: RestService,
     private route: ActivatedRoute,
@@ -44,7 +46,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    // this.route.queryParams.subscribe(queryParams => {
     merge(this.route.queryParams, this.route.params).subscribe(() => {
       const snapshot = this.route.snapshot;
       const newFileSystem = snapshot.params.type;
@@ -55,17 +56,16 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
         || this.dataSource.path !== newPath) {
         this.dataSource = new FileExplorerDataSource(
           this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject);
-        this.dataSource.updatePagination(this.paginator);
-        this.dataSource.reloadDataIfNeeded();
+        this.updateDataSource();
       }
     });
   }
 
   ngAfterViewInit() {
+    this.viewInitialized = true;
+    this.updateDataSource();
     merge(this.paginator.page, this.sort.sortChange).subscribe(() => {
-      this.dataSource.updatePagination(this.paginator);
-      this.dataSource.updateSorting(this.sort);
-      this.dataSource.reloadDataIfNeeded();
+      this.updateDataSource();
     });
   }
 
@@ -112,11 +112,19 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     window.open(url);
   }
 
-  getBreadcrumbPath(relativePath: string) {
+  getBreadcrumbPath(relativePath: string): string {
     if (relativePath.length === 0) {
       return this.router.createUrlTree([]).toString();
     }
     return this.router.createUrlTree([], this.getNavigationExtras(relativePath)).toString();
+  }
+
+  private updateDataSource() {
+    if (this.viewInitialized) {
+      this.dataSource.updatePagination(this.paginator);
+      this.dataSource.updateSorting(this.sort);
+      this.dataSource.reloadDataIfNeeded();
+    }
   }
 
   private getNavigationExtras(entry: FileSystemEntry | string): NavigationExtras {
