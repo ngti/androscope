@@ -2,6 +2,7 @@ package nl.ngti.androscope.server
 
 import android.database.Cursor
 import android.net.Uri
+import android.os.SystemClock
 import android.util.Log
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
@@ -26,6 +27,7 @@ class RestResponse : BaseAndroscopeResponse() {
 
         if (LOG) Log.d(tag, "Rest url: $restUrl")
 
+        val start = SystemClock.elapsedRealtimeNanos()
         val responseObject: Any? =
                 when (restUrl) {
                     "provider/data" -> getData(session)
@@ -36,6 +38,10 @@ class RestResponse : BaseAndroscopeResponse() {
                     "file-system/delete" -> null
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
+
+        if (LOG) Log.d(tag, String.format(Locale.ENGLISH,
+                "Response generation time: %,d ns",
+                SystemClock.elapsedRealtimeNanos() - start))
 
         val json = gson.toJson(responseObject)
 
@@ -142,10 +148,15 @@ class RestResponse : BaseAndroscopeResponse() {
             folderComparator.then(it)
         } ?: folderComparator
 
-        return FileSystemListResponseFactory(context).generate(root).sortedWith(comparator).run {
+        val responseFactory = FileSystemListResponseFactory(context)
+        return responseFactory.generate(root).sortedWith(comparator).run {
             val fromIndex = pageSize * pageNumber
             val toIndex = min(fromIndex + pageSize, size)
             subList(fromIndex, toIndex)
+        }.apply {
+            forEach {
+                it.prepareForSerialization(responseFactory)
+            }
         }
     }
 

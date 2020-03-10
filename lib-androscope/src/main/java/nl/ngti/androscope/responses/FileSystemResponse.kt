@@ -15,12 +15,16 @@ internal interface IFormatter {
     fun formatDate(timestamp: Long): String
 }
 
-class FileSystemEntry internal constructor(root: File, itemName: String, formatter: IFormatter) {
+class FileSystemEntry internal constructor(
+        root: File,
+        itemName: String
+) {
     val name: String
     val extension: String?
     val isFolder: Boolean
-    val date: String
-    val size: String?
+
+    lateinit var date: String
+    var size: String? = null
 
     @Transient
     val dateInternal: Long
@@ -32,9 +36,7 @@ class FileSystemEntry internal constructor(root: File, itemName: String, formatt
         val file = File(root, itemName)
         isFolder = file.isDirectory
         dateInternal = file.lastModified()
-        date = formatter.formatDate(dateInternal)
         sizeInternal = if (isFolder) -1 else file.length()
-        size = if (isFolder) null else formatter.formatFileSize(sizeInternal)
         if (isFolder) {
             name = itemName
             extension = null
@@ -49,6 +51,13 @@ class FileSystemEntry internal constructor(root: File, itemName: String, formatt
             }
         }
     }
+
+    internal fun prepareForSerialization(formatter: IFormatter) {
+        date = formatter.formatDate(dateInternal)
+        if (!isFolder) {
+            size = formatter.formatFileSize(sizeInternal)
+        }
+    }
 }
 
 class FileSystemListResponseFactory(
@@ -56,17 +65,14 @@ class FileSystemListResponseFactory(
 ) : IFormatter {
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
 
-    fun generate(root: File): List<FileSystemEntry> {
-        val list = root.list()
-
-        val result = ArrayList<FileSystemEntry>(list?.size ?: 0)
-
-        list?.forEach {
-            result += FileSystemEntry(root, it, this)
-        }
-
-        return result
-    }
+    fun generate(root: File): List<FileSystemEntry> =
+            root.list()?.let { array ->
+                ArrayList<FileSystemEntry>(array.size).also { result ->
+                    array.forEach {
+                        result += FileSystemEntry(root, it)
+                    }
+                }
+            } ?: emptyList()
 
     override fun formatFileSize(size: Long): String = Formatter.formatFileSize(context, size)
 
