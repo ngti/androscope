@@ -39,7 +39,7 @@ class RestResponse : BaseAndroscopeResponse() {
 
         val json = gson.toJson(responseObject)
 
-        if (LOG) Log.d(tag, "Response: $json")
+//        if (LOG) Log.d(tag, "Response: $json")
 
         return NanoHTTPD.newFixedLengthResponse(json)
     }
