@@ -25,12 +25,12 @@
             android:name=".AndroscopeContentProvider"
             android:authorities="${applicationId}.androscope"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="false" />
 
         <service
             android:name=".service.AndroscopeService"
             android:exported="false"
-            android:process=":androscope"></service>
+            android:process=":androscope" />
 
     </application>
 </manifest>
