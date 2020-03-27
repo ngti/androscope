@@ -134,7 +134,7 @@ class RestResponse : BaseAndroscopeResponse() {
         val comparator = session["sortOrder"]?.let { order ->
             session["sortColumn"]?.let { column ->
                 val compareFunction: (FileSystemEntry, FileSystemEntry) -> Int = when (column) {
-                    "name" -> { entry1, entry2 -> entry1.name.compareTo(entry2.name) }
+                    "name" -> { entry1, entry2 -> entry1.name.compareTo(entry2.name, ignoreCase = true) }
                     "extension" -> { entry1, entry2 -> entry1.extension.orEmpty().compareTo(entry2.extension.orEmpty()) }
                     "date" -> { entry1, entry2 -> entry1.dateInternal.compareTo(entry2.dateInternal) }
                     "size" -> { entry1, entry2 -> entry1.sizeInternal.compareTo(entry2.sizeInternal) }
