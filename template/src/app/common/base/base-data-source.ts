@@ -3,23 +3,20 @@ import {MatSort, SortDirection} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {finalize} from 'rxjs/operators';
+import {DataParams} from './data-params';
 
 export abstract class BaseDataSource<T> extends DataSource<T> {
 
-  private pageSize: number;
-  private pageNumber = 0;
-  private sortOrder: SortDirection = '';
-  private sortColumn?: string = null;
+  private dataParams = new DataParams();
 
   private dataSubject = new BehaviorSubject<T[]>(null);
-  private changed = true;
 
   protected constructor(
     defaultPageSize: number,
     private loadingSubject: BehaviorSubject<boolean>
   ) {
     super();
-    this.pageSize = defaultPageSize;
+    this.dataParams.pageSize = defaultPageSize;
   }
 
   connect(): Observable<T[]> {
@@ -34,11 +31,7 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
     if (paginator == null) {
       return;
     }
-    if (this.pageSize !== paginator.pageSize || this.pageNumber !== paginator.pageIndex) {
-      this.pageSize = paginator.pageSize;
-      this.pageNumber = paginator.pageIndex;
-      this.changed = true;
-    }
+    this.dataParams.updatePagination(paginator.pageSize, paginator.pageIndex);
   }
 
   updateSorting(sort?: MatSort) {
@@ -49,24 +42,25 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
   }
 
   setSorting(sortOrder: SortDirection = '', sortColumn?: string) {
-    if (this.sortOrder !== sortOrder || this.sortColumn !== sortColumn) {
-      this.sortOrder = sortOrder;
-      this.sortColumn = sortColumn;
-      this.changed = true;
-    }
+    this.dataParams.updateSorting(sortOrder, sortColumn);
   }
 
   reloadDataIfNeeded() {
-    if (this.changed) {
-      this.reloadData();
-      this.changed = false;
-    }
+    this.dataParams.consume(dataParams =>
+      this.reloadData(dataParams)
+    );
   }
 
-  reloadData() {
+  forceReloadData() {
+    this.reloadData(this.dataParams);
+  }
+
+  protected abstract onGenerateNetworkRequest(dataParams: DataParams): Observable<T[]>;
+
+  private reloadData(dataParams: DataParams) {
     this.loadingSubject.next(true);
 
-    this.onGenerateNetworkRequest(this.pageSize, this.pageNumber, this.sortOrder, this.sortColumn)
+    this.onGenerateNetworkRequest(dataParams)
       .pipe(
         finalize(() => this.loadingSubject.next(false))
       )
@@ -74,8 +68,4 @@ export abstract class BaseDataSource<T> extends DataSource<T> {
         this.dataSubject.next(data)
       );
   }
-
-  protected abstract onGenerateNetworkRequest(
-    pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
-  ): Observable<T[]>;
 }

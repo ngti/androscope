@@ -2,7 +2,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {RestService} from '../rest/rest.service';
 import {Uri} from '../query-model/uri';
 import {BaseDataSource} from '../base/base-data-source';
-import {SortDirection} from '@angular/material/sort';
+import {DataParams} from '../base/data-params';
 
 export class QueryDataSource extends BaseDataSource<[]> {
 
@@ -40,9 +40,7 @@ export class QueryDataSource extends BaseDataSource<[]> {
     return this.metadataLoaded && this.errorSubject.value == null;
   }
 
-  protected onGenerateNetworkRequest(
-    pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
-  ): Observable<[][]> {
-    return this.restService.getUriData(this.uri, pageSize, pageNumber, sortOrder, sortColumn);
+  protected onGenerateNetworkRequest(dataParams: DataParams): Observable<[][]> {
+    return this.restService.getUriData(this.uri, dataParams);
   }
 }

@@ -2,7 +2,7 @@ import {BaseDataSource} from '../common/base/base-data-source';
 import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
 import {FileSystemType, RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {SortDirection} from '@angular/material';
+import {DataParams} from '../common/base/data-params';
 
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
@@ -50,9 +50,7 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     return FileExplorerDataSource.concatPaths(this.path, FileSystemEntry.getFullName(entry));
   }
 
-  protected onGenerateNetworkRequest(
-    pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
-  ): Observable<FileSystemEntry[]> {
-    return this.restService.getFileList(this.fileSystemType, this.path, pageSize, pageNumber, sortOrder, sortColumn);
+  protected onGenerateNetworkRequest(dataParams: DataParams): Observable<FileSystemEntry[]> {
+    return this.restService.getFileList(this.fileSystemType, this.path, dataParams);
   }
 }

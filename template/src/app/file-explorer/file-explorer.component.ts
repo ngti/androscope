@@ -96,7 +96,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
         this.snackBar.open(`«${result}» has been deleted`, null, {
           duration: 2000,
         });
-        this.dataSource.reloadData();
+        this.dataSource.forceReloadData();
       }
       console.log('The dialog was closed ' + result);
     });

@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Uri} from '../query-model/uri';
-import {SortDirection} from '@angular/material';
 import {UriMetadata} from './uri-metadata';
 import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
+import {DataParams} from '../base/data-params';
 
 class ParamsBuilder {
 
@@ -23,18 +23,14 @@ class ParamsBuilder {
     return this;
   }
 
-  addPaginationParams(pageSize: number, pageNumber: number): ParamsBuilder {
+  addDataParams(dataParams: DataParams): ParamsBuilder {
     this.httpParams = this.httpParams
-      .set('pageSize', pageSize.toString())
-      .set('pageNumber', pageNumber.toString());
-    return this;
-  }
-
-  addSorting(sortOrder: SortDirection, sortColumn?: string): ParamsBuilder {
-    if (sortColumn != null && sortColumn.length > 0 && sortOrder.length > 0) {
+      .set('pageSize', dataParams.pageSize.toString())
+      .set('pageNumber', dataParams.pageNumber.toString());
+    if (dataParams.hasSorting()) {
       this.httpParams = this.httpParams
-        .set('sortColumn', sortColumn)
-        .set('sortOrder', sortOrder);
+        .set('sortColumn', dataParams.sortColumn)
+        .set('sortOrder', dataParams.sortOrder);
     }
     return this;
   }
@@ -82,24 +78,22 @@ export class RestService {
     });
   }
 
-  getUriData(uri: Uri, pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string): Observable<[][]> {
+  getUriData(uri: Uri, dataParams: DataParams): Observable<[][]> {
     return this.http.get<[][]>(RestService.REST_URL + 'provider/data', {
       params: new ParamsBuilder()
         .addUri(uri)
-        .addPaginationParams(pageSize, pageNumber)
-        .addSorting(sortOrder, sortColumn)
+        .addDataParams(dataParams)
         .build()
     });
   }
 
   getFileList(
-    type: FileSystemType, path: string, pageSize: number, pageNumber: number, sortOrder: SortDirection, sortColumn?: string
+    type: FileSystemType, path: string, dataParams: DataParams
   ): Observable<FileSystemEntry[]> {
     return this.http.get<FileSystemEntry[]>(RestService.REST_URL + 'file-system/list', {
       params: new ParamsBuilder()
         .addFileSystemParams(type, path)
-        .addPaginationParams(pageSize, pageNumber)
-        .addSorting(sortOrder, sortColumn)
+        .addDataParams(dataParams)
         .build()
     });
   }
