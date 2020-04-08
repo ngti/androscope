@@ -23,6 +23,7 @@ class FileSystemEntry internal constructor(
     val extension: String?
     val isFolder: Boolean
 
+    @Volatile
     lateinit var date: String
     var size: String? = null
 
@@ -53,9 +54,11 @@ class FileSystemEntry internal constructor(
     }
 
     internal fun prepareForSerialization(formatter: IFormatter) {
-        date = formatter.formatDate(dateInternal)
-        if (!isFolder) {
-            size = formatter.formatFileSize(sizeInternal)
+        if (!::date.isInitialized) {
+            date = formatter.formatDate(dateInternal)
+            if (!isFolder) {
+                size = formatter.formatFileSize(sizeInternal)
+            }
         }
     }
 }
