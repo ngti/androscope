@@ -11,14 +11,12 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
   private rowCountSubject = new BehaviorSubject<number>(0);
   rowCount$ = this.rowCountSubject.asObservable();
 
-  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>(null);
-  breadcrumbs$ = this.breadcrumbsSubject.asObservable();
-
   constructor(
     private restService: RestService,
     public readonly fileSystemType: FileSystemType,
     public readonly path: string,
-    loadingSubject: BehaviorSubject<boolean>
+    loadingSubject: BehaviorSubject<boolean>,
+    breadcrumbsSubject: BehaviorSubject<Breadcrumb[]>
   ) {
     super(FileExplorerDataSource.DEFAULT_PAGE_SIZE, loadingSubject);
 
@@ -29,7 +27,7 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     });
 
     restService.getBreadcrumbs(fileSystemType, path).subscribe(breadcrumbs => {
-      this.breadcrumbsSubject.next(breadcrumbs);
+      breadcrumbsSubject.next(breadcrumbs);
     });
   }
 
@@ -43,7 +41,6 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
   disconnect() {
     super.disconnect();
     this.rowCountSubject.complete();
-    this.breadcrumbsSubject.complete();
   }
 
   getSubPath(entry: FileSystemEntry): string {

@@ -4,10 +4,10 @@
 
 <div class="basic-container">
   <ol class="breadcrumb">
-    <li *ngFor="let item of dataSource.breadcrumbs$ | async; let first = first; let last = last"
-        [class.active]="last"
+    <li *ngFor="let item of breadcrumbs$ | async; let last = last"
+        [class.parent]="!last"
         class="breadcrumb-item">
-      <a *ngIf="!last; else noLink" href="{{getBreadcrumbPath(item.path)}}">{{item.name}}</a>
+      <a *ngIf="!last; else noLink" (click)="onBreadcrumbClick(item)" (mouseup)="onBreadcrumbUp(item, $event)">{{item.name}}</a>
       <ng-template #noLink>{{item.name}}</ng-template>
     </li>
   </ol>

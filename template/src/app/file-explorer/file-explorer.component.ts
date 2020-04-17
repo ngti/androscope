@@ -5,7 +5,7 @@ import {MatTable} from '@angular/material/table';
 import {FileExplorerDataSource} from './file-explorer-datasource';
 import {RestService} from '../common/rest/rest.service';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
-import {FileSystemEntry} from '../common/rest/file-system-data';
+import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
 import {BehaviorSubject, merge} from 'rxjs';
 import {
   DeleteConfirmationDialogComponent,
@@ -35,6 +35,9 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
+  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>(null);
+  breadcrumbs$ = this.breadcrumbsSubject.asObservable();
+
   private viewInitialized = false;
 
   constructor(
@@ -57,7 +60,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
         || this.dataSource.fileSystemType !== newFileSystem
         || this.dataSource.path !== newPath) {
         this.dataSource = new FileExplorerDataSource(
-          this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject);
+          this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject, this.breadcrumbsSubject);
         this.updateDataSource();
       }
     });
@@ -72,13 +75,34 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
 
   onMouseClick(entry: FileSystemEntry) {
     if (entry.isFolder) {
-      this.router.navigate([], this.getNavigationExtras(entry));
+      this.openFolder(this.getNavigationExtras(entry));
     }
   }
 
   onMouseUp(entry: FileSystemEntry, event: MouseEvent) {
-    if (entry.isFolder && event.button === 1) {
-      const url = this.router.createUrlTree([], this.getNavigationExtras(entry)).toString();
+    this.openFolderInNewWindow(event, () => {
+      return this.getNavigationExtras(entry);
+    });
+  }
+
+  onBreadcrumbClick(entry: Breadcrumb) {
+    this.openFolder(this.getBreadcrumbNavigationExtras(entry));
+  }
+
+  onBreadcrumbUp(entry: Breadcrumb, event: MouseEvent) {
+    this.openFolderInNewWindow(event, () => {
+      return this.getBreadcrumbNavigationExtras(entry);
+    });
+  }
+
+  private openFolder(extras: NavigationExtras) {
+    // noinspection JSIgnoredPromiseFromCall
+    this.router.navigate([], extras);
+  }
+
+  private openFolderInNewWindow(event: MouseEvent, extrasSupplier: () => NavigationExtras) {
+    if (event.button === 1) {
+      const url = this.router.createUrlTree([], extrasSupplier()).toString();
       window.open(url);
     }
   }
@@ -113,11 +137,11 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     window.open(url);
   }
 
-  getBreadcrumbPath(relativePath: string): string {
-    if (relativePath.length === 0) {
-      return this.router.createUrlTree([]).toString();
+  private getBreadcrumbNavigationExtras(breadcrumb: Breadcrumb): NavigationExtras {
+    if (breadcrumb.path.length === 0) {
+      return {};
     }
-    return this.router.createUrlTree([], this.getNavigationExtras(relativePath)).toString();
+    return this.getNavigationExtras(breadcrumb.path);
   }
 
   private updateDataSource() {
