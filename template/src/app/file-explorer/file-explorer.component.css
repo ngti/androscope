@@ -45,15 +45,18 @@ tr.highlightable-row:hover {
   content: "/";
 }
 
-.breadcrumb-item {
+.breadcrumb-item + .breadcrumb-item:hover::before {
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
   color: #6c757d;
 }
 
-.breadcrumb-item.parent {
-  color: #007bff;
-  cursor: pointer;
+a {
+  text-decoration: none;
 }
 
-.breadcrumb-item.parent:hover {
+a:hover {
   text-decoration: underline;
 }

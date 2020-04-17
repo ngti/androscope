@@ -32,8 +32,11 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
   }
 
   static concatPaths(parent: string, path: string): string {
-    if (parent == null) {
+    if (parent == null || parent.length === 0) {
       return path;
+    }
+    if (path == null || path.length === 0) {
+      return parent;
     }
     return parent + '/' + path;
   }

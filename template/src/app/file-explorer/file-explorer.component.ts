@@ -85,16 +85,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
   }
 
-  onBreadcrumbClick(entry: Breadcrumb) {
-    this.openFolder(this.getBreadcrumbNavigationExtras(entry));
-  }
-
-  onBreadcrumbUp(entry: Breadcrumb, event: MouseEvent) {
-    this.openFolderInNewWindow(event, () => {
-      return this.getBreadcrumbNavigationExtras(entry);
-    });
-  }
-
   private openFolder(extras: NavigationExtras) {
     // noinspection JSIgnoredPromiseFromCall
     this.router.navigate([], extras);
@@ -135,13 +125,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     const path = this.dataSource.getSubPath(entry);
     const url = this.restService.getFileViewUrl(this.dataSource.fileSystemType, path);
     window.open(url);
-  }
-
-  private getBreadcrumbNavigationExtras(breadcrumb: Breadcrumb): NavigationExtras {
-    if (breadcrumb.path.length === 0) {
-      return {};
-    }
-    return this.getNavigationExtras(breadcrumb.path);
   }
 
   private updateDataSource() {

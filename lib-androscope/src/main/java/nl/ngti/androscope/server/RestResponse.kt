@@ -124,10 +124,11 @@ class RestResponse : BaseAndroscopeResponse() {
     }
 
     private fun getFileSystemBreadcrumbs(session: SessionParams): List<Breadcrumb> {
-        val root = FileSystemParams(session).resolveFileSystemType(context)
+        val params = FileSystemParams(session)
+        val root = params.resolveFileSystemType(context)
         val result = ArrayList<Breadcrumb>()
         result += Breadcrumb(root.absolutePath, "")
-        session["path"]?.run {
+        params.path?.takeIf { it.isNotEmpty() }?.run {
             var relativePath = ""
             split('/').forEach {
                 relativePath += it

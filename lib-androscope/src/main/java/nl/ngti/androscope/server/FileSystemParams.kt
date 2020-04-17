@@ -28,8 +28,6 @@ data class FileSystemParams(
 
     fun getRootFile(context: Context): File {
         val dataDir = resolveFileSystemType(context)
-        return path?.let {
-            File(dataDir, it)
-        } ?: dataDir
+        return if (path.isNullOrEmpty()) dataDir else File(dataDir, path)
     }
 }
