@@ -33,8 +33,8 @@ class RestResponse : BaseAndroscopeResponse() {
                 when (restUrl) {
                     "provider/data" -> getData(session)
                     "provider/metadata" -> getMetadata(session)
-                    "file-system/list" -> fileSystemResponseCache.get(session).getFileSystemList(session)
-                    "file-system/count" -> fileSystemResponseCache.get(session).getFileSystemCount()
+                    "file-system/list" -> fileSystemResponseCache[session].getFileSystemList(session)
+                    "file-system/count" -> fileSystemResponseCache[session].getFileSystemCount()
                     "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
                     "file-system/delete" -> null // FIXME
                     else -> throw IOException("Unknown path: ${session.path}")

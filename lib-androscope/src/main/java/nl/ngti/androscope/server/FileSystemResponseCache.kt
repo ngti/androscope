@@ -9,7 +9,7 @@ class FileSystemResponseCache(
     private var lastParams: FileSystemParams? = null
     private var lastCachedResult: FileSystemData? = null
 
-    fun get(session: SessionParams): FileSystemData {
+    operator fun get(session: SessionParams): FileSystemData {
         val params = FileSystemParams(session)
         return synchronized(this) {
             if (lastParams == params) {

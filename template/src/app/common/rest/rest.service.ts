@@ -26,7 +26,8 @@ class ParamsBuilder {
   addDataParams(dataParams: DataParams): ParamsBuilder {
     this.httpParams = this.httpParams
       .set('pageSize', dataParams.pageSize.toString())
-      .set('pageNumber', dataParams.pageNumber.toString());
+      .set('pageNumber', dataParams.pageNumber.toString())
+      .set('timestamp', dataParams.timestamp.toString());
     if (dataParams.hasSorting()) {
       this.httpParams = this.httpParams
         .set('sortColumn', dataParams.sortColumn)
