@@ -72,21 +72,27 @@ private data class SortParams(
 
     val comparator: Comparator<FileSystemEntry>
         get() {
+            val nameCompareFunction: (FileSystemEntry, FileSystemEntry) -> Int = { entry1, entry2 ->
+                entry1.name.compareTo(entry2.name, ignoreCase = true)
+            }
             val folderComparator = Comparator<FileSystemEntry> { entry1, entry2 ->
                 entry2.isFolder.compareTo(entry1.isFolder)
             }
             return sortOrder?.let { order ->
                 sortColumn?.let { column ->
                     val compareFunction: (FileSystemEntry, FileSystemEntry) -> Int = when (column) {
-                        "name" -> { entry1, entry2 -> entry1.name.compareTo(entry2.name, ignoreCase = true) }
+                        "name" -> nameCompareFunction
                         "extension" -> { entry1, entry2 -> entry1.extension.orEmpty().compareTo(entry2.extension.orEmpty()) }
                         "date" -> { entry1, entry2 -> entry1.dateInternal.compareTo(entry2.dateInternal) }
                         "size" -> { entry1, entry2 -> entry1.sizeInternal.compareTo(entry2.sizeInternal) }
                         else -> throw IllegalArgumentException("Illegal sort column: $column")
                     }
-                    Comparator<FileSystemEntry>(compareFunction).let {
+                    val comparator = Comparator<FileSystemEntry>(compareFunction).let {
                         if (order == "desc") Collections.reverseOrder(it) else it
                     }
+                    if (compareFunction !== nameCompareFunction) {
+                        comparator.then(Comparator(nameCompareFunction))
+                    } else comparator
                 }
             }?.let {
                 folderComparator.then(it)
