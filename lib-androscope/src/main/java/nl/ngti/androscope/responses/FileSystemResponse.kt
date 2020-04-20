@@ -91,3 +91,8 @@ class Breadcrumb(
         val name: String,
         val path: String
 )
+
+class FileDeleteResult(
+        val success: Boolean,
+        val errorMessage: String? = null
+)

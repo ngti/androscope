@@ -31,6 +31,11 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     });
   }
 
+  forceReloadData() {
+    this.params.updateTimestamp();
+    super.forceReloadData();
+  }
+
   disconnect() {
     super.disconnect();
     this.rowCountSubject.complete();

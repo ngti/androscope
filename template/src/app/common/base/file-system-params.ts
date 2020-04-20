@@ -5,7 +5,7 @@ export class FileSystemParams {
   constructor(
     public readonly fileSystemType: FileSystemType,
     public readonly path?: string,
-    public readonly timestamp: number = Date.now()
+    private timestampInternal: number = Date.now()
   ) {
   }
 
@@ -31,8 +31,16 @@ export class FileSystemParams {
     return new FileSystemParams(
       this.fileSystemType,
       this.appendPath(path),
-      this.timestamp
+      this.timestampInternal
     );
+  }
+
+  get timestamp(): number {
+    return this.timestampInternal;
+  }
+
+  updateTimestamp() {
+    this.timestampInternal = Date.now();
   }
 
   equals(other: FileSystemParams): boolean {

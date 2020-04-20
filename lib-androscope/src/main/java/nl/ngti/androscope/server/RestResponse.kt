@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
 import nl.ngti.androscope.responses.Breadcrumb
+import nl.ngti.androscope.responses.FileDeleteResult
 import nl.ngti.androscope.responses.MetadataResponse
 import java.io.IOException
 import java.util.*
@@ -36,7 +37,7 @@ class RestResponse : BaseAndroscopeResponse() {
                     "file-system/list" -> fileSystemResponseCache[session].getFileSystemList(session)
                     "file-system/count" -> fileSystemResponseCache[session].getFileSystemCount()
                     "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
-                    "file-system/delete" -> null // FIXME
+                    "file-system/delete" -> deleteFileSystemObject(session)
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
 
@@ -137,5 +138,17 @@ class RestResponse : BaseAndroscopeResponse() {
             }
         }
         return result
+    }
+
+    private fun deleteFileSystemObject(session: SessionParams): FileDeleteResult {
+        val params = FileSystemParams(session)
+        val file = params.getRootFile(context)
+        if (file.isDirectory && file.listFiles()?.isEmpty() == false) {
+            return FileDeleteResult(false, "Cannot delete non-empty directories")
+        }
+        if (file.delete()) {
+            return FileDeleteResult(true)
+        }
+        return FileDeleteResult(false, "Cannot delete \"$file\"")
     }
 }
