@@ -26,7 +26,7 @@ class RestResponse : BaseAndroscopeResponse() {
     override fun getResponse(session: SessionParams): NanoHTTPD.Response? {
         val restUrl = session.relativePath
 
-        if (LOG) Log.d(tag, "Rest url: $restUrl")
+        if (LOG) Log.d(tag, "Rest url: [$restUrl]")
 
         val start = SystemClock.elapsedRealtimeNanos()
         val responseObject: Any? =
@@ -41,8 +41,8 @@ class RestResponse : BaseAndroscopeResponse() {
                 }
 
         if (LOG) Log.d(tag, String.format(Locale.ENGLISH,
-                "Response generation time: %,d ns",
-                SystemClock.elapsedRealtimeNanos() - start))
+                "Response generation time [%s]: %,d ns",
+                restUrl, SystemClock.elapsedRealtimeNanos() - start))
 
         val json = gson.toJson(responseObject)
 

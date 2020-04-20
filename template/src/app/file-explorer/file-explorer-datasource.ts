@@ -3,6 +3,7 @@ import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
 import {FileSystemType, RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {DataParams} from '../common/base/data-params';
+import {FileSystemParams} from '../common/base/file-system-params';
 
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
@@ -13,8 +14,7 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
   constructor(
     private restService: RestService,
-    public readonly fileSystemType: FileSystemType,
-    public readonly path: string,
+    public readonly params: FileSystemParams,
     loadingSubject: BehaviorSubject<boolean>,
     breadcrumbsSubject: BehaviorSubject<Breadcrumb[]>
   ) {
@@ -22,23 +22,13 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
     console.log('FileExplorerDataSource created');
 
-    restService.getFileCount(fileSystemType, path).subscribe(fileSystemCount => {
+    restService.getFileCount(params).subscribe(fileSystemCount => {
       this.rowCountSubject.next(fileSystemCount.totalEntries);
     });
 
-    restService.getBreadcrumbs(fileSystemType, path).subscribe(breadcrumbs => {
+    restService.getBreadcrumbs(params).subscribe(breadcrumbs => {
       breadcrumbsSubject.next(breadcrumbs);
     });
-  }
-
-  static concatPaths(parent: string, path: string): string {
-    if (parent == null || parent.length === 0) {
-      return path;
-    }
-    if (path == null || path.length === 0) {
-      return parent;
-    }
-    return parent + '/' + path;
   }
 
   disconnect() {
@@ -46,11 +36,7 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     this.rowCountSubject.complete();
   }
 
-  getSubPath(entry: FileSystemEntry): string {
-    return FileExplorerDataSource.concatPaths(this.path, FileSystemEntry.getFullName(entry));
-  }
-
   protected onGenerateNetworkRequest(dataParams: DataParams): Observable<FileSystemEntry[]> {
-    return this.restService.getFileList(this.fileSystemType, this.path, dataParams);
+    return this.restService.getFileList(this.params, dataParams);
   }
 }

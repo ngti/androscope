@@ -1,15 +1,14 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatButton, MatDialogRef} from '@angular/material';
 import {FileSystemEntry} from '../../common/rest/file-system-data';
-import {FileSystemType, RestService} from '../../common/rest/rest.service';
+import {RestService} from '../../common/rest/rest.service';
 import {BehaviorSubject} from 'rxjs';
-import {FileExplorerDataSource} from '../file-explorer-datasource';
+import {FileSystemParams} from '../../common/base/file-system-params';
 
 export class DeleteConfirmationDialogData {
   constructor(
-    public fileSystemType: FileSystemType,
-    public entry: FileSystemEntry,
-    public parentPath: string
+    public readonly parent: FileSystemParams,
+    public readonly entry: FileSystemEntry
   ) {
   }
 }
@@ -52,8 +51,8 @@ export class DeleteConfirmationDialogComponent {
     this.clearError();
     this.deleteButton.disabled = true;
     const entryName = this.getEntryName();
-    const fullPath = FileExplorerDataSource.concatPaths(this.data.parentPath, entryName);
-    this.restService.deleteFile(this.data.fileSystemType, fullPath)
+    const params = this.data.parent.withAppendedPath(entryName);
+    this.restService.deleteFile(params)
       .subscribe({
         next: value => {
           if (value.success) {

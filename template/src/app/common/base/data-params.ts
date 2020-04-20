@@ -6,7 +6,6 @@ export class DataParams {
   pageNumber = 0;
   sortOrder: SortDirection = '';
   sortColumn?: string = null;
-  readonly timestamp: number = Date.now();
 
   private changed = true;
 

@@ -12,7 +12,7 @@ import {
   DeleteConfirmationDialogData
 } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
 import {MatDialog, MatSnackBar} from '@angular/material';
-import {isString} from 'util';
+import {FileSystemParams} from '../common/base/file-system-params';
 
 @Component({
   selector: 'app-file-explorer',
@@ -53,14 +53,12 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     merge(this.route.queryParams, this.route.params).subscribe(() => {
       const snapshot = this.route.snapshot;
-      const newFileSystem = snapshot.params.type;
-      const newPath = snapshot.queryParams.path;
-      console.log(`FileExplorerComponent new params: ${newFileSystem}, ${newPath}`);
+      const newParams = new FileSystemParams(snapshot.params.type, snapshot.queryParams.path);
+      console.log(`FileExplorerComponent new params: ${newParams}`);
       if (this.dataSource == null
-        || this.dataSource.fileSystemType !== newFileSystem
-        || this.dataSource.path !== newPath) {
+        || !this.dataSource.params.equals(newParams)) {
         this.dataSource = new FileExplorerDataSource(
-          this.restService, newFileSystem, snapshot.queryParams.path, this.loadingSubject, this.breadcrumbsSubject);
+          this.restService, newParams, this.loadingSubject, this.breadcrumbsSubject);
         this.updateDataSource();
       }
     });
@@ -100,9 +98,9 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   onDelete(entry: FileSystemEntry) {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: new DeleteConfirmationDialogData(
-        this.dataSource.fileSystemType,
-        entry,
-        this.dataSource.path)
+        this.dataSource.params,
+        entry
+      )
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -117,13 +115,15 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   }
 
   onDownload(entry: FileSystemEntry) {
-    const path = this.dataSource.getSubPath(entry);
-    window.location.href = this.restService.getFileDownloadUrl(this.dataSource.fileSystemType, path);
+    const path = FileSystemEntry.getFullName(entry);
+    const params = this.dataSource.params.withAppendedPath(path);
+    window.location.href = this.restService.getFileDownloadUrl(params);
   }
 
   onView(entry: FileSystemEntry) {
-    const path = this.dataSource.getSubPath(entry);
-    const url = this.restService.getFileViewUrl(this.dataSource.fileSystemType, path);
+    const path = FileSystemEntry.getFullName(entry);
+    const params = this.dataSource.params.withAppendedPath(path);
+    const url = this.restService.getFileViewUrl(params);
     window.open(url);
   }
 
@@ -137,13 +137,9 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     this.dataSource.reloadDataIfNeeded();
   }
 
-  private getNavigationExtras(entry: FileSystemEntry | string): NavigationExtras {
-    let subPath: string;
-    if (isString(entry)) {
-      subPath = entry as string;
-    } else {
-      subPath = this.dataSource.getSubPath(entry as FileSystemEntry);
-    }
+  private getNavigationExtras(entry: FileSystemEntry): NavigationExtras {
+    const entryFullName = FileSystemEntry.getFullName(entry);
+    const subPath = this.dataSource.params.appendPath(entryFullName);
     return {
       queryParams: {path: subPath}
     };

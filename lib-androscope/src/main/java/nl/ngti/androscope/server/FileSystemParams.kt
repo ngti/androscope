@@ -6,10 +6,15 @@ import java.io.File
 
 data class FileSystemParams(
         val fileSystemType: String,
-        val path: String?
+        val path: String?,
+        val timestamp: Long
 ) {
 
-    constructor(session: SessionParams) : this(session["type"]!!, session["path"])
+    constructor(session: SessionParams) : this(
+            fileSystemType = session["type"]!!,
+            path = session["path"],
+            timestamp = session["timestamp"]?.toLong() ?: 0
+    )
 
     @Suppress("DEPRECATION")
     fun resolveFileSystemType(context: Context): File {
