@@ -3,6 +3,7 @@ import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
 import {FileSystemType, RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {DataParams} from '../common/base/data-params';
+import {FileSystemParams} from '../common/base/file-system-params';
 
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
@@ -11,46 +12,31 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
   private rowCountSubject = new BehaviorSubject<number>(0);
   rowCount$ = this.rowCountSubject.asObservable();
 
-  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>(null);
-  breadcrumbs$ = this.breadcrumbsSubject.asObservable();
-
   constructor(
     private restService: RestService,
-    public readonly fileSystemType: FileSystemType,
-    public readonly path: string,
-    loadingSubject: BehaviorSubject<boolean>
+    public readonly params: FileSystemParams,
+    loadingSubject: BehaviorSubject<boolean>,
+    breadcrumbsSubject: BehaviorSubject<Breadcrumb[]>
   ) {
     super(FileExplorerDataSource.DEFAULT_PAGE_SIZE, loadingSubject);
 
     console.log('FileExplorerDataSource created');
 
-    restService.getFileCount(fileSystemType, path).subscribe(fileSystemCount => {
+    restService.getFileCount(params).subscribe(fileSystemCount => {
       this.rowCountSubject.next(fileSystemCount.totalEntries);
     });
 
-    restService.getBreadcrumbs(fileSystemType, path).subscribe(breadcrumbs => {
-      this.breadcrumbsSubject.next(breadcrumbs);
+    restService.getBreadcrumbs(params).subscribe(breadcrumbs => {
+      breadcrumbsSubject.next(breadcrumbs);
     });
-  }
-
-  static concatPaths(parent: string, path: string): string {
-    if (parent == null) {
-      return path;
-    }
-    return parent + '/' + path;
   }
 
   disconnect() {
     super.disconnect();
     this.rowCountSubject.complete();
-    this.breadcrumbsSubject.complete();
-  }
-
-  getSubPath(entry: FileSystemEntry): string {
-    return FileExplorerDataSource.concatPaths(this.path, FileSystemEntry.getFullName(entry));
   }
 
   protected onGenerateNetworkRequest(dataParams: DataParams): Observable<FileSystemEntry[]> {
-    return this.restService.getFileList(this.fileSystemType, this.path, dataParams);
+    return this.restService.getFileList(this.params, dataParams);
   }
 }

@@ -46,13 +46,17 @@ tr.highlightable-row:hover {
 }
 
 .breadcrumb-item + .breadcrumb-item:hover::before {
-  text-decoration: underline;
-}
-
-.breadcrumb-item + .breadcrumb-item:hover::before {
   text-decoration: none;
 }
 
 .breadcrumb-item.active {
   color: #6c757d;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }

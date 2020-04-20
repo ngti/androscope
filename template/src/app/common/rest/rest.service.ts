@@ -5,6 +5,7 @@ import {Uri} from '../query-model/uri';
 import {UriMetadata} from './uri-metadata';
 import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 import {DataParams} from '../base/data-params';
+import {FileSystemParams} from '../base/file-system-params';
 
 class ParamsBuilder {
 
@@ -15,10 +16,12 @@ class ParamsBuilder {
     return this;
   }
 
-  addFileSystemParams(type: FileSystemType, path?: string): ParamsBuilder {
-    this.httpParams = this.httpParams.set('type', type);
-    if (path != null) {
-      this.httpParams = this.httpParams.set('path', path);
+  addFileSystemParams(params: FileSystemParams): ParamsBuilder {
+    this.httpParams = this.httpParams
+      .set('type', params.fileSystemType)
+      .set('timestamp', params.timestamp.toString());
+    if (params.hasPath()) {
+      this.httpParams = this.httpParams.set('path', params.path);
     }
     return this;
   }
@@ -55,7 +58,7 @@ export declare type FileSystemType =
 })
 export class RestService {
 
-  private static ROOT = 'http://localhost:62414/';
+  private static ROOT = 'http://192.168.178.10:8791/';
 
   private static REST_URL = `${RestService.ROOT}rest/`;
 
@@ -66,8 +69,8 @@ export class RestService {
   constructor(private http: HttpClient) {
   }
 
-  private static getFileUrlParams(type: FileSystemType, path?: string): string {
-    return '?' + new ParamsBuilder().addFileSystemParams(type, path).build().toString();
+  private static getFileUrlParams(params: FileSystemParams): string {
+    return '?' + new ParamsBuilder().addFileSystemParams(params).build().toString();
   }
 
   getUriMetadata(uri: Uri): Observable<UriMetadata> {
@@ -88,45 +91,45 @@ export class RestService {
   }
 
   getFileList(
-    type: FileSystemType, path: string, dataParams: DataParams
+    params: FileSystemParams, dataParams: DataParams
   ): Observable<FileSystemEntry[]> {
     return this.http.get<FileSystemEntry[]>(RestService.REST_URL + 'file-system/list', {
       params: new ParamsBuilder()
-        .addFileSystemParams(type, path)
+        .addFileSystemParams(params)
         .addDataParams(dataParams)
         .build()
     });
   }
 
-  getFileCount(type: FileSystemType, path?: string): Observable<FileSystemCount> {
+  getFileCount(params: FileSystemParams): Observable<FileSystemCount> {
     return this.http.get<FileSystemCount>(RestService.REST_URL + 'file-system/count', {
       params: new ParamsBuilder()
-        .addFileSystemParams(type, path)
+        .addFileSystemParams(params)
         .build()
     });
   }
 
-  getBreadcrumbs(type: FileSystemType, path?: string): Observable<Breadcrumb[]> {
+  getBreadcrumbs(params: FileSystemParams): Observable<Breadcrumb[]> {
     return this.http.get<Breadcrumb[]>(RestService.REST_URL + 'file-system/breadcrumbs', {
       params: new ParamsBuilder()
-        .addFileSystemParams(type, path)
+        .addFileSystemParams(params)
         .build()
     });
   }
 
-  deleteFile(type: FileSystemType, path?: string): Observable<FileDeleteResult> {
+  deleteFile(params: FileSystemParams): Observable<FileDeleteResult> {
     return this.http.delete<FileDeleteResult>(RestService.REST_URL + 'file-system/delete', {
       params: new ParamsBuilder()
-        .addFileSystemParams(type, path)
+        .addFileSystemParams(params)
         .build()
     });
   }
 
-  getFileViewUrl(type: FileSystemType, path?: string): string {
-    return RestService.VIEW_URL + RestService.getFileUrlParams(type, path);
+  getFileViewUrl(params: FileSystemParams): string {
+    return RestService.VIEW_URL + RestService.getFileUrlParams(params);
   }
 
-  getFileDownloadUrl(type: FileSystemType, path?: string): string {
-    return RestService.DOWNLOAD_URL + RestService.getFileUrlParams(type, path);
+  getFileDownloadUrl(params: FileSystemParams): string {
+    return RestService.DOWNLOAD_URL + RestService.getFileUrlParams(params);
   }
 }

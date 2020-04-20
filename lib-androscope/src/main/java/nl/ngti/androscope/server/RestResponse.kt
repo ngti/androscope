@@ -7,14 +7,11 @@ import android.util.Log
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.LOG
-import nl.ngti.androscope.responses.*
-import nl.ngti.androscope.utils.getRootFile
-import nl.ngti.androscope.utils.resolveFileSystemType
+import nl.ngti.androscope.responses.Breadcrumb
+import nl.ngti.androscope.responses.MetadataResponse
 import java.io.IOException
 import java.util.*
-import kotlin.Comparator
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 class RestResponse : BaseAndroscopeResponse() {
 
@@ -22,26 +19,30 @@ class RestResponse : BaseAndroscopeResponse() {
 
     private val gson = Gson()
 
+    private val fileSystemResponseCache by lazy {
+        FileSystemResponseCache(context)
+    }
+
     override fun getResponse(session: SessionParams): NanoHTTPD.Response? {
         val restUrl = session.relativePath
 
-        if (LOG) Log.d(tag, "Rest url: $restUrl")
+        if (LOG) Log.d(tag, "Rest url: [$restUrl]")
 
         val start = SystemClock.elapsedRealtimeNanos()
         val responseObject: Any? =
                 when (restUrl) {
                     "provider/data" -> getData(session)
                     "provider/metadata" -> getMetadata(session)
-                    "file-system/list" -> getFileSystemList(session)
-                    "file-system/count" -> getFileSystemCount(session)
+                    "file-system/list" -> fileSystemResponseCache[session].getFileSystemList(session)
+                    "file-system/count" -> fileSystemResponseCache[session].getFileSystemCount()
                     "file-system/breadcrumbs" -> getFileSystemBreadcrumbs(session)
-                    "file-system/delete" -> null
+                    "file-system/delete" -> null // FIXME
                     else -> throw IOException("Unknown path: ${session.path}")
                 }
 
         if (LOG) Log.d(tag, String.format(Locale.ENGLISH,
-                "Response generation time: %,d ns",
-                SystemClock.elapsedRealtimeNanos() - start))
+                "Response generation time [%s]: %,d ns",
+                restUrl, SystemClock.elapsedRealtimeNanos() - start))
 
         val json = gson.toJson(responseObject)
 
@@ -122,56 +123,12 @@ class RestResponse : BaseAndroscopeResponse() {
         )
     }
 
-    private fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
-        val root = getRootFile(context, session)
-        val pageSize = session["pageSize"]?.toInt()
-                ?: throw IllegalArgumentException("Missing page number")
-        val pageNumber = session["pageNumber"]?.toInt() ?: 0
-
-        val folderComparator = Comparator<FileSystemEntry> { entry1, entry2 ->
-            entry2.isFolder.compareTo(entry1.isFolder)
-        }
-        val comparator = session["sortOrder"]?.let { order ->
-            session["sortColumn"]?.let { column ->
-                val compareFunction: (FileSystemEntry, FileSystemEntry) -> Int = when (column) {
-                    "name" -> { entry1, entry2 -> entry1.name.compareTo(entry2.name, ignoreCase = true) }
-                    "extension" -> { entry1, entry2 -> entry1.extension.orEmpty().compareTo(entry2.extension.orEmpty()) }
-                    "date" -> { entry1, entry2 -> entry1.dateInternal.compareTo(entry2.dateInternal) }
-                    "size" -> { entry1, entry2 -> entry1.sizeInternal.compareTo(entry2.sizeInternal) }
-                    else -> throw IllegalArgumentException("Illegal sort column: $column")
-                }
-                Comparator<FileSystemEntry>(compareFunction).let {
-                    if (order == "desc") Collections.reverseOrder(it) else it
-                }
-            }
-        }?.let {
-            folderComparator.then(it)
-        } ?: folderComparator
-
-        val responseFactory = FileSystemListResponseFactory(context)
-        return responseFactory.generate(root).sortedWith(comparator).run {
-            val fromIndex = pageSize * pageNumber
-            val toIndex = min(fromIndex + pageSize, size)
-            subList(fromIndex, toIndex)
-        }.apply {
-            forEach {
-                it.prepareForSerialization(responseFactory)
-            }
-        }
-    }
-
-    private fun getFileSystemCount(session: SessionParams): FileSystemCount {
-        val root = getRootFile(context, session)
-        val list = root.list()
-
-        return FileSystemCount(list?.size ?: 0)
-    }
-
     private fun getFileSystemBreadcrumbs(session: SessionParams): List<Breadcrumb> {
-        val root = resolveFileSystemType(context, session)
+        val params = FileSystemParams(session)
+        val root = params.resolveFileSystemType(context)
         val result = ArrayList<Breadcrumb>()
         result += Breadcrumb(root.absolutePath, "")
-        session["path"]?.run {
+        params.path?.takeIf { it.isNotEmpty() }?.run {
             var relativePath = ""
             split('/').forEach {
                 relativePath += it
