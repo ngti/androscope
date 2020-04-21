@@ -1,4 +1,4 @@
-package nl.ngti.androscope.responses
+package nl.ngti.androscope.responses.provider
 
 class MetadataResponse(
         val columns: Array<String> = emptyArray(),

@@ -1,14 +1,16 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.responses
 
-import android.util.Log
+import android.content.Context
 import fi.iki.elonen.NanoHTTPD
+import nl.ngti.androscope.responses.files.FileSystemParams
+import nl.ngti.androscope.server.SessionParams
 import java.io.FileInputStream
 
-class DownloadResponse : BaseAndroscopeResponse() {
+class DownloadResponse(
+        private val context: Context
+) : Response {
 
-    override fun getResponse(session: SessionParams): NanoHTTPD.Response? {
-        Log.d("DownloadResponse", "Download response " + session["path"]);
-
+    override fun invoke(session: SessionParams): NanoHTTPD.Response? {
         val file = FileSystemParams(session).getRootFile(context)
 
         val mime = "application/octet-stream"

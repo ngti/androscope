@@ -1,6 +1,8 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.responses.files
 
 import android.content.Context
+import nl.ngti.androscope.server.FileSystemData
+import nl.ngti.androscope.server.SessionParams
 
 class FileSystemResponseCache(
         private val context: Context

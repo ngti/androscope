@@ -39,6 +39,8 @@ import {DatabaseTableComponent} from './database/database-table/database-table.c
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
 import {FileExplorerComponent} from './file-explorer/file-explorer.component';
 import {DeleteConfirmationDialogComponent} from './file-explorer/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { ImageCacheListComponent } from './image-cache/image-cache-list/image-cache-list.component';
+import { ImageCacheGridComponent } from './image-cache/image-cache-grid/image-cache-grid.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import {DeleteConfirmationDialogComponent} from './file-explorer/delete-confirma
     ProviderDataComponent,
     FileExplorerComponent,
     DeleteConfirmationDialogComponent,
+    ImageCacheListComponent,
+    ImageCacheGridComponent,
   ],
   imports: [
     BrowserModule,

@@ -35,7 +35,7 @@ export class ProviderSuggestionsComponent {
     ),
     new UriSuggestion(
       'content://media/none/media_scanner',
-      'Displays phone contacts, requires READ_CONTACTS permission',
+      'Queries the state of the media scanner',
       'scanner'
     ),
   ];

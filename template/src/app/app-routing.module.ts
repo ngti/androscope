@@ -10,6 +10,7 @@ import {DatabaseQueryComponent} from './database/database-query/database-query.c
 import {DatabaseTableComponent} from './database/database-table/database-table.component';
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
 import {FileExplorerComponent} from './file-explorer/file-explorer.component';
+import {ImageCacheGridComponent} from './image-cache/image-cache-grid/image-cache-grid.component';
 
 const providerChildRoutes: Routes = [
   {path: ':uri', component: ProviderDataComponent},
@@ -27,7 +28,8 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
   {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
-  {path: 'file-explorer/:type', component: FileExplorerComponent}
+  {path: 'file-explorer/:type', component: FileExplorerComponent},
+  {path: 'image-cache/:type', component: ImageCacheGridComponent}
 ];
 
 @NgModule({

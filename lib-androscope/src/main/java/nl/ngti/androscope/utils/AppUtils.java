@@ -16,7 +16,7 @@ public final class AppUtils {
     private AppUtils() {
     }
 
-    @NonNull
+    @Nullable
     public static Bundle getMetadata(@NonNull final Context context) {
         try {
             final ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(

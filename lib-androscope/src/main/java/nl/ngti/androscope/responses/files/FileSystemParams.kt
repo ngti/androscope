@@ -1,7 +1,9 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.responses.files
 
 import android.content.Context
 import android.os.Environment
+import nl.ngti.androscope.server.SessionParams
+import nl.ngti.androscope.server.get
 import java.io.File
 
 data class FileSystemParams(

@@ -1,9 +1,9 @@
 package nl.ngti.androscope.server
 
 import android.content.Context
-import nl.ngti.androscope.responses.FileSystemCount
-import nl.ngti.androscope.responses.FileSystemEntry
-import nl.ngti.androscope.responses.FileSystemListResponseFactory
+import nl.ngti.androscope.responses.files.FileSystemCount
+import nl.ngti.androscope.responses.files.FileSystemEntry
+import nl.ngti.androscope.responses.files.FileSystemEntryListFactory
 import java.io.File
 import java.util.*
 import kotlin.Comparator
@@ -14,7 +14,7 @@ class FileSystemData(
         private val root: File
 ) {
 
-    private val responseFactory = FileSystemListResponseFactory(context)
+    private val responseFactory = FileSystemEntryListFactory(context)
 
     private val fileList: Array<String>? by lazy {
         root.list()
