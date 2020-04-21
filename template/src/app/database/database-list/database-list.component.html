@@ -1,2 +1,7 @@
-<p>database-list works!</p>
-<mat-spinner></mat-spinner>
+<mat-spinner *ngIf="loading$ | async"></mat-spinner>
+<mat-nav-list>
+<mat-list-item *ngFor="let database of databaseList$ | async" [routerLink]="['./database/' + getDbPath(database.name)]">
+  <h4 mat-line>{{database.name}}</h4>
+  <p mat-line *ngIf="database.description?.length > 0">{{database.description}}</p>
+</mat-list-item>
+</mat-nav-list>

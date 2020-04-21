@@ -11,6 +11,7 @@ import nl.ngti.androscope.responses.AssetResponse
 import nl.ngti.androscope.responses.DownloadResponse
 import nl.ngti.androscope.responses.Response
 import nl.ngti.androscope.responses.ViewResponse
+import nl.ngti.androscope.responses.database.DatabaseResponse
 import nl.ngti.androscope.responses.files.FileSystemResponse
 import nl.ngti.androscope.responses.provider.ProviderResponse
 
@@ -22,22 +23,26 @@ internal class ResponseFactory(
     private val gson = Gson()
 
     private val urlMatcher = UrlMatcher<Response>().apply {
-        add("view", null, ViewResponse(context))
-        add("download", null, DownloadResponse(context))
+        add("view", ViewResponse(context))
+        add("download", DownloadResponse(context))
 
         FileSystemResponse(context).apply {
-            addJson("rest", "file-system/list", ::getFileList)
-            addJson("rest", "file-system/count", ::getFileCount)
-            addJson("rest", "file-system/breadcrumbs", ::getBreadcrumbs)
-            addJson("rest", "file-system/delete", ::delete)
+            addRest("file-system/list", ::getFileList)
+            addRest("file-system/count", ::getFileCount)
+            addRest("file-system/breadcrumbs", ::getBreadcrumbs)
+            addRest("file-system/delete", ::delete)
         }
 
         ProviderResponse(context).apply {
-            addJson("rest", "provider/metadata", ::getMetadata)
-            addJson("rest", "provider/data", ::getData)
+            addRest("provider/metadata", ::getMetadata)
+            addRest("provider/data", ::getData)
         }
 
-        add("*", null, AssetResponse(context))
+        DatabaseResponse(context, metadata).apply {
+            addRest("database/list") { getList() }
+        }
+
+        add("*", AssetResponse(context))
     }
 
     fun getResponse(session: IHTTPSession): NanoHTTPD.Response? {
@@ -60,12 +65,18 @@ internal class ResponseFactory(
         }
     }
 
-    private fun UrlMatcher<Response>.addJson(rootPath: String, path: String, handler: (SessionParams) -> Any?) {
-        add(rootPath, path) {
+    private fun UrlMatcher<Response>.addRest(path: String, handler: (SessionParams) -> Any?) {
+        add("rest", path) {
             val data = handler(it)
             val json = gson.toJson(data)
-//        log { "Response: $json" }
+
+//            log { "Response: $json" }
+
             NanoHTTPD.newFixedLengthResponse(json)
         }
+    }
+
+    private fun UrlMatcher<Response>.add(rootPath: String, handler: Response) {
+        add(rootPath, null, handler)
     }
 }

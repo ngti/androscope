@@ -16,8 +16,8 @@ class AssetResponse(
         private val context: Context
 ) : Response {
 
-    override fun invoke(session: SessionParams): NanoHTTPD.Response? {
-        val assetToOpen = WEB_CONTENT_ROOT + session.path
+    override fun invoke(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val assetToOpen = WEB_CONTENT_ROOT + sessionParams.path
         var inputStream: InputStream
         var mimeType: String?
         try {

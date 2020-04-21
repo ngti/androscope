@@ -10,8 +10,8 @@ class DownloadResponse(
         private val context: Context
 ) : Response {
 
-    override fun invoke(session: SessionParams): NanoHTTPD.Response? {
-        val file = FileSystemParams(session).getRootFile(context)
+    override fun invoke(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val file = FileSystemParams(sessionParams).getRootFile(context)
 
         val mime = "application/octet-stream"
         val response = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, FileInputStream(file))

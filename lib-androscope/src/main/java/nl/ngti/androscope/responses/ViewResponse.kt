@@ -11,8 +11,8 @@ class ViewResponse(
         private val context: Context
 ) : Response {
 
-    override fun invoke(session: SessionParams): NanoHTTPD.Response? {
-        val file = FileSystemParams(session).getRootFile(context)
+    override fun invoke(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val file = FileSystemParams(sessionParams).getRootFile(context)
 
         val mime = getMimeType(file)
         return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, FileInputStream(file)).apply {

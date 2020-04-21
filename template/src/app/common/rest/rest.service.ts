@@ -6,6 +6,7 @@ import {UriMetadata} from './uri-metadata';
 import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 import {DataParams} from '../base/data-params';
 import {FileSystemParams} from '../base/file-system-params';
+import {Database} from "./database-data";
 
 class ParamsBuilder {
 
@@ -131,5 +132,9 @@ export class RestService {
 
   getFileDownloadUrl(params: FileSystemParams): string {
     return RestService.DOWNLOAD_URL + RestService.getFileUrlParams(params);
+  }
+
+  getDatabaseList(): Observable<Database[]> {
+    return this.http.get<Database[]>(RestService.REST_URL + 'database/list');
   }
 }
