@@ -1,19 +1,18 @@
 package nl.ngti.androscope.responses.database
 
 import android.content.Context
-import android.os.Bundle
+import nl.ngti.androscope.utils.AndroscopeMetadata
 
-private const val KEY_DATABASE_NAME = "nl.ngti.androscope.DATABASE_NAME"
 
 class DatabaseResponse(
         private val context: Context,
-        private val metadata: Bundle
+        private val metadata: AndroscopeMetadata
 ) {
 
     fun getList(): List<Database> {
         val result = ArrayList<Database>()
 
-        metadata.getString(KEY_DATABASE_NAME)?.run {
+        metadata.databaseName?.run {
             if (isNotBlank()) {
                 result += Database(this, "Set in manifest")
             }

@@ -1,7 +1,6 @@
 package nl.ngti.androscope.server
 
 import android.content.Context
-import android.os.Bundle
 import android.os.SystemClock
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
@@ -14,10 +13,11 @@ import nl.ngti.androscope.responses.ViewResponse
 import nl.ngti.androscope.responses.database.DatabaseResponse
 import nl.ngti.androscope.responses.files.FileSystemResponse
 import nl.ngti.androscope.responses.provider.ProviderResponse
+import nl.ngti.androscope.utils.AndroscopeMetadata
 
 internal class ResponseFactory(
         private val context: Context,
-        private val metadata: Bundle
+        private val metadata: AndroscopeMetadata
 ) {
 
     private val gson = Gson()

@@ -3,19 +3,18 @@ package nl.ngti.androscope
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.net.Uri
-import nl.ngti.androscope.server.AndroscopeHttpServer
 import nl.ngti.androscope.service.AndroscopeService
-import nl.ngti.androscope.utils.AppUtils
+import nl.ngti.androscope.utils.AndroscopeMetadata
 
 class AndroscopeContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         val context = context!!
-        AppUtils.getMetadata(context)?.run {
-            if (getBoolean(AndroscopeHttpServer.KEY_AUTO_START)) {
-                AndroscopeService.startServer(context)
-            }
+
+        if (AndroscopeMetadata.isAutoStartEnabled(context)) {
+            AndroscopeService.startServer(context)
         }
+
         return false
     }
 
