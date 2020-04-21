@@ -7,7 +7,7 @@ import {FileSystemParams} from '../common/base/file-system-params';
 
 export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
 
-  static DEFAULT_PAGE_SIZE = 250;
+  static DEFAULT_PAGE_SIZE = 100;
 
   private rowCountSubject = new BehaviorSubject<number>(0);
   rowCount$ = this.rowCountSubject.asObservable();

@@ -59,6 +59,10 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
         || !this.dataSource.params.equals(newParams)) {
         this.dataSource = new FileExplorerDataSource(
           this.restService, newParams, this.loadingSubject, this.breadcrumbsSubject);
+        // Reset pagination
+        if (this.paginator != null) {
+          this.paginator.pageIndex = 0;
+        }
         this.updateDataSource();
       }
     });
