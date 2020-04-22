@@ -1,5 +1,5 @@
 export class Database {
-  path: string;
+  name: string;
   title: string;
   description?: string;
   error?: string;

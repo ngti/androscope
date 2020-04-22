@@ -27,6 +27,6 @@ export class DatabaseListComponent {
     if (database.error != null) {
       return null;
     }
-    return './database/' + encodeURIComponent(database.path);
+    return './database/' + encodeURIComponent(database.name);
   }
 }

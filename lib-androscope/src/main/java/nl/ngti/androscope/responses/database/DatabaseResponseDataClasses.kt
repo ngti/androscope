@@ -1,8 +1,8 @@
 package nl.ngti.androscope.responses.database
 
 class Database(
-        val path: String,
-        val title: String = path,
+        val name: String,
+        val title: String = name,
         val description: String? = null,
         val error: String? = null
 )
