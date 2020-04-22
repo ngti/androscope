@@ -8,7 +8,7 @@ import {Database} from '../../common/rest/database-data';
   templateUrl: './database-list.component.html',
   styleUrls: ['./database-list.component.css']
 })
-export class DatabaseListComponent implements AfterViewInit, OnInit {
+export class DatabaseListComponent {
 
   private databaseListSubject = new BehaviorSubject<Database[]>([]);
   databaseList$ = this.databaseListSubject.asObservable();
@@ -23,13 +23,10 @@ export class DatabaseListComponent implements AfterViewInit, OnInit {
     });
   }
 
-  ngOnInit() {
-  }
-
-  ngAfterViewInit(): void {
-  }
-
-  getDbPath(database: string) {
-    return encodeURIComponent(database);
+  getDbPath(database: Database): string {
+    if (database.error != null) {
+      return null;
+    }
+    return './database/' + encodeURIComponent(database.path);
   }
 }

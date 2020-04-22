@@ -30,7 +30,7 @@
             android:value="true" />
         <meta-data
             android:name="nl.ngti.androscope.DATABASE_NAME"
-            android:value="no_backup/androidx.work.workdb" />
+            android:value="no_backup://androidx.work.workdb" />
     </application>
 
 </manifest>
