@@ -32,6 +32,7 @@ private class ManifestDbConfig(
         context: Context,
         private val manifestDatabaseName: String
 ) {
+    private val customPath: String?
     private val databaseName: String
     val databasePath: String
     private var error: String? = null
@@ -39,7 +40,7 @@ private class ManifestDbConfig(
     init {
         val separatorIndex = manifestDatabaseName.indexOf(PATH_SEPARATOR)
         if (separatorIndex >= 0) {
-            val customPath = manifestDatabaseName.substring(0, separatorIndex)
+            customPath = manifestDatabaseName.substring(0, separatorIndex)
             databaseName = manifestDatabaseName.substring(separatorIndex + PATH_SEPARATOR.length)
 
             if (customPath == "no_backup") {
@@ -52,11 +53,17 @@ private class ManifestDbConfig(
 
             }
         } else {
+            customPath = null
             databaseName = manifestDatabaseName
             databasePath = manifestDatabaseName
         }
 
     }
 
-    fun toJsonDatabase() = Database(manifestDatabaseName, title = databaseName, description = "Set in manifest", error = error)
+    fun toJsonDatabase() = Database(
+            manifestDatabaseName,
+            title = customPath?.let { "$databaseName ($customPath)" } ?: databaseName,
+            description = "Set in manifest",
+            error = error
+    )
 }
