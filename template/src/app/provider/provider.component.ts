@@ -23,7 +23,8 @@ export class ProviderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uriSubscription = this.model.uri$.subscribe(newUri => this.uri = Object.assign(new Uri(), newUri));
+    this.uriSubscription = this.model.uri$.subscribe(
+      newUri => this.uri = Object.assign(new Uri(), newUri));
   }
 
   ngOnDestroy(): void {
@@ -31,7 +32,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
   }
 
   submitUri(newUri: Uri) {
-    this.router.navigate([encodeURIComponent(newUri.content.trim())], {relativeTo: this.route});
+    this.router.navigate([newUri.contentUrlEncoded], {relativeTo: this.route});
   }
 
 }

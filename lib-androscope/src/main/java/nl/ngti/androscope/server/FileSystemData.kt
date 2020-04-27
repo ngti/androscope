@@ -28,11 +28,10 @@ class FileSystemData(
     private var lastSortParams: SortParams? = null
 
     fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
-        val pageSize = session["pageSize"]?.toInt()
-                ?: throw IllegalArgumentException("Missing page number")
-        val pageNumber = session["pageNumber"]?.toInt() ?: 0
+        val pageSize = session.pageSize
+        val pageNumber = session.pageNumber
 
-        val sortParams = SortParams(session["sortOrder"], session["sortColumn"])
+        val sortParams = SortParams(session.sortOrder, session.sortColumn)
 
         return getEntryList(sortParams).run {
             val fromIndex = pageSize * pageNumber

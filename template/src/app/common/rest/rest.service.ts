@@ -2,18 +2,20 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Uri} from '../query-model/uri';
-import {UriMetadata} from './uri-metadata';
+import {ProviderInfo} from './provider-info';
 import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 import {DataParams} from '../base/data-params';
 import {FileSystemParams} from '../base/file-system-params';
-import {Database} from "./database-data";
+import {Database, DatabaseInfo} from './database-data';
 
 class ParamsBuilder {
 
   private httpParams = new HttpParams();
 
   addUri(uri: Uri): ParamsBuilder {
-    this.httpParams = this.httpParams.set('uri', uri.content);
+    this.httpParams = this.httpParams
+      .set('uri', uri.content)
+      .set('timestamp', uri.timestamp.toString());
     return this;
   }
 
@@ -36,6 +38,11 @@ class ParamsBuilder {
         .set('sortColumn', dataParams.sortColumn)
         .set('sortOrder', dataParams.sortOrder);
     }
+    return this;
+  }
+
+  addDatabaseName(name: string): ParamsBuilder {
+    this.httpParams = this.httpParams.set('location', name);
     return this;
   }
 
@@ -74,8 +81,8 @@ export class RestService {
     return '?' + new ParamsBuilder().addFileSystemParams(params).build().toString();
   }
 
-  getUriMetadata(uri: Uri): Observable<UriMetadata> {
-    return this.http.get<UriMetadata>(RestService.REST_URL + 'provider/metadata', {
+  getProviderInfo(uri: Uri): Observable<ProviderInfo> {
+    return this.http.get<ProviderInfo>(RestService.REST_URL + 'provider/info', {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -136,5 +143,13 @@ export class RestService {
 
   getDatabaseList(): Observable<Database[]> {
     return this.http.get<Database[]>(RestService.REST_URL + 'database/list');
+  }
+
+  getDatabaseInfo(name: string): Observable<DatabaseInfo> {
+    return this.http.get<DatabaseInfo>(RestService.REST_URL + 'database/info', {
+      params: new ParamsBuilder()
+        .addDatabaseName(name)
+        .build()
+    });
   }
 }

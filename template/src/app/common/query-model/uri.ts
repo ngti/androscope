@@ -1,8 +1,17 @@
 export class Uri {
 
-  constructor(public content: string = '') {}
+  readonly content: string;
+  timestamp: number = Date.now();
+
+  constructor(content: string = '') {
+    this.content = content.trim();
+  }
 
   isEmpty(): boolean {
-    return this.content.trim().length === 0;
+    return this.content.length === 0;
+  }
+
+  get contentUrlEncoded(): string {
+    return encodeURIComponent(this.content);
   }
 }

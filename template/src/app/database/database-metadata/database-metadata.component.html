@@ -1,1 +1,4 @@
-<p>database-metadata works!</p>
+<mat-spinner *ngIf="loading$ | async"></mat-spinner>
+<div *ngIf="(databaseInfo$ | async) != null">
+  <p>{{(databaseInfo$ | async).name}}</p>
+</div>

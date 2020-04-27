@@ -1,13 +1,20 @@
 package nl.ngti.androscope.responses.files
 
 import android.content.Context
+import nl.ngti.androscope.common.ResponseDataCache
+import nl.ngti.androscope.server.FileSystemData
 import nl.ngti.androscope.server.SessionParams
 
 class FileSystemResponse(
         private val context: Context
 ) {
 
-    private val fileSystemResponseCache = FileSystemResponseCache(context)
+    private val fileSystemResponseCache = ResponseDataCache(
+            paramsSupplier = ::FileSystemParams,
+            dataSupplier = {
+                FileSystemData(context, it.getRootFile(context))
+            }
+    )
 
     fun getFileCount(session: SessionParams) = fileSystemResponseCache[session].getFileSystemCount()
 

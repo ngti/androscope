@@ -8,34 +8,16 @@ import {Uri} from '../../common/query-model/uri';
   templateUrl: './provider-data.component.html',
   styleUrls: ['./provider-data.component.css']
 })
-export class ProviderDataComponent implements OnInit, OnDestroy {
+export class ProviderDataComponent {
 
   constructor(
     private model: QueryModelService,
-    private route: ActivatedRoute
+    route: ActivatedRoute
   ) {
-    console.log('ProviderDataComponent created');
-
     route.url.subscribe(newUrl => {
-      console.log('newUrl: ' + newUrl);
-
-      let uriContent = route.snapshot.params.uri;
-      console.log('uriContent: ' + uriContent);
-      if (uriContent != null) {
-        uriContent = decodeURIComponent(uriContent);
-      } else {
-        uriContent = '';
-      }
-      model.uri = new Uri(uriContent);
+      const uriString = decodeURIComponent(route.snapshot.params.uri);
+      model.uri = new Uri(uriString);
     });
-  }
-
-  ngOnInit() {
-    console.log('ProviderDataComponent - onInit');
-  }
-
-  ngOnDestroy(): void {
-    console.log('ProviderDataComponent - onDestroy');
   }
 
 }

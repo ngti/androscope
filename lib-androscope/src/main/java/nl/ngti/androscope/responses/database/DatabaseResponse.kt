@@ -1,8 +1,9 @@
 package nl.ngti.androscope.responses.database
 
 import android.content.Context
+import nl.ngti.androscope.server.SessionParams
+import nl.ngti.androscope.server.get
 import nl.ngti.androscope.utils.AndroscopeMetadata
-import java.io.File
 
 class DatabaseResponse(
         private val context: Context,
@@ -14,7 +15,7 @@ class DatabaseResponse(
 
         metadata.databaseName?.run {
             if (isNotBlank()) {
-                val manifestDbConfig = ManifestDbConfig(context, this)
+                val manifestDbConfig = DbConfig(context, this)
                 result += manifestDbConfig.toJsonDatabase()
             }
         }
@@ -24,46 +25,11 @@ class DatabaseResponse(
         }
         return result
     }
-}
 
-private const val PATH_SEPARATOR = "://"
-
-private class ManifestDbConfig(
-        context: Context,
-        private val manifestDatabaseName: String
-) {
-    private val customPath: String?
-    private val databaseName: String
-    val databasePath: String
-    private var error: String? = null
-
-    init {
-        val separatorIndex = manifestDatabaseName.indexOf(PATH_SEPARATOR)
-        if (separatorIndex >= 0) {
-            customPath = manifestDatabaseName.substring(0, separatorIndex)
-            databaseName = manifestDatabaseName.substring(separatorIndex + PATH_SEPARATOR.length)
-
-            if (customPath == "no_backup") {
-                databasePath = File(context.noBackupFilesDir, databaseName).absolutePath
-            } else {
-                databasePath = ""
-                error = if (customPath.isBlank())
-                    "Custom path should not be empty"
-                else "Unsupported custom path: $customPath"
-
-            }
-        } else {
-            customPath = null
-            databaseName = manifestDatabaseName
-            databasePath = manifestDatabaseName
-        }
-
+    fun getInfo(sessionParams: SessionParams): DatabaseInfo {
+        val config = sessionParams.dbConfig
+        return DatabaseInfo(config.name, "")
     }
 
-    fun toJsonDatabase() = Database(
-            manifestDatabaseName,
-            title = customPath?.let { "$databaseName ($customPath)" } ?: databaseName,
-            description = "Set in manifest",
-            error = error
-    )
+    private val SessionParams.dbConfig get() = DbConfig(context, this["location"]!!)
 }

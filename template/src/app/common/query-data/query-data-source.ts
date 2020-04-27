@@ -22,7 +22,7 @@ export class QueryDataSource extends BaseDataSource<[]> {
   ) {
     super(QueryDataSource.DEFAULT_PAGE_SIZE, loadingSubject);
 
-    restService.getUriMetadata(uri).subscribe(metadata => {
+    restService.getProviderInfo(uri).subscribe(metadata => {
       this.columnNamesSubject.next(metadata.columns);
       this.rowCountSubject.next(metadata.rowCount);
       this.errorSubject.next(metadata.errorMessage);

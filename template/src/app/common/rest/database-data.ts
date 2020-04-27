@@ -4,3 +4,12 @@ export class Database {
   description?: string;
   error?: string;
 }
+
+export class DatabaseInfo {
+  name: string;
+  size: string;
+  tables: string[];
+  views: string[];
+  triggers: string[];
+  indexes: string[];
+}

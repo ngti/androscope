@@ -4,18 +4,19 @@ import android.content.Context
 import android.os.Environment
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.get
+import nl.ngti.androscope.server.timestamp
 import java.io.File
 
 data class FileSystemParams(
-        val fileSystemType: String,
+        private val fileSystemType: String,
         val path: String?,
-        val timestamp: Long
+        private val timestamp: Long
 ) {
 
     constructor(session: SessionParams) : this(
             fileSystemType = session["type"]!!,
             path = session["path"],
-            timestamp = session["timestamp"]?.toLong() ?: 0
+            timestamp = session.timestamp
     )
 
     @Suppress("DEPRECATION")

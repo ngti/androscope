@@ -34,12 +34,15 @@ internal class ResponseFactory(
         }
 
         ProviderResponse(context).apply {
-            addRest("provider/metadata", ::getMetadata)
+            addRest("provider/info", ::getInfo)
             addRest("provider/data", ::getData)
         }
 
         DatabaseResponse(context, metadata).apply {
             addRest("database/list") { getList() }
+            addRest("database/info", ::getInfo)
+            //addRest("database/download")
+            //addRest("database/upload")
         }
 
         add("*", AssetResponse(context))

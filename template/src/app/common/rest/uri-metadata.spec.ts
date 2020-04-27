@@ -1,7 +1,7 @@
-import { UriMetadata } from './uri-metadata';
+import { ProviderInfo } from './provider-info';
 
 describe('UriMetadata', () => {
   it('should create an instance', () => {
-    expect(new UriMetadata()).toBeTruthy();
+    expect(new ProviderInfo()).toBeTruthy();
   });
 });
