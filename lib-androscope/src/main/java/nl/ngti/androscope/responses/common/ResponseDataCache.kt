@@ -1,4 +1,4 @@
-package nl.ngti.androscope.common
+package nl.ngti.androscope.responses.common
 
 import nl.ngti.androscope.server.SessionParams
 

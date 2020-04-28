@@ -18,16 +18,16 @@ const providerChildRoutes: Routes = [
 ];
 
 const databasesChildRoutes: Routes = [
-  {path: ':database/:query', component: DatabaseQueryComponent},
-  {path: ':database/:table', component: DatabaseTableComponent},
-  {path: ':database', component: DatabaseMetadataComponent},
-  {path: '', component: DatabaseListComponent}
+  {path: 'query/:query', component: DatabaseQueryComponent},
+  {path: 'table/:table', component: DatabaseTableComponent},
+  {path: '', component: DatabaseMetadataComponent}
 ];
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'provider', component: ProviderComponent, children: providerChildRoutes},
-  {path: 'database', component: DatabaseComponent, children: databasesChildRoutes},
+  {path: 'databases', component: DatabaseListComponent},
+  {path: 'database/:database', component: DatabaseComponent, children: databasesChildRoutes},
   {path: 'file-explorer/:type', component: FileExplorerComponent},
   {path: 'image-cache/:type', component: ImageCacheGridComponent}
 ];

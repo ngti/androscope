@@ -93,7 +93,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   }
 
   private openFolderInNewWindow(event: MouseEvent, extrasSupplier: () => NavigationExtras) {
-    if (event.button === 1) {
+    if (event == null || event.button === 1) {
       const url = this.router.createUrlTree([], extrasSupplier()).toString();
       window.open(url);
     }

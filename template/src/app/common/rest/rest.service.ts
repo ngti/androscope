@@ -41,11 +41,6 @@ class ParamsBuilder {
     return this;
   }
 
-  addDatabaseName(name: string): ParamsBuilder {
-    this.httpParams = this.httpParams.set('location', name);
-    return this;
-  }
-
   build(): HttpParams {
     return this.httpParams;
   }
@@ -145,10 +140,10 @@ export class RestService {
     return this.http.get<Database[]>(RestService.REST_URL + 'database/list');
   }
 
-  getDatabaseInfo(name: string): Observable<DatabaseInfo> {
+  getDatabaseInfo(uri: Uri): Observable<DatabaseInfo> {
     return this.http.get<DatabaseInfo>(RestService.REST_URL + 'database/info', {
       params: new ParamsBuilder()
-        .addDatabaseName(name)
+        .addUri(uri)
         .build()
     });
   }

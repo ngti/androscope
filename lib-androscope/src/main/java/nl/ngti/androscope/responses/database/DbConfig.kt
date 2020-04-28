@@ -7,13 +7,16 @@ private const val PATH_SEPARATOR = "://"
 
 class DbConfig(
         context: Context,
-        private val databaseName: String
+        val databaseName: String
 ) {
     private val customPath: String?
     private val databaseFileName: String
+
     val databasePath: String
     val name get() = customPath?.let { "$databaseFileName ($customPath)" } ?: databaseFileName
-    private var error: String? = null
+
+    var errorMessage: String? = null
+        private set
 
     init {
         val separatorIndex = databaseName.indexOf(PATH_SEPARATOR)
@@ -25,7 +28,7 @@ class DbConfig(
                 databasePath = File(context.noBackupFilesDir, databaseFileName).absolutePath
             } else {
                 databasePath = ""
-                error = if (customPath.isBlank())
+                errorMessage = if (customPath.isBlank())
                     "Custom path should not be empty"
                 else "Unsupported custom path: $customPath"
 
@@ -37,11 +40,4 @@ class DbConfig(
         }
 
     }
-
-    fun toJsonDatabase() = Database(
-            databaseName,
-            title = name,
-            description = "Set in manifest",
-            error = error
-    )
 }

@@ -1,26 +1,23 @@
-import { Injectable } from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Uri} from './uri';
-import {BehaviorSubject} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class QueryModelService {
+export abstract class QueryModelService<U extends Uri> {
 
-  private uriSubject: BehaviorSubject<Uri> = new BehaviorSubject<Uri>(new Uri());
+  private readonly uriSubject: BehaviorSubject<U>;
+  readonly uri$: Observable<U>;
 
-  uri$ = this.uriSubject.asObservable();
-
-  constructor() {
+  protected constructor(initialUri: U) {
+    this.uriSubject = new BehaviorSubject<U>(initialUri);
+    this.uri$ = this.uriSubject.asObservable();
     console.log('QueryModelService created');
   }
 
-  get uri(): Uri {
+  get uri(): U {
     return this.uriSubject.value;
   }
 
-  set uri(newUri: Uri) {
-    console.log('Set uri: ' + newUri.content);
+  set uri(newUri: U) {
+    console.log('QueryModelService set uri: ' + newUri.content);
     this.uriSubject.next(newUri);
   }
 }

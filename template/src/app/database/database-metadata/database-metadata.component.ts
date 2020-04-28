@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RestService} from '../../common/rest/rest.service';
-import {Uri} from "../../common/query-model/uri";
-import {ActivatedRoute} from "@angular/router";
-import {BehaviorSubject} from "rxjs";
-import {DatabaseInfo} from "../../common/rest/database-data";
+import {ActivatedRoute} from '@angular/router';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {DatabaseInfo} from '../../common/rest/database-data';
+import {DatabaseModelService} from '../model/database-model.service';
 
 @Component({
   selector: 'app-database-metadata',
   templateUrl: './database-metadata.component.html',
   styleUrls: ['./database-metadata.component.css']
 })
-export class DatabaseMetadataComponent implements OnInit {
+export class DatabaseMetadataComponent implements OnDestroy {
 
   private databaseInfoSubject = new BehaviorSubject<DatabaseInfo>(null);
   databaseInfo$ = this.databaseInfoSubject.asObservable();
@@ -18,18 +18,27 @@ export class DatabaseMetadataComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
-  constructor(restService: RestService, route: ActivatedRoute) {
-    route.url.subscribe(newUrl => {
-      const database = route.snapshot.params.database;
+  private uriSubscription: Subscription;
+
+  constructor(
+    restService: RestService,
+    route: ActivatedRoute,
+    model: DatabaseModelService
+  ) {
+    console.log('DatabaseMetadataComponent created');
+
+    this.uriSubscription = model.uri$.subscribe(databaseUri => {
+      console.log('DatabaseMetadataComponent new database uri: ' + databaseUri.content);
+
       this.loadingSubject.next(true);
-      restService.getDatabaseInfo(database).subscribe(info => {
+      restService.getDatabaseInfo(databaseUri).subscribe(info => {
         this.loadingSubject.next(false);
         this.databaseInfoSubject.next(info);
       });
     });
   }
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    this.uriSubscription.unsubscribe();
   }
-
 }

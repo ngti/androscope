@@ -6,17 +6,6 @@ mat-cell, .mat-cell {
   padding-right: 24px;
 }
 
-.spinner-container {
-  position: fixed;
-  /* Center alignment */
-  height: 10%;
-  width: 10%;
-  top: 45%;
-  left: 45%;
-  /* Must be on top of fixed columns */
-  z-index: 101;
-}
-
 .alert {
   position: relative;
   padding: 0.75rem 1.25rem;

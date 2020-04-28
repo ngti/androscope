@@ -1,7 +1,7 @@
 package nl.ngti.androscope.responses.files
 
 import android.content.Context
-import nl.ngti.androscope.common.ResponseDataCache
+import nl.ngti.androscope.responses.common.ResponseDataCache
 import nl.ngti.androscope.server.FileSystemData
 import nl.ngti.androscope.server.SessionParams
 

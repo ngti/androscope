@@ -1,0 +1,130 @@
+<div *ngIf="databaseInfo != null">
+  <mat-toolbar color="primary">
+    {{databaseInfo.name}}
+    <span class="spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="databaseMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #databaseMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>cloud_download</mat-icon>
+        <span>Download</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>open_in_new</mat-icon>
+        <span>Execute SQL</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+  <div class="basic-container">
+
+    <mat-accordion>
+      <mat-expansion-panel [disabled]="databaseInfo.tables.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Tables
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.tables.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item *ngFor="let name of databaseInfo.tables" routerLink="./table/{{name}}" (click)="onTableClick($event)" (mouseup)="onTableMouseUp($event)">
+            <h4 mat-line>{{name}}</h4>
+<!--            <button mat-button (click)="onMenuButtonClick($event)">Test</button>-->
+            <button mat-icon-button [matMenuTriggerFor]="tableMenu" (click)="onMenuButtonClick($event)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #tableMenu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>open_in_new</mat-icon>
+                <span>Open in new window</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>open_in_new</mat-icon>
+                <span>Custom query</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>visibility</mat-icon>
+                <span>View SQL</span>
+              </button>
+            </mat-menu>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.views.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Views
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.views.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item *ngFor="let name of databaseInfo.views" routerLink="./">
+            <h4 mat-line>{{name}}</h4>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.triggers.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Triggers
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.triggers.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item *ngFor="let name of databaseInfo.triggers" routerLink="./">
+            <h4 mat-line>{{name}}</h4>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.indexes.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Indexes
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.indexes.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item *ngFor="let name of databaseInfo.indexes" routerLink="./">
+            <h4 mat-line>{{name}}</h4>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Info
+          </mat-panel-title>
+          <mat-panel-description>
+            General database information
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table>
+          <tr>
+            <td>Full path</td>
+            <td>{{databaseInfo.fullPath}}</td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td>{{databaseInfo.size}}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

@@ -6,3 +6,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .basic-container {
   padding: 24px 16px;
 }
+
+.spinner-container {
+  position: fixed;
+  /* Center alignment */
+  height: 10%;
+  width: 10%;
+  top: 45%;
+  left: 45%;
+  /* Must be on top of fixed columns */
+  z-index: 101;
+}

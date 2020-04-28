@@ -1,56 +1,31 @@
 package nl.ngti.androscope.server
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.os.SystemClock
-import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.IHTTPSession
 import nl.ngti.androscope.common.log
-import nl.ngti.androscope.responses.AssetResponse
-import nl.ngti.androscope.responses.DownloadResponse
-import nl.ngti.androscope.responses.Response
-import nl.ngti.androscope.responses.ViewResponse
-import nl.ngti.androscope.responses.database.DatabaseResponse
-import nl.ngti.androscope.responses.files.FileSystemResponse
-import nl.ngti.androscope.responses.provider.ProviderResponse
+import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
+import nl.ngti.androscope.responses.common.UriDataProvider
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
 internal class ResponseFactory(
-        private val context: Context,
-        private val metadata: AndroscopeMetadata
+        context: Context,
+        metadata: AndroscopeMetadata
 ) {
 
-    private val gson = Gson()
-
-    private val urlMatcher = UrlMatcher<Response>().apply {
-        add("view", ViewResponse(context))
-        add("download", DownloadResponse(context))
-
-        FileSystemResponse(context).apply {
-            addRest("file-system/list", ::getFileList)
-            addRest("file-system/count", ::getFileCount)
-            addRest("file-system/breadcrumbs", ::getBreadcrumbs)
-            addRest("file-system/delete", ::delete)
-        }
-
-        ProviderResponse(context).apply {
-            addRest("provider/info", ::getInfo)
-            addRest("provider/data", ::getData)
-        }
-
-        DatabaseResponse(context, metadata).apply {
-            addRest("database/list") { getList() }
-            addRest("database/info", ::getInfo)
-            //addRest("database/download")
-            //addRest("database/upload")
-        }
-
-        add("*", AssetResponse(context))
+    private val uriDataProvider = MultiSchemeDataProvider().apply {
+        addProvider(ContentResolver.SCHEME_CONTENT, ContentResolverDataProvider(context.contentResolver))
     }
+
+    private val urlMatcher = ResponseMatcher(context, metadata, uriDataProvider)
 
     fun getResponse(session: IHTTPSession): NanoHTTPD.Response? {
         log {
-            """getResponse ${session.path},
+            """getResponse
+                | path ${session.path},
                 | params ${session.parameters}""".trimMargin()
         }
         val handler = urlMatcher["http:/${session.path}"]
@@ -67,19 +42,17 @@ internal class ResponseFactory(
                     session.path, SystemClock.elapsedRealtimeNanos() - start)
         }
     }
+}
 
-    private fun UrlMatcher<Response>.addRest(path: String, handler: (SessionParams) -> Any?) {
-        add("rest", path) {
-            val data = handler(it)
-            val json = gson.toJson(data)
+private class ContentResolverDataProvider(
+        private val contentResolver: ContentResolver
+) : UriDataProvider {
 
-//            log { "Response: $json" }
-
-            NanoHTTPD.newFixedLengthResponse(json)
-        }
-    }
-
-    private fun UrlMatcher<Response>.add(rootPath: String, handler: Response) {
-        add(rootPath, null, handler)
-    }
+    override fun query(
+            uri: Uri,
+            projection: Array<String>?,
+            selection: String?,
+            selectionArgs: Array<String>?,
+            sortOrder: String?
+    ) = contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)
 }

@@ -36,7 +36,7 @@ export class QueryDataSource extends BaseDataSource<[]> {
     this.rowCountSubject.complete();
   }
 
-  showTable(): boolean {
+  get showTable(): boolean {
     return this.metadataLoaded && this.errorSubject.value == null;
   }
 

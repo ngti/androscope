@@ -1,4 +1,4 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.common
 
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame

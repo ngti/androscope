@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {QueryModelService} from '../common/query-model/query-model.service';
 import {Uri} from '../common/query-model/uri';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {ProviderModelService} from './model/provider-model.service';
 
 @Component({
   selector: 'app-provider',
@@ -18,7 +18,7 @@ export class ProviderComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private model: QueryModelService
+    private model: ProviderModelService
   ) {
   }
 

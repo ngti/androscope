@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {QueryModelService} from '../../common/query-model/query-model.service';
 import {Uri} from '../../common/query-model/uri';
+import {ProviderModelService} from '../model/provider-model.service';
 
 export class UriSuggestion {
   constructor(
@@ -40,7 +40,7 @@ export class ProviderSuggestionsComponent {
     ),
   ];
 
-  constructor(private model: QueryModelService) {
+  constructor(private model: ProviderModelService) {
     // Clear input field
     model.uri = new Uri();
   }

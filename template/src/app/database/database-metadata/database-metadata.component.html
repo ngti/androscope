@@ -1,4 +1,2 @@
-<mat-spinner *ngIf="loading$ | async"></mat-spinner>
-<div *ngIf="(databaseInfo$ | async) != null">
-  <p>{{(databaseInfo$ | async).name}}</p>
-</div>
+<mat-spinner *ngIf="loading$ | async" class="spinner-container"></mat-spinner>
+<app-database-info [data]="databaseInfo$ | async"></app-database-info>

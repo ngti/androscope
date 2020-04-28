@@ -7,6 +7,7 @@ export class Database {
 
 export class DatabaseInfo {
   name: string;
+  fullPath: string;
   size: string;
   tables: string[];
   views: string[];

@@ -1,9 +1,9 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.common
 
 import android.content.UriMatcher
 import androidx.core.net.toUri
 
-internal class UrlMatcher<T> {
+internal open class UrlMatcher<T> {
 
     private val matcher = UriMatcher(UriMatcher.NO_MATCH)
     private val handlers = ArrayList<T>()

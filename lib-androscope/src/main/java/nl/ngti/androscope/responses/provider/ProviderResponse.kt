@@ -1,15 +1,14 @@
 package nl.ngti.androscope.responses.provider
 
-import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import nl.ngti.androscope.common.ResponseDataCache
+import nl.ngti.androscope.responses.common.ResponseDataCache
+import nl.ngti.androscope.responses.common.UriDataProvider
 import nl.ngti.androscope.server.*
-import java.io.IOException
 import kotlin.math.min
 
 class ProviderResponse(
-        private val context: Context
+        private val uriDataProvider: UriDataProvider
 ) {
 
     private val cursorCache = ResponseDataCache(
@@ -76,12 +75,9 @@ class ProviderResponse(
             uri: Uri,
             sortOrder: String? = null
     ): Cursor? {
-        return context.contentResolver.query(uri, null, null, null, sortOrder)
+        return uriDataProvider.query(uri, sortOrder = sortOrder)
     }
 }
-
-private val SessionParams.providerUri: Uri
-    get() = Uri.parse(this["uri"] ?: throw IOException("No uri provided"))
 
 private data class CursorParams(
         val uri: Uri,

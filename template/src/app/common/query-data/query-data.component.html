@@ -6,7 +6,7 @@
   <p>{{error$ | async}}</p>
 </div>
 
-<div [hidden]="!showTable()" class="mat-elevation-z8">
+<div [hidden]="!showTable" class="mat-elevation-z8">
   <table [dataSource]="dataSource" class="full-width-table" mat-table matSort>
     <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index"
                   matColumnDef="{{disCol}}">

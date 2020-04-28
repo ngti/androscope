@@ -1,20 +1,13 @@
+.basic-container {
+  padding: 8px 16px 24px;
+}
+
 .full-width-table {
   width: 100%;
 }
 
 mat-cell, .mat-cell {
   padding-right: 24px;
-}
-
-.spinner-container {
-  position: fixed;
-  /* Center alignment */
-  height: 10%;
-  width: 10%;
-  top: 45%;
-  left: 45%;
-  /* Must be on top of fixed columns */
-  z-index: 101;
 }
 
 tr.highlightable-row:hover {

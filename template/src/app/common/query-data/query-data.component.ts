@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {QueryModelService} from '../query-model/query-model.service';
 import {MatPaginator, MatSort, MatTable} from '@angular/material';
 import {RestService} from '../rest/rest.service';
 import {QueryDataSource} from './query-data-source';
 import {BehaviorSubject, merge, Subscription} from 'rxjs';
+import {Uri} from '../query-model/uri';
 
 @Component({
   selector: 'app-query-data',
@@ -27,8 +28,10 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private uriSubscription: Subscription;
 
+  @Input('queryModel')
+  model: QueryModelService<Uri>;
+
   constructor(
-    private model: QueryModelService,
     private restService: RestService
   ) {
   }
@@ -67,8 +70,8 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
     this.uriSubscription.unsubscribe();
   }
 
-  showTable(): boolean {
-    return this.dataSource != null && this.dataSource.showTable();
+  get showTable(): boolean {
+    return this.dataSource != null && this.dataSource.showTable;
   }
 
 }

@@ -59,6 +59,10 @@
           </button>
 
           <mat-menu #menu="matMenu">
+            <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
+              <mat-icon>open_in_new</mat-icon>
+              <span>Open in new window</span>
+            </button>
             <button (click)="onDownload(row)" *ngIf="!row.isFolder" mat-menu-item>
               <mat-icon>cloud_download</mat-icon>
               <span>Download</span>
