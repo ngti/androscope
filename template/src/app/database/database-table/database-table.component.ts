@@ -10,15 +10,17 @@ import {log} from 'util';
 })
 export class DatabaseTableComponent implements OnInit {
 
+  tableName: string;
+
   constructor(
     readonly model: DatabaseModelService,
     route: ActivatedRoute
   ) {
     log('DatabaseTableComponent created');
     route.url.subscribe(() => {
-      const tableName = decodeURIComponent(route.snapshot.params.table);
-      model.setDatabaseQuery('table', tableName);
-      log('DatabaseTableComponent new table: ' + tableName);
+      this.tableName = decodeURIComponent(route.snapshot.params.table);
+      model.setDatabaseQuery('table', this.tableName);
+      log('DatabaseTableComponent new table: ' + this.tableName);
     });
   }
 

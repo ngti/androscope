@@ -1,4 +1,11 @@
-<div class="basic-container">
-<p>database-table works!</p>
-<app-query-data [queryModel]="model"></app-query-data>
+<div class="smaller-top-padding-container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a [routerLink]="['../../']">Back to the database</a>
+    </li>
+    <li class="breadcrumb-item active">
+      {{tableName}}
+    </li>
+  </ol>
+  <app-query-data [queryModel]="model"></app-query-data>
 </div>
