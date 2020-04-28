@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {ActivatedRoute} from '@angular/router';
-import {Uri} from "../../common/query-model/uri";
-import {log} from "util";
+import {log} from 'util';
 
 @Component({
   selector: 'app-database-table',

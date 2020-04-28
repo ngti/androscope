@@ -1,20 +1,22 @@
 <mat-toolbar color="primary" class="mat-elevation-z8">
   <a mat-button routerLink="/">Androscope</a>
   <a mat-button routerLink="/provider">Content Providers</a>
-<!--  <a mat-button routerLink="/databases">Databases</a>-->
-  <button mat-button [matMenuTriggerFor]="fileExplorerMenu">File Explorer<mat-icon>arrow_drop_down</mat-icon></button>
+  <!--  <a mat-button routerLink="/databases">Databases</a>-->
+  <button mat-button [matMenuTriggerFor]="fileExplorerMenu">File Explorer
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
   <mat-menu #fileExplorerMenu="matMenu">
     <ng-template matMenuContent>
-    <button mat-menu-item routerLink="/file-explorer/application-data">Application Data</button>
-    <button mat-menu-item routerLink="/file-explorer/external-storage">External Storage</button>
-    <button mat-menu-item routerLink="/file-explorer/phone-root">Root Directory</button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="/file-explorer/downloads">Downloads</button>
-    <button mat-menu-item routerLink="/file-explorer/photos">Photos</button>
-    <button mat-menu-item routerLink="/file-explorer/movies">Movies</button>
-    <button mat-menu-item routerLink="/file-explorer/pictures">Pictures</button>
-    <button mat-menu-item routerLink="/file-explorer/music">Music</button>
+      <a mat-menu-item routerLink="/file-explorer/application-data">Application Data</a>
+      <a mat-menu-item routerLink="/file-explorer/external-storage">External Storage</a>
+      <a mat-menu-item routerLink="/file-explorer/phone-root">Root Directory</a>
+      <mat-divider></mat-divider>
+      <a mat-menu-item routerLink="/file-explorer/downloads">Downloads</a>
+      <a mat-menu-item routerLink="/file-explorer/photos">Photos</a>
+      <a mat-menu-item routerLink="/file-explorer/movies">Movies</a>
+      <a mat-menu-item routerLink="/file-explorer/pictures">Pictures</a>
+      <a mat-menu-item routerLink="/file-explorer/music">Music</a>
     </ng-template>
   </mat-menu>
-<!--  <a mat-button>Image cache</a>-->
+  <!--  <a mat-button>Image cache</a>-->
 </mat-toolbar>
