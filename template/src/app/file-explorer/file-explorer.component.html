@@ -59,6 +59,7 @@
           </button>
 
           <mat-menu #menu="matMenu">
+            <ng-template matMenuContent>
             <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
               <mat-icon>open_in_new</mat-icon>
               <span>Open in new window</span>
@@ -75,6 +76,7 @@
               <mat-icon>delete</mat-icon>
               <span>Delete</span>
             </button>
+            </ng-template>
           </mat-menu>
         </td>
       </ng-container>

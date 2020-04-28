@@ -4,6 +4,7 @@
 <!--  <a mat-button routerLink="/databases">Databases</a>-->
   <button mat-button [matMenuTriggerFor]="fileExplorerMenu">File Explorer<mat-icon>arrow_drop_down</mat-icon></button>
   <mat-menu #fileExplorerMenu="matMenu">
+    <ng-template matMenuContent>
     <button mat-menu-item routerLink="/file-explorer/application-data">Application Data</button>
     <button mat-menu-item routerLink="/file-explorer/external-storage">External Storage</button>
     <button mat-menu-item routerLink="/file-explorer/phone-root">Root Directory</button>
@@ -13,6 +14,7 @@
     <button mat-menu-item routerLink="/file-explorer/movies">Movies</button>
     <button mat-menu-item routerLink="/file-explorer/pictures">Pictures</button>
     <button mat-menu-item routerLink="/file-explorer/music">Music</button>
+    </ng-template>
   </mat-menu>
 <!--  <a mat-button>Image cache</a>-->
 </mat-toolbar>

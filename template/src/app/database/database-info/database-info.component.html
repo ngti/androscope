@@ -6,6 +6,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #databaseMenu="matMenu">
+      <ng-template matMenuContent>
       <button mat-menu-item>
         <mat-icon>cloud_download</mat-icon>
         <span>Download</span>
@@ -18,6 +19,7 @@
         <mat-icon>open_in_new</mat-icon>
         <span>Execute SQL</span>
       </button>
+      </ng-template>
     </mat-menu>
   </mat-toolbar>
   <div class="basic-container">
@@ -33,13 +35,15 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <mat-list-item *ngFor="let name of databaseInfo.tables" routerLink="./table/{{name}}" (click)="onTableClick($event)" (mouseup)="onTableMouseUp($event)">
+          <mat-list-item *ngFor="let name of databaseInfo.tables" routerLink="./table/{{name}}"
+                         (click)="onTableClick($event)" (mouseup)="onTableMouseUp($event)" (mousedown)="onTableMouseDown($event)">
             <h4 mat-line>{{name}}</h4>
 <!--            <button mat-button (click)="onMenuButtonClick($event)">Test</button>-->
             <button mat-icon-button [matMenuTriggerFor]="tableMenu" (click)="onMenuButtonClick($event)">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #tableMenu="matMenu">
+              <ng-template matMenuContent>
               <button mat-menu-item>
                 <mat-icon>open_in_new</mat-icon>
                 <span>Open in new window</span>
@@ -52,6 +56,7 @@
                 <mat-icon>visibility</mat-icon>
                 <span>View SQL</span>
               </button>
+              </ng-template>
             </mat-menu>
           </mat-list-item>
         </mat-nav-list>
