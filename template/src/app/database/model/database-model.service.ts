@@ -1,17 +1,24 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {QueryModelService} from '../../common/query-model/query-model.service';
 import {DatabaseUri} from './database-uri';
+import {BehaviorSubject} from 'rxjs';
+import {RestService} from '../../common/rest/rest.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseModelService extends QueryModelService<DatabaseUri> {
 
+  private databaseTitleSubject = new BehaviorSubject<string>('...');
+  readonly databaseTitle$ = this.databaseTitleSubject.asObservable();
+
   private databaseNameInternal: string;
   private databaseQueryKey: string = null;
   private databaseQueryValue: string = null;
 
-  constructor() {
+  constructor(
+    private restService: RestService
+  ) {
     super(null);
   }
 
@@ -25,6 +32,10 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
       this.databaseQueryKey = null;
       this.databaseQueryValue = null;
       this.updateUri();
+
+      this.restService.getDatabaseTitle(this.uri).subscribe(title => {
+        this.databaseTitleSubject.next(title);
+      });
     }
   }
 

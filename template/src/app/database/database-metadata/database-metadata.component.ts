@@ -22,8 +22,7 @@ export class DatabaseMetadataComponent implements OnDestroy {
 
   constructor(
     restService: RestService,
-    route: ActivatedRoute,
-    model: DatabaseModelService
+    readonly model: DatabaseModelService
   ) {
     console.log('DatabaseMetadataComponent created');
 

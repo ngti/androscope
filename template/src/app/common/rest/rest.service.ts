@@ -140,6 +140,14 @@ export class RestService {
     return this.http.get<Database[]>(RestService.REST_URL + 'database/list');
   }
 
+  getDatabaseTitle(uri: Uri): Observable<string> {
+    return this.http.get<string>(RestService.REST_URL + 'database/title', {
+      params: new ParamsBuilder()
+        .addUri(uri)
+        .build()
+    });
+  }
+
   getDatabaseInfo(uri: Uri): Observable<DatabaseInfo> {
     return this.http.get<DatabaseInfo>(RestService.REST_URL + 'database/info', {
       params: new ParamsBuilder()

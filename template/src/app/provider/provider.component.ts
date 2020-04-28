@@ -7,7 +7,8 @@ import {ProviderModelService} from './model/provider-model.service';
 @Component({
   selector: 'app-provider',
   templateUrl: './provider.component.html',
-  styleUrls: ['./provider.component.css']
+  styleUrls: ['./provider.component.css'],
+  providers: [ProviderModelService]
 })
 export class ProviderComponent implements OnInit, OnDestroy {
 

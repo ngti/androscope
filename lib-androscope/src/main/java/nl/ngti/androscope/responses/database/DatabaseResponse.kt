@@ -41,12 +41,18 @@ class DatabaseResponse(
         return result
     }
 
+    fun getTitle(sessionParams: SessionParams): String {
+        val uri = sessionParams.dbUri
+        val config = DbConfig(context, uri.databaseName)
+        return config.name
+    }
+
     fun getInfo(sessionParams: SessionParams): DatabaseInfo {
         val uri = sessionParams.dbUri
         val config = DbConfig(context, uri.databaseName)
         val databaseFile = context.getDatabasePath(config.databasePath)
         val size = Formatter.formatFileSize(context, databaseFile.length())
-        val result = DatabaseInfo(config.name, databaseFile.absolutePath, size)
+        val result = DatabaseInfo(databaseFile.absolutePath, size)
 
         databaseManager.query(uri,
                 tableName = TABLE_SQLITE_MASTER,

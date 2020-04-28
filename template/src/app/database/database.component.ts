@@ -5,7 +5,8 @@ import {DatabaseModelService} from './model/database-model.service';
 @Component({
   selector: 'app-database',
   templateUrl: './database.component.html',
-  styleUrls: ['./database.component.css']
+  styleUrls: ['./database.component.css'],
+  providers: [DatabaseModelService]
 })
 export class DatabaseComponent {
 

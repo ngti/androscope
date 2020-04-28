@@ -35,7 +35,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
-  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>(null);
+  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>([{ name: '...', path: ''}]);
   breadcrumbs$ = this.breadcrumbsSubject.asObservable();
 
   private viewInitialized = false;

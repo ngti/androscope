@@ -40,6 +40,7 @@ internal class ResponseMatcher(
 
         DatabaseResponse(context, metadata, uriDataProvider).apply {
             addRest("database/list") { getList() }
+            addRest("database/title", ::getTitle)
             addRest("database/info", ::getInfo)
             //addRest("database/download")
             //addRest("database/upload")

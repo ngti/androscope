@@ -1,11 +1,8 @@
-<div class="smaller-top-padding-container">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a [routerLink]="['../../']">Back to the database</a>
-    </li>
-    <li class="breadcrumb-item active">
-      {{tableName}}
-    </li>
-  </ol>
+<mat-toolbar color="primary" class="breadcrumb-toolbar">
+  <a class="toolbar-parent-link" [routerLink]="['../../']">{{model.databaseTitle$ | async}}</a>
+  <mat-icon>chevron_right</mat-icon>
+  <span>{{tableName}}</span>
+</mat-toolbar>
+<div class="basic-container">
   <app-query-data [queryModel]="model"></app-query-data>
 </div>

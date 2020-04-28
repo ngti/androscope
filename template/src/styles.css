@@ -68,3 +68,20 @@ li.breadcrumb-item a {
 li.breadcrumb-item a:hover {
   text-decoration: underline;
 }
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+a.toolbar-parent-link {
+  color: gainsboro;
+  text-decoration: none;
+}
+
+a.toolbar-parent-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-toolbar {
+  align-items: center;
+}

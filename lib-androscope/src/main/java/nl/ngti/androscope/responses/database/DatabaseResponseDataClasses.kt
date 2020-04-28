@@ -8,7 +8,6 @@ class Database(
 )
 
 class DatabaseInfo(
-        val name: String,
         val fullPath: String,
         val size: String
 ) {
