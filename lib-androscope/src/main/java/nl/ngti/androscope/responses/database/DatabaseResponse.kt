@@ -7,6 +7,8 @@ import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.dbUri
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
+private const val TABLE_SQLITE_MASTER = "sqlite_master"
+
 class DatabaseResponse(
         private val context: Context,
         private val metadata: AndroscopeMetadata,
@@ -47,7 +49,7 @@ class DatabaseResponse(
         val result = DatabaseInfo(config.name, databaseFile.absolutePath, size)
 
         databaseManager.query(uri,
-                tableName = "sqlite_master",
+                tableName = TABLE_SQLITE_MASTER,
                 projection = arrayOf(
                         /* 0 */ "name",
                         /* 1 */ "type"
@@ -67,6 +69,7 @@ class DatabaseResponse(
                 }
             }
         }
+        result.tables += TABLE_SQLITE_MASTER
 
         return result
     }

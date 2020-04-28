@@ -4,18 +4,20 @@ export class DatabaseUri extends Uri {
 
   constructor(
     databaseName: string,
-    databaseQuery: string = null
+    databaseQueryKey: string = null,
+    databaseQueryValue: string = null
   ) {
-    super(DatabaseUri.buildUri(databaseName, databaseQuery));
+    super(DatabaseUri.buildUri(databaseName, databaseQueryKey, databaseQueryValue));
   }
 
   private static buildUri(
     databaseName: string,
-    databaseQuery: string
+    databaseQueryKey: string,
+    databaseQueryValue: string
   ) {
     let result = 'database://' + encodeURIComponent(databaseName);
-    if (databaseQuery != null && databaseQuery.length > 0) {
-      result += '?query=' + encodeURIComponent(databaseQuery);
+    if (databaseQueryKey != null && databaseQueryKey.length > 0) {
+      result += `?${databaseQueryKey}=` + encodeURIComponent(databaseQueryValue);
     }
     return result;
   }

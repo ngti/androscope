@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Uri} from '../../common/query-model/uri';
 import {ProviderModelService} from '../model/provider-model.service';

@@ -8,7 +8,8 @@ import {DatabaseUri} from './database-uri';
 export class DatabaseModelService extends QueryModelService<DatabaseUri> {
 
   private databaseNameInternal: string;
-  private databaseQueryInternal: string = null;
+  private databaseQueryKey: string = null;
+  private databaseQueryValue: string = null;
 
   constructor() {
     super(null);
@@ -21,18 +22,21 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
   set databaseName(newName: string) {
     if (this.databaseName !== newName) {
       this.databaseNameInternal = newName;
+      this.databaseQueryKey = null;
+      this.databaseQueryValue = null;
       this.updateUri();
     }
   }
 
-  set databaseQuery(newQuery: string) {
-    if (this.databaseQueryInternal !== newQuery) {
-      this.databaseQueryInternal = newQuery;
+  setDatabaseQuery(key: string, value: string) {
+    if (this.databaseQueryKey !== key || this.databaseQueryValue !== value) {
+      this.databaseQueryKey = key;
+      this.databaseQueryValue = value;
       this.updateUri();
     }
   }
 
   private updateUri() {
-    this.uri = new DatabaseUri(this.databaseNameInternal, this.databaseQueryInternal);
+    this.uri = new DatabaseUri(this.databaseNameInternal, this.databaseQueryKey, this.databaseQueryValue);
   }
 }
