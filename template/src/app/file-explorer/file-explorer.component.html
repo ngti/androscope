@@ -54,30 +54,9 @@
       <ng-container matColumnDef="menu">
         <th *matHeaderCellDef mat-header-cell style="width: 24px"></th>
         <td (click)="$event.stopPropagation()" *matCellDef="let row" mat-cell>
-          <button [matMenuTriggerFor]="menu" mat-icon-button>
+          <button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{data: row}" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>
-
-          <mat-menu #menu="matMenu">
-            <ng-template matMenuContent>
-            <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
-              <mat-icon>open_in_new</mat-icon>
-              <span>Open in new window</span>
-            </button>
-            <button (click)="onDownload(row)" *ngIf="!row.isFolder" mat-menu-item>
-              <mat-icon>cloud_download</mat-icon>
-              <span>Download</span>
-            </button>
-            <button (click)="onView(row)" *ngIf="!row.isFolder" mat-menu-item>
-              <mat-icon>launch</mat-icon>
-              <span>View</span>
-            </button>
-            <button (click)="onDelete(row)" mat-menu-item>
-              <mat-icon>delete</mat-icon>
-              <span>Delete</span>
-            </button>
-            </ng-template>
-          </mat-menu>
         </td>
       </ng-container>
 
@@ -94,4 +73,26 @@
                    showFirstLastButtons>
     </mat-paginator>
   </div>
+
 </div>
+
+<mat-menu #menu="matMenu">
+  <ng-template matMenuContent let-row="data">
+    <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
+      <mat-icon>open_in_new</mat-icon>
+      <span>Open in new window</span>
+    </button>
+    <button (click)="onDownload(row)" *ngIf="!row.isFolder" mat-menu-item>
+      <mat-icon>cloud_download</mat-icon>
+      <span>Download</span>
+    </button>
+    <button (click)="onView(row)" *ngIf="!row.isFolder" mat-menu-item>
+      <mat-icon>launch</mat-icon>
+      <span>View</span>
+    </button>
+    <button (click)="onDelete(row)" mat-menu-item>
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </ng-template>
+</mat-menu>
