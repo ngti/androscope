@@ -1,6 +1,6 @@
 <div class="basic-container">
   <div *ngIf="databaseInfo != null">
-    <mat-accordion>
+    <mat-accordion *ngIf="databaseInfo.valid; else errorView">
       <mat-expansion-panel [disabled]="databaseInfo.tables.length == 0">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -90,6 +90,12 @@
         </table>
       </mat-expansion-panel>
     </mat-accordion>
+
+    <ng-template #errorView>
+      <div class="alert alert-danger" role="alert">
+        <p>{{databaseInfo.errorMessage}}</p>
+      </div>
+    </ng-template>
   </div>
 </div>
 

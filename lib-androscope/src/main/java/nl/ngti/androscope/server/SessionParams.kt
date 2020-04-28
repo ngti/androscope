@@ -1,9 +1,16 @@
 package nl.ngti.androscope.server
 
 import android.net.Uri
+import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
 import fi.iki.elonen.NanoHTTPD
+import fi.iki.elonen.NanoHTTPD.IHTTPSession
+import nl.ngti.androscope.common.log
 import nl.ngti.androscope.responses.database.DbUri
+import nl.ngti.androscope.responses.database.SqlParams
 import java.io.IOException
+import java.io.InputStreamReader
+import java.net.URLDecoder
 
 typealias SessionParams = NanoHTTPD.IHTTPSession
 
@@ -34,3 +41,9 @@ val SessionParams.providerUri: Uri
 
 val SessionParams.dbUri: DbUri
     get() = DbUri(providerUri)
+
+fun SessionParams.readSql(jsonConverter: Gson): String {
+    return JsonReader(InputStreamReader(inputStream)).let {
+        jsonConverter.fromJson<SqlParams>(it, SqlParams::class.java).sql
+    }
+}

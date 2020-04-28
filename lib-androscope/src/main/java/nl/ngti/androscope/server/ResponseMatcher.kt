@@ -22,6 +22,8 @@ internal class ResponseMatcher(
 
     private val jsonConverter = Gson()
 
+    val assetResponse = AssetResponse(context)
+
     init {
         add("view", ViewResponse(context))
         add("download", DownloadResponse(context))
@@ -38,15 +40,15 @@ internal class ResponseMatcher(
             addRest("provider/data", ::getData)
         }
 
-        DatabaseResponse(context, metadata, uriDataProvider).apply {
+        DatabaseResponse(context, metadata, uriDataProvider, jsonConverter).apply {
             addRest("database/list") { getList() }
             addRest("database/title", ::getTitle)
             addRest("database/info", ::getInfo)
+            addRest("database/can-query", ::getCanQuery)
+            addRest("database/execute-sql", ::executeSql)
             //addRest("database/download")
             //addRest("database/upload")
         }
-
-        add("*", AssetResponse(context))
     }
 
     private fun addRest(path: String, handler: (SessionParams) -> Any?) {

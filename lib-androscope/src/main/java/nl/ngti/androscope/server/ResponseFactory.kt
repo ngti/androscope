@@ -28,11 +28,7 @@ internal class ResponseFactory(
                 | path ${session.path},
                 | params ${session.parameters}""".trimMargin()
         }
-        val handler = urlMatcher["http:/${session.path}"]
-        if (handler == null) {
-            log { "Unknown path: ${session.path}" }
-            return null
-        }
+        val handler = urlMatcher["http:/${session.path}"] ?: urlMatcher.assetResponse
 
         val start = SystemClock.elapsedRealtimeNanos()
         try {

@@ -6,7 +6,7 @@ import {ProviderInfo} from './provider-info';
 import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
 import {DataParams} from '../base/data-params';
 import {FileSystemParams} from '../base/file-system-params';
-import {Database, DatabaseInfo} from './database-data';
+import {Database, DatabaseInfo, ExecuteSqlResult, SqlParams} from './database-data';
 
 class ParamsBuilder {
 
@@ -150,6 +150,18 @@ export class RestService {
 
   getDatabaseInfo(uri: Uri): Observable<DatabaseInfo> {
     return this.http.get<DatabaseInfo>(RestService.REST_URL + 'database/info', {
+      params: new ParamsBuilder()
+        .addUri(uri)
+        .build()
+    });
+  }
+
+  canQuery(sql: string): Observable<boolean> {
+    return this.http.post<boolean>(RestService.REST_URL + 'database/can-query', new SqlParams(sql));
+  }
+
+  executeSql(uri: Uri, sql: string): Observable<ExecuteSqlResult> {
+    return this.http.post<ExecuteSqlResult>(RestService.REST_URL + 'database/execute-sql', new SqlParams(sql), {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()

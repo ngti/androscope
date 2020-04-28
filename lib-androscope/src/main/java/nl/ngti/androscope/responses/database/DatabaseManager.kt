@@ -46,9 +46,20 @@ class DatabaseManager(
         throw IllegalArgumentException("Invalid uri: $uri");
     }
 
+    fun executeSql(uri: DbUri, sql: String) {
+        getDatabase(uri).execSQL(sql)
+    }
+
     private fun getDatabase(uri: DbUri): SQLiteDatabase {
         val dbName = uri.databaseName
         val dbConfig = DbConfig(context, dbName)
+        val dbFile = dbConfig.databaseFile
+        if (!dbFile.exists()) {
+            throw IllegalStateException("Database ${dbFile.absolutePath} does not exist")
+        }
+        if (!dbFile.isFile) {
+            throw IllegalStateException("The specified path ${dbFile.absolutePath} is not a file")
+        }
         return context.openOrCreateDatabase(dbConfig.databasePath, 0, null)
     }
 }

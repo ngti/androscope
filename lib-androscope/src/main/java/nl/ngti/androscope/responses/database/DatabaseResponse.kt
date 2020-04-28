@@ -1,10 +1,13 @@
 package nl.ngti.androscope.responses.database
 
 import android.content.Context
+import android.database.DatabaseUtils
 import android.text.format.Formatter
+import com.google.gson.Gson
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.dbUri
+import nl.ngti.androscope.server.readSql
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
 private const val TABLE_SQLITE_MASTER = "sqlite_master"
@@ -12,7 +15,8 @@ private const val TABLE_SQLITE_MASTER = "sqlite_master"
 class DatabaseResponse(
         private val context: Context,
         private val metadata: AndroscopeMetadata,
-        uriDataProvider: MultiSchemeDataProvider
+        uriDataProvider: MultiSchemeDataProvider,
+        private val jsonConverter: Gson
 ) {
 
     private val databaseManager = DatabaseManager(context).also {
@@ -50,10 +54,19 @@ class DatabaseResponse(
     fun getInfo(sessionParams: SessionParams): DatabaseInfo {
         val uri = sessionParams.dbUri
         val config = DbConfig(context, uri.databaseName)
-        val databaseFile = context.getDatabasePath(config.databasePath)
+        val databaseFile = config.databaseFile
         val size = Formatter.formatFileSize(context, databaseFile.length())
-        val result = DatabaseInfo(databaseFile.absolutePath, size)
 
+        return try {
+            DatabaseInfo(true, databaseFile.absolutePath, size).apply {
+                fillDatabaseInfo(uri, this)
+            }
+        } catch (e: Throwable) {
+            DatabaseInfo(false, errorMessage = e.message)
+        }
+    }
+
+    private fun fillDatabaseInfo(uri: DbUri, result: DatabaseInfo) {
         databaseManager.query(uri,
                 tableName = TABLE_SQLITE_MASTER,
                 projection = arrayOf(
@@ -76,7 +89,21 @@ class DatabaseResponse(
             }
         }
         result.tables += TABLE_SQLITE_MASTER
+    }
 
-        return result
+    fun getCanQuery(sessionParams: SessionParams): Boolean {
+        val sql = sessionParams.readSql(jsonConverter)
+        val type = DatabaseUtils.getSqlStatementType(sql)
+        return type == DatabaseUtils.STATEMENT_SELECT
+    }
+
+    fun executeSql(sessionParams: SessionParams): ExecuteSqlResult {
+        return try {
+            val sql = sessionParams.readSql(jsonConverter)
+            databaseManager.executeSql(sessionParams.dbUri, sql)
+            ExecuteSqlResult(true, "Executed")
+        } catch (e: Throwable) {
+            return ExecuteSqlResult(false, e.message ?: "")
+        }
     }
 }

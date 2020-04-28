@@ -8,11 +8,22 @@ class Database(
 )
 
 class DatabaseInfo(
-        val fullPath: String,
-        val size: String
+        val valid: Boolean,
+        val errorMessage: String? = null,
+        val fullPath: String? = null,
+        val size: String? = null
 ) {
     val tables = ArrayList<String>()
     val views = ArrayList<String>()
     val triggers = ArrayList<String>()
     val indexes = ArrayList<String>()
 }
+
+class ExecuteSqlResult(
+        val success: Boolean,
+        val message: String
+)
+
+class SqlParams(
+        val sql: String
+)

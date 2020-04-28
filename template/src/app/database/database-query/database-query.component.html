@@ -9,12 +9,23 @@
     <form novalidate (ngSubmit)="submitQuery(query)">
       <mat-form-field appearance="fill" class="full-width-table" hideRequiredMarker>
         <mat-label>SQL query</mat-label>
-        <textarea matInput placeholder="SELECT, INSERT, UPDATE, DELETE..." name="query" [(ngModel)]="query" required></textarea>
+        <textarea matInput placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..." name="query" [(ngModel)]="query"
+                  required></textarea>
       </mat-form-field>
 
-      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="query != null && query.length == 0">Submit</button>
+      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="query != null && query.length == 0">
+        Submit
+      </button>
     </form>
   </div>
 
-  <router-outlet></router-outlet>
+  <div *ngIf="(queryResult$ | async).display; else queryData">
+    <div class="alert" role="alert"
+         [ngClass]="(queryResult$ | async).alertClass">
+      <p>{{(queryResult$ | async).message}}</p>
+    </div>
+  </div>
+  <ng-template #queryData>
+    <router-outlet></router-outlet>
+  </ng-template>
 </div>

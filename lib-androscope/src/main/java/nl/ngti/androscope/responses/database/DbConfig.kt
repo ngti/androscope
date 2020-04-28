@@ -6,13 +6,15 @@ import java.io.File
 private const val PATH_SEPARATOR = "://"
 
 class DbConfig(
-        context: Context,
+        private val context: Context,
         val databaseName: String
 ) {
     private val customPath: String?
     private val databaseFileName: String
 
     val databasePath: String
+    val databaseFile: File
+        get() = context.getDatabasePath(databasePath)
     val name get() = customPath?.let { "$databaseFileName ($customPath)" } ?: databaseFileName
 
     var errorMessage: String? = null
