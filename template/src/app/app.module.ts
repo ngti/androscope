@@ -43,6 +43,8 @@ import { ImageCacheListComponent } from './image-cache/image-cache-list/image-ca
 import { ImageCacheGridComponent } from './image-cache/image-cache-grid/image-cache-grid.component';
 import { DatabaseInfoComponent } from './database/database-info/database-info.component';
 import {MatExpansionModule} from "@angular/material/expansion";
+import { DatabaseQueryDataComponent } from './database/database-query-data/database-query-data.component';
+import { DatabaseQueryEmptyComponent } from './database/database-query-empty/database-query-empty.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     ImageCacheListComponent,
     ImageCacheGridComponent,
     DatabaseInfoComponent,
+    DatabaseQueryDataComponent,
+    DatabaseQueryEmptyComponent,
   ],
   imports: [
     BrowserModule,

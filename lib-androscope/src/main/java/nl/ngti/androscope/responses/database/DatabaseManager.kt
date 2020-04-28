@@ -12,7 +12,7 @@ class DatabaseManager(
 
     fun query(
             uri: DbUri,
-            tableName: String = uri.tableName,
+            tableName: String,
             projection: Array<String>? = null,
             selection: String? = null,
             selectionArgs: Array<String>? = null,
@@ -28,13 +28,23 @@ class DatabaseManager(
             selection: String?,
             selectionArgs: Array<String>?,
             sortOrder: String?
-    ) = query(
-            DbUri(uri),
-            projection = projection,
-            selection = selection,
-            selectionArgs = selectionArgs,
-            sortOrder = sortOrder
-    )
+    ): Cursor? {
+        val dbUri = DbUri(uri)
+        dbUri.tableName?.let {
+            return query(
+                    dbUri,
+                    it,
+                    projection = projection,
+                    selection = selection,
+                    selectionArgs = selectionArgs,
+                    sortOrder = sortOrder
+            )
+        }
+        dbUri.query?.let {
+            return getDatabase(dbUri).rawQuery(it, null)
+        }
+        throw IllegalArgumentException("Invalid uri: $uri");
+    }
 
     private fun getDatabase(uri: DbUri): SQLiteDatabase {
         val dbName = uri.databaseName

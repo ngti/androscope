@@ -1,6 +1,6 @@
 export class Uri {
 
-  readonly content: string;
+  content: string;
   timestamp: number = Date.now();
 
   constructor(content: string = '') {

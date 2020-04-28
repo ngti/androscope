@@ -1,1 +1,20 @@
-<p>database-query works!</p>
+<mat-toolbar color="primary" class="breadcrumb-toolbar">
+  <a class="toolbar-parent-link" [routerLink]="['../']">{{model.databaseTitle$ | async}}</a>
+  <mat-icon>chevron_right</mat-icon>
+  <span>Custom query</span>
+</mat-toolbar>
+
+<div class="basic-container">
+  <div class="query-input">
+    <form novalidate (ngSubmit)="submitQuery(query)">
+      <mat-form-field appearance="fill" class="full-width-table" hideRequiredMarker>
+        <mat-label>SQL query</mat-label>
+        <textarea matInput placeholder="SELECT, INSERT, UPDATE, DELETE..." name="query" [(ngModel)]="query" required></textarea>
+      </mat-form-field>
+
+      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="query != null && query.length == 0">Submit</button>
+    </form>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>

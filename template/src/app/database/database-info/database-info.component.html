@@ -95,8 +95,8 @@
 
 <mat-menu #tableMenu="matMenu">
   <ng-template matMenuContent let-name="tableName">
-    <a mat-menu-item target="_blank" [routerLink]="['./query/', 'SELECT * FROM ' + name]">
-      <mat-icon>open_in_new</mat-icon>
+    <a mat-menu-item [routerLink]="['./query/', 'SELECT * FROM ' + name]">
+      <mat-icon>edit</mat-icon>
       <span>Custom query</span>
     </a>
     <button mat-menu-item>

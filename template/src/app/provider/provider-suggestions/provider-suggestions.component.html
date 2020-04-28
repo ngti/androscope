@@ -1,8 +1,8 @@
 <mat-nav-list>
   <h3 mat-subheader>Examples:</h3>
-  <mat-list-item *ngFor="let suggestion of suggestions" routerLink="./{{suggestion.uriForUrl()}}">
+  <a mat-list-item *ngFor="let suggestion of suggestions" routerLink="./{{suggestion.uriForUrl()}}">
     <mat-icon mat-list-icon>{{suggestion.icon}}</mat-icon>
     <h4 mat-line>{{suggestion.uri}}</h4>
     <p mat-line> {{suggestion.description}}</p>
-  </mat-list-item>
+  </a>
 </mat-nav-list>

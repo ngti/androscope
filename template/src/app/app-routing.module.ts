@@ -11,14 +11,21 @@ import {DatabaseTableComponent} from './database/database-table/database-table.c
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
 import {FileExplorerComponent} from './file-explorer/file-explorer.component';
 import {ImageCacheGridComponent} from './image-cache/image-cache-grid/image-cache-grid.component';
+import {DatabaseQueryDataComponent} from './database/database-query-data/database-query-data.component';
+import {DatabaseQueryEmptyComponent} from './database/database-query-empty/database-query-empty.component';
 
 const providerChildRoutes: Routes = [
   {path: ':uri', component: ProviderDataComponent},
   {path: '', component: ProviderSuggestionsComponent}
 ];
 
+const databaseQueryChildRoutes: Routes = [
+  {path: '', component: DatabaseQueryEmptyComponent},
+  {path: ':query', component: DatabaseQueryDataComponent},
+];
+
 const databasesChildRoutes: Routes = [
-  {path: 'query/:query', component: DatabaseQueryComponent},
+  {path: 'query', component: DatabaseQueryComponent, children: databaseQueryChildRoutes},
   {path: 'table/:table', component: DatabaseTableComponent},
   {path: '', component: DatabaseMetadataComponent}
 ];

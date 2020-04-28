@@ -8,8 +8,11 @@ class DbUri(
     val databaseName: String
         get() = uri.host!!
 
-    val tableName: String
-        get() = uri.getQueryParameter("table")!!
+    val tableName: String?
+        get() = uri.getQueryParameter("table")
+
+    val query: String?
+        get() = uri.getQueryParameter("query")
 
     init {
         check(uri.scheme == SCHEME) {

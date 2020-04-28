@@ -40,7 +40,7 @@ export class ProviderSuggestionsComponent {
     ),
   ];
 
-  constructor(private model: ProviderModelService) {
+  constructor(model: ProviderModelService) {
     // Clear input field
     model.uri = new Uri();
   }

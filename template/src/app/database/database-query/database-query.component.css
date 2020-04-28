@@ -1,0 +1,9 @@
+.query-input {
+  margin-bottom: 20px;
+}
+
+.query-input textarea {
+  font-family: monospace;
+  font-size: 12pt;
+  height: 80px;
+}
