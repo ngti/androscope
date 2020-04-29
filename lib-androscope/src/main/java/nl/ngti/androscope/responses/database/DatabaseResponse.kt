@@ -58,7 +58,9 @@ class DatabaseResponse(
         val size = Formatter.formatFileSize(context, databaseFile.length())
 
         return try {
-            DatabaseInfo(true, databaseFile.absolutePath, size).apply {
+            DatabaseInfo(true,
+                    fullPath = databaseFile.absolutePath,
+                    size = size).apply {
                 fillDatabaseInfo(uri, this)
             }
         } catch (e: Throwable) {
