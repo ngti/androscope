@@ -43,7 +43,6 @@ public final class ResponseFactory {
     private static void addResponses(Map<String, BaseResponse> responses) {
         // HTML responses
         responses.put("", new HomeResponse());
-        responses.put("files", new FileExplorerResponse());
 
         // System responses
         responses.put("asset", new AssetResponse());
