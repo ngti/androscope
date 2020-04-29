@@ -64,10 +64,9 @@ export class RestService {
   private static ROOT = 'http://192.168.178.10:8791/';
 
   private static REST_URL = `${RestService.ROOT}rest/`;
-
-  private static VIEW_URL = `${RestService.ROOT}view`;
-
-  private static DOWNLOAD_URL = `${RestService.ROOT}download`;
+  private static PROVIDER_URL = `${RestService.REST_URL}provider/`;
+  private static FILE_SYSTEM_URL = `${RestService.REST_URL}file-system/`;
+  private static DATABASE_URL = `${RestService.REST_URL}database/`;
 
   constructor(private http: HttpClient) {
   }
@@ -76,8 +75,12 @@ export class RestService {
     return '?' + new ParamsBuilder().addFileSystemParams(params).build().toString();
   }
 
+  private static getUriUrlParams(uri: Uri): string {
+    return '?' + new ParamsBuilder().addUri(uri).build().toString();
+  }
+
   getProviderInfo(uri: Uri): Observable<ProviderInfo> {
-    return this.http.get<ProviderInfo>(RestService.REST_URL + 'provider/info', {
+    return this.http.get<ProviderInfo>(RestService.PROVIDER_URL + 'info', {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -85,7 +88,7 @@ export class RestService {
   }
 
   getUriData(uri: Uri, dataParams: DataParams): Observable<[][]> {
-    return this.http.get<[][]>(RestService.REST_URL + 'provider/data', {
+    return this.http.get<[][]>(RestService.PROVIDER_URL + 'data', {
       params: new ParamsBuilder()
         .addUri(uri)
         .addDataParams(dataParams)
@@ -96,7 +99,7 @@ export class RestService {
   getFileList(
     params: FileSystemParams, dataParams: DataParams
   ): Observable<FileSystemEntry[]> {
-    return this.http.get<FileSystemEntry[]>(RestService.REST_URL + 'file-system/list', {
+    return this.http.get<FileSystemEntry[]>(RestService.FILE_SYSTEM_URL + 'list', {
       params: new ParamsBuilder()
         .addFileSystemParams(params)
         .addDataParams(dataParams)
@@ -105,7 +108,7 @@ export class RestService {
   }
 
   getFileCount(params: FileSystemParams): Observable<FileSystemCount> {
-    return this.http.get<FileSystemCount>(RestService.REST_URL + 'file-system/count', {
+    return this.http.get<FileSystemCount>(RestService.FILE_SYSTEM_URL + 'count', {
       params: new ParamsBuilder()
         .addFileSystemParams(params)
         .build()
@@ -113,7 +116,7 @@ export class RestService {
   }
 
   getBreadcrumbs(params: FileSystemParams): Observable<Breadcrumb[]> {
-    return this.http.get<Breadcrumb[]>(RestService.REST_URL + 'file-system/breadcrumbs', {
+    return this.http.get<Breadcrumb[]>(RestService.FILE_SYSTEM_URL + 'breadcrumbs', {
       params: new ParamsBuilder()
         .addFileSystemParams(params)
         .build()
@@ -121,7 +124,7 @@ export class RestService {
   }
 
   deleteFile(params: FileSystemParams): Observable<FileDeleteResult> {
-    return this.http.delete<FileDeleteResult>(RestService.REST_URL + 'file-system/delete', {
+    return this.http.delete<FileDeleteResult>(RestService.FILE_SYSTEM_URL + 'delete', {
       params: new ParamsBuilder()
         .addFileSystemParams(params)
         .build()
@@ -129,19 +132,19 @@ export class RestService {
   }
 
   getFileViewUrl(params: FileSystemParams): string {
-    return RestService.VIEW_URL + RestService.getFileUrlParams(params);
+    return RestService.FILE_SYSTEM_URL + 'view' + RestService.getFileUrlParams(params);
   }
 
   getFileDownloadUrl(params: FileSystemParams): string {
-    return RestService.DOWNLOAD_URL + RestService.getFileUrlParams(params);
+    return RestService.FILE_SYSTEM_URL + 'download' + RestService.getFileUrlParams(params);
   }
 
   getDatabaseList(): Observable<Database[]> {
-    return this.http.get<Database[]>(RestService.REST_URL + 'database/list');
+    return this.http.get<Database[]>(RestService.DATABASE_URL + 'list');
   }
 
   getDatabaseTitle(uri: Uri): Observable<string> {
-    return this.http.get<string>(RestService.REST_URL + 'database/title', {
+    return this.http.get<string>(RestService.DATABASE_URL + 'title', {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -149,7 +152,7 @@ export class RestService {
   }
 
   getDatabaseInfo(uri: Uri): Observable<DatabaseInfo> {
-    return this.http.get<DatabaseInfo>(RestService.REST_URL + 'database/info', {
+    return this.http.get<DatabaseInfo>(RestService.DATABASE_URL + 'info', {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -157,14 +160,18 @@ export class RestService {
   }
 
   canQuery(sql: string): Observable<boolean> {
-    return this.http.post<boolean>(RestService.REST_URL + 'database/can-query', new SqlParams(sql));
+    return this.http.post<boolean>(RestService.DATABASE_URL + 'can-query', new SqlParams(sql));
   }
 
   executeSql(uri: Uri, sql: string): Observable<ExecuteSqlResult> {
-    return this.http.post<ExecuteSqlResult>(RestService.REST_URL + 'database/execute-sql', new SqlParams(sql), {
+    return this.http.post<ExecuteSqlResult>(RestService.DATABASE_URL + 'execute-sql', new SqlParams(sql), {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
     });
+  }
+
+  getDatabaseDownloadUrl(uri: Uri): string {
+    return RestService.DATABASE_URL + 'download' + RestService.getUriUrlParams(uri);
   }
 }

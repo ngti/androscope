@@ -3,9 +3,9 @@ package nl.ngti.androscope.responses
 import android.content.Context
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.log
+import nl.ngti.androscope.responses.common.getMimeType
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.path
-import nl.ngti.androscope.utils.AppUtils
 import java.io.FileNotFoundException
 import java.io.InputStream
 
@@ -22,7 +22,7 @@ class AssetResponse(
         var mimeType: String?
         try {
             inputStream = context.assets.open(assetToOpen)
-            mimeType = AppUtils.getMimeType(assetToOpen)
+            mimeType = getMimeType(assetToOpen)
         } catch (ignore: FileNotFoundException) {
             inputStream = context.assets.open(HOME_PAGE)
             mimeType = "text/html"

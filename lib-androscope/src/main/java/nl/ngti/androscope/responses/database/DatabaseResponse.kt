@@ -4,7 +4,9 @@ import android.content.Context
 import android.database.DatabaseUtils
 import android.text.format.Formatter
 import com.google.gson.Gson
+import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
+import nl.ngti.androscope.responses.common.toDownloadResponse
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.dbUri
 import nl.ngti.androscope.server.readSql
@@ -46,14 +48,12 @@ class DatabaseResponse(
     }
 
     fun getTitle(sessionParams: SessionParams): String {
-        val uri = sessionParams.dbUri
-        val config = DbConfig(context, uri.databaseName)
-        return config.name
+        return sessionParams.dbUri.toConfig(context).name
     }
 
     fun getInfo(sessionParams: SessionParams): DatabaseInfo {
         val uri = sessionParams.dbUri
-        val config = DbConfig(context, uri.databaseName)
+        val config = uri.toConfig(context)
         val databaseFile = config.databaseFile
         val size = Formatter.formatFileSize(context, databaseFile.length())
 
@@ -105,5 +105,10 @@ class DatabaseResponse(
         } catch (e: Throwable) {
             return ExecuteSqlResult(false, e.message ?: "")
         }
+    }
+
+    fun getDatabaseToDownload(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val file = sessionParams.dbUri.toConfig(context).databaseFile
+        return file.toDownloadResponse()
     }
 }

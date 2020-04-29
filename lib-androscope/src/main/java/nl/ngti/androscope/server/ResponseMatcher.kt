@@ -5,9 +5,7 @@ import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.common.UrlMatcher
 import nl.ngti.androscope.responses.AssetResponse
-import nl.ngti.androscope.responses.DownloadResponse
 import nl.ngti.androscope.responses.Response
-import nl.ngti.androscope.responses.ViewResponse
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
 import nl.ngti.androscope.responses.database.DatabaseResponse
 import nl.ngti.androscope.responses.files.FileSystemResponse
@@ -25,33 +23,36 @@ internal class ResponseMatcher(
     val assetResponse = AssetResponse(context)
 
     init {
-        add("view", ViewResponse(context))
-        add("download", DownloadResponse(context))
-
         FileSystemResponse(context).apply {
-            addRest("file-system/list", ::getFileList)
-            addRest("file-system/count", ::getFileCount)
-            addRest("file-system/breadcrumbs", ::getBreadcrumbs)
-            addRest("file-system/delete", ::delete)
+            addJson("file-system/list", ::getFileList)
+            addJson("file-system/count", ::getFileCount)
+            addJson("file-system/breadcrumbs", ::getBreadcrumbs)
+            addJson("file-system/delete", ::delete)
+            add("file-system/view", ::getFileToView)
+            add("file-system/download", ::getFileToDownload)
         }
 
         ProviderResponse(uriDataProvider).apply {
-            addRest("provider/info", ::getInfo)
-            addRest("provider/data", ::getData)
+            addJson("provider/info", ::getInfo)
+            addJson("provider/data", ::getData)
         }
 
         DatabaseResponse(context, metadata, uriDataProvider, jsonConverter).apply {
-            addRest("database/list") { getList() }
-            addRest("database/title", ::getTitle)
-            addRest("database/info", ::getInfo)
-            addRest("database/can-query", ::getCanQuery)
-            addRest("database/execute-sql", ::executeSql)
-            //addRest("database/download")
+            addJson("database/list") { getList() }
+            addJson("database/title", ::getTitle)
+            addJson("database/info", ::getInfo)
+            addJson("database/can-query", ::getCanQuery)
+            addJson("database/execute-sql", ::executeSql)
+            add("database/download", ::getDatabaseToDownload)
             //addRest("database/upload")
         }
     }
 
-    private fun addRest(path: String, handler: (SessionParams) -> Any?) {
+    private fun add(path: String, handler: Response) {
+        add("rest", path, handler)
+    }
+
+    private fun addJson(path: String, handler: (SessionParams) -> Any?) {
         add("rest", path) {
             val data = handler(it)
             val json = jsonConverter.toJson(data)
@@ -60,9 +61,5 @@ internal class ResponseMatcher(
 
             NanoHTTPD.newFixedLengthResponse(json)
         }
-    }
-
-    private fun add(rootPath: String, handler: Response) {
-        add(rootPath, null, handler)
     }
 }

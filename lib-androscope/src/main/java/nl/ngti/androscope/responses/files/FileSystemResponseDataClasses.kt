@@ -1,6 +1,6 @@
 package nl.ngti.androscope.responses.files
 
-import org.apache.commons.io.FilenameUtils
+import nl.ngti.androscope.responses.common.indexOfExtension
 import java.io.File
 
 internal interface IFormatter {
@@ -37,7 +37,7 @@ class FileSystemEntry internal constructor(
             name = itemName
             extension = null
         } else {
-            val extensionIndex = FilenameUtils.indexOfExtension(itemName)
+            val extensionIndex = indexOfExtension(itemName)
             if (extensionIndex < 1) {
                 name = itemName
                 extension = null

@@ -1,5 +1,6 @@
 package nl.ngti.androscope.responses.database
 
+import android.content.Context
 import android.net.Uri
 
 class DbUri(
@@ -19,6 +20,8 @@ class DbUri(
             "Invalid ${javaClass.simpleName} scheme: ${uri.scheme}"
         }
     }
+
+    fun toConfig(context: Context) = DbConfig(context, databaseName)
 
     companion object {
         const val SCHEME = "database"

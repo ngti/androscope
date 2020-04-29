@@ -21,7 +21,7 @@ export class DatabaseMetadataComponent implements OnDestroy {
   private uriSubscription: Subscription;
 
   constructor(
-    restService: RestService,
+    private restService: RestService,
     readonly model: DatabaseModelService
   ) {
     console.log('DatabaseMetadataComponent created');
@@ -39,5 +39,9 @@ export class DatabaseMetadataComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.uriSubscription.unsubscribe();
+  }
+
+  get databaseDownloadUrl(): string {
+    return this.restService.getDatabaseDownloadUrl(this.model.uri);
   }
 }

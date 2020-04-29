@@ -51,8 +51,7 @@ class DatabaseManager(
     }
 
     private fun getDatabase(uri: DbUri): SQLiteDatabase {
-        val dbName = uri.databaseName
-        val dbConfig = DbConfig(context, dbName)
+        val dbConfig = uri.toConfig(context)
         val dbFile = dbConfig.databaseFile
         if (!dbFile.exists()) {
             throw IllegalStateException("Database ${dbFile.absolutePath} does not exist")

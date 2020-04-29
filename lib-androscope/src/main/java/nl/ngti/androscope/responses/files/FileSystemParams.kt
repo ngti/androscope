@@ -34,7 +34,7 @@ data class FileSystemParams(
         } ?: throw IllegalArgumentException("Null File returned for $fileSystemType")
     }
 
-    fun getRootFile(context: Context): File {
+    fun getFile(context: Context): File {
         val dataDir = resolveFileSystemType(context)
         return if (path.isNullOrEmpty()) dataDir else File(dataDir, path)
     }

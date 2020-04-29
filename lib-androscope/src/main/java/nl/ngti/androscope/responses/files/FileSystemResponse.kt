@@ -1,9 +1,13 @@
 package nl.ngti.androscope.responses.files
 
 import android.content.Context
+import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.responses.common.ResponseDataCache
+import nl.ngti.androscope.responses.common.mimeType
+import nl.ngti.androscope.responses.common.toDownloadResponse
 import nl.ngti.androscope.server.FileSystemData
 import nl.ngti.androscope.server.SessionParams
+import java.io.FileInputStream
 
 class FileSystemResponse(
         private val context: Context
@@ -12,7 +16,7 @@ class FileSystemResponse(
     private val fileSystemResponseCache = ResponseDataCache(
             paramsSupplier = ::FileSystemParams,
             dataSupplier = {
-                FileSystemData(context, it.getRootFile(context))
+                FileSystemData(context, it.getFile(context))
             }
     )
 
@@ -38,7 +42,7 @@ class FileSystemResponse(
 
     fun delete(session: SessionParams): FileDeleteResult {
         val params = FileSystemParams(session)
-        val file = params.getRootFile(context)
+        val file = params.getFile(context)
         if (file.isDirectory && file.listFiles()?.isEmpty() == false) {
             return FileDeleteResult(false, "Cannot delete non-empty directories")
         }
@@ -46,5 +50,19 @@ class FileSystemResponse(
             return FileDeleteResult(true)
         }
         return FileDeleteResult(false, "Cannot delete \"$file\"")
+    }
+
+    fun getFileToView(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val file = FileSystemParams(sessionParams).getFile(context)
+
+        val mime = file.mimeType ?: "text/plain"
+        return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, FileInputStream(file)).apply {
+            addHeader("Content-Disposition", "filename=\"" + file.name + "\"")
+        }
+    }
+
+    fun getFileToDownload(sessionParams: SessionParams): NanoHTTPD.Response? {
+        val file = FileSystemParams(sessionParams).getFile(context)
+        return file.toDownloadResponse()
     }
 }
