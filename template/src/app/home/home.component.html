@@ -3,7 +3,7 @@
     <mat-grid-tile>
       <mat-card class="dashboard-card">
         <mat-card-title>Databases</mat-card-title>
-        <mat-card-subtitle>All application databases</mat-card-subtitle>
+        <mat-card-subtitle>Returned by Context.databaseList() and configured in application manifest</mat-card-subtitle>
         <mat-card-content>
           <app-database-list></app-database-list>
         </mat-card-content>
@@ -15,7 +15,7 @@
     <mat-grid-tile>
       <mat-card class="dashboard-card">
         <mat-card-title>Image cache</mat-card-title>
-        <mat-card-subtitle>We try to detect caches of popular image loading libraries</mat-card-subtitle>
+        <mat-card-subtitle>Picasso, Glide, Coil or configured in application manifest</mat-card-subtitle>
         <mat-card-content>
           <app-image-cache-list></app-image-cache-list>
         </mat-card-content>
