@@ -16,15 +16,9 @@ export class DatabaseInfo {
   indexes: string[];
 }
 
-export class ExecuteSqlResult {
-  success: boolean;
-  message: string;
-}
-
 export class SqlParams {
   constructor(
     readonly sql: string
   ) {
   }
-
 }

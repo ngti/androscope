@@ -9,9 +9,8 @@ import {log} from 'util';
 })
 export class DatabaseQueryEmptyComponent implements OnInit {
 
-  constructor(model: DatabaseModelService) {
+  constructor() {
     log('DatabaseQueryEmptyComponent created');
-    model.clearDatabaseQuery();
   }
 
   ngOnInit() {

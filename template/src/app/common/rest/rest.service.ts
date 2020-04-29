@@ -3,10 +3,11 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Uri} from '../query-model/uri';
 import {ProviderInfo} from './provider-info';
-import {Breadcrumb, FileDeleteResult, FileSystemCount, FileSystemEntry} from './file-system-data';
+import {Breadcrumb, FileSystemCount, FileSystemEntry} from './file-system-data';
 import {DataParams} from '../base/data-params';
 import {FileSystemParams} from '../base/file-system-params';
-import {Database, DatabaseInfo, ExecuteSqlResult, SqlParams} from './database-data';
+import {Database, DatabaseInfo, SqlParams} from './database-data';
+import {RequestResult} from './common-data';
 
 class ParamsBuilder {
 
@@ -123,8 +124,8 @@ export class RestService {
     });
   }
 
-  deleteFile(params: FileSystemParams): Observable<FileDeleteResult> {
-    return this.http.delete<FileDeleteResult>(RestService.FILE_SYSTEM_URL + 'delete', {
+  deleteFile(params: FileSystemParams): Observable<RequestResult> {
+    return this.http.delete<RequestResult>(RestService.FILE_SYSTEM_URL + 'delete', {
       params: new ParamsBuilder()
         .addFileSystemParams(params)
         .build()
@@ -163,8 +164,8 @@ export class RestService {
     return this.http.post<boolean>(RestService.DATABASE_URL + 'can-query', new SqlParams(sql));
   }
 
-  executeSql(uri: Uri, sql: string): Observable<ExecuteSqlResult> {
-    return this.http.post<ExecuteSqlResult>(RestService.DATABASE_URL + 'execute-sql', new SqlParams(sql), {
+  executeSql(uri: Uri, sql: string): Observable<RequestResult> {
+    return this.http.post<RequestResult>(RestService.DATABASE_URL + 'execute-sql', new SqlParams(sql), {
       params: new ParamsBuilder()
         .addUri(uri)
         .build()
@@ -173,5 +174,15 @@ export class RestService {
 
   getDatabaseDownloadUrl(uri: Uri): string {
     return RestService.DATABASE_URL + 'download' + RestService.getUriUrlParams(uri);
+  }
+
+  uploadDatabase(uri: Uri, file: File): Observable<RequestResult> {
+    const formData = new FormData();
+    formData.append(file.name, file);
+    return this.http.post<RequestResult>(RestService.DATABASE_URL + 'upload', formData, {
+      params: new ParamsBuilder()
+        .addUri(uri)
+        .build()
+    });
   }
 }

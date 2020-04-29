@@ -42,9 +42,10 @@ import {DeleteConfirmationDialogComponent} from './file-explorer/delete-confirma
 import { ImageCacheListComponent } from './image-cache/image-cache-list/image-cache-list.component';
 import { ImageCacheGridComponent } from './image-cache/image-cache-grid/image-cache-grid.component';
 import { DatabaseInfoComponent } from './database/database-info/database-info.component';
-import {MatExpansionModule} from "@angular/material/expansion";
+import {MatExpansionModule} from '@angular/material/expansion';
 import { DatabaseQueryDataComponent } from './database/database-query-data/database-query-data.component';
 import { DatabaseQueryEmptyComponent } from './database/database-query-empty/database-query-empty.component';
+import { DatabaseUploadComponent } from './database/database-upload/database-upload.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { DatabaseQueryEmptyComponent } from './database/database-query-empty/dat
     DatabaseInfoComponent,
     DatabaseQueryDataComponent,
     DatabaseQueryEmptyComponent,
+    DatabaseUploadComponent,
   ],
   imports: [
     BrowserModule,
@@ -94,7 +96,7 @@ import { DatabaseQueryEmptyComponent } from './database/database-query-empty/dat
     MatSnackBarModule,
     MatExpansionModule,
   ],
-  entryComponents: [DeleteConfirmationDialogComponent],
+  entryComponents: [DeleteConfirmationDialogComponent, DatabaseUploadComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

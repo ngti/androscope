@@ -19,11 +19,6 @@ class DatabaseInfo(
     val indexes = ArrayList<String>()
 }
 
-class ExecuteSqlResult(
-        val success: Boolean,
-        val message: String
-)
-
 class SqlParams(
         val sql: String
 )

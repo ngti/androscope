@@ -2,6 +2,7 @@ package nl.ngti.androscope.responses.files
 
 import android.content.Context
 import fi.iki.elonen.NanoHTTPD
+import nl.ngti.androscope.responses.common.RequestResult
 import nl.ngti.androscope.responses.common.ResponseDataCache
 import nl.ngti.androscope.responses.common.mimeType
 import nl.ngti.androscope.responses.common.toDownloadResponse
@@ -40,16 +41,16 @@ class FileSystemResponse(
         return result
     }
 
-    fun delete(session: SessionParams): FileDeleteResult {
+    fun delete(session: SessionParams): RequestResult {
         val params = FileSystemParams(session)
         val file = params.getFile(context)
         if (file.isDirectory && file.listFiles()?.isEmpty() == false) {
-            return FileDeleteResult(false, "Cannot delete non-empty directories")
+            return RequestResult.error("Cannot delete non-empty directories")
         }
         if (file.delete()) {
-            return FileDeleteResult(true)
+            return RequestResult.success()
         }
-        return FileDeleteResult(false, "Cannot delete \"$file\"")
+        return RequestResult.error("Cannot delete \"$file\"")
     }
 
     fun getFileToView(sessionParams: SessionParams): NanoHTTPD.Response? {

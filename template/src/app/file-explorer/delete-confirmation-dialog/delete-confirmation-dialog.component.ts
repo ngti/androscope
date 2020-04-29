@@ -27,7 +27,7 @@ export class DeleteConfirmationDialogComponent {
 
   constructor(
     private restService: RestService,
-    public dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
+    private dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private readonly data: DeleteConfirmationDialogData
   ) {
   }
@@ -59,7 +59,7 @@ export class DeleteConfirmationDialogComponent {
             this.clearError();
             this.dialogRef.close(entryName);
           } else {
-            this.reportError(value.errorMessage);
+            this.reportError(value.message);
           }
         },
         error: err => {

@@ -44,7 +44,7 @@ internal class ResponseMatcher(
             addJson("database/can-query", ::getCanQuery)
             addJson("database/execute-sql", ::executeSql)
             add("database/download", ::getDatabaseToDownload)
-            //addRest("database/upload")
+            addJson("database/upload", ::uploadDatabase)
         }
     }
 

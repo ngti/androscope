@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {ActivatedRoute} from '@angular/router';
 import {log} from 'util';
@@ -8,7 +8,7 @@ import {log} from 'util';
   templateUrl: './database-table.component.html',
   styleUrls: ['./database-table.component.css']
 })
-export class DatabaseTableComponent implements OnInit {
+export class DatabaseTableComponent implements OnInit, OnDestroy {
 
   tableName: string;
 
@@ -25,6 +25,11 @@ export class DatabaseTableComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy(): void {
+    this.model.clearDatabaseQuery();
+    log('DatabaseTableComponent destroyed');
   }
 
 }

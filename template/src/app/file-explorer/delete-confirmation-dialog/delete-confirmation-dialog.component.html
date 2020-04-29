@@ -1,7 +1,10 @@
 <h1 mat-dialog-title>Confirmation</h1>
 <div mat-dialog-content>
   <p>Are you sure you want to delete {{getEntryType()}} <b>{{getEntryName()}}</b>?</p>
-  <p *ngIf="($error | async) != null" style="color: red">Failed to perform delete request:<br>{{$error | async}}</p>
+  <div class="alert alert-danger" *ngIf="($error | async) != null" style="color: red">
+    <p>Failed to perform delete request:</p>
+    <p>{{$error | async}}</p>
+  </div>
 </div>
 <div align="end" mat-dialog-actions>
   <button (click)="onCancelClick()" cdkFocusInitial mat-button>Cancel</button>

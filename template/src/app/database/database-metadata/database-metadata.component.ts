@@ -4,6 +4,10 @@ import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {DatabaseInfo} from '../../common/rest/database-data';
 import {DatabaseModelService} from '../model/database-model.service';
+import {MatDialog} from '@angular/material/dialog';
+import {DatabaseUploadComponent} from '../database-upload/database-upload.component';
+import {Uri} from '../../common/query-model/uri';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-database-metadata',
@@ -22,18 +26,16 @@ export class DatabaseMetadataComponent implements OnDestroy {
 
   constructor(
     private restService: RestService,
-    readonly model: DatabaseModelService
+    readonly model: DatabaseModelService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     console.log('DatabaseMetadataComponent created');
 
     this.uriSubscription = model.uri$.subscribe(databaseUri => {
       console.log('DatabaseMetadataComponent new database uri: ' + databaseUri.content);
 
-      this.loadingSubject.next(true);
-      restService.getDatabaseInfo(databaseUri).subscribe(info => {
-        this.loadingSubject.next(false);
-        this.databaseInfoSubject.next(info);
-      });
+      this.reloadData(databaseUri);
     });
   }
 
@@ -43,5 +45,28 @@ export class DatabaseMetadataComponent implements OnDestroy {
 
   get databaseDownloadUrl(): string {
     return this.restService.getDatabaseDownloadUrl(this.model.uri);
+  }
+
+  onDatabaseUpload() {
+    const dialogRef = this.dialog.open(DatabaseUploadComponent, {
+      data: this.model.uri
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null && result) {
+        this.snackBar.open('Database has been successfully uploaded', null, {
+          duration: 2000,
+        });
+        this.reloadData(this.model.uri);
+      }
+    });
+  }
+
+  private reloadData(uri: Uri) {
+    this.loadingSubject.next(true);
+    this.restService.getDatabaseInfo(uri).subscribe(info => {
+      this.loadingSubject.next(false);
+      this.databaseInfoSubject.next(info);
+    });
   }
 }

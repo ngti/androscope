@@ -19,10 +19,10 @@
     </form>
   </div>
 
-  <div *ngIf="(queryResult$ | async).display; else queryData">
+  <div *ngIf="(queryStatus$ | async).display; else queryData">
     <div class="alert" role="alert"
-         [ngClass]="(queryResult$ | async).alertClass">
-      <p>{{(queryResult$ | async).message}}</p>
+         [ngClass]="(queryStatus$ | async).alertClass">
+      <p>{{(queryStatus$ | async).message}}</p>
     </div>
   </div>
   <ng-template #queryData>

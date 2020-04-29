@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Upload Database</h1>
+<div mat-dialog-content>
+  <p><input type="file" id="file" (change)="handleFileInput($event.target)"/></p>
+  <div class="alert alert-danger" *ngIf="(uploadStatus$ | async).isError" style="color: red">
+    <p>Failed to perform delete request:</p>
+    <p>{{(uploadStatus$ | async).message}}</p>
+  </div>
+</div>
+<div align="end" mat-dialog-actions>
+  <button (click)="onCancelClick()" cdkFocusInitial mat-button>Cancel</button>
+  <button #uploadButton (click)="onUploadClick()" mat-button
+          [disabled]="(file$ | async) == null || (uploadStatus$ | async).isInProgress">
+    Upload
+  </button>
+</div>

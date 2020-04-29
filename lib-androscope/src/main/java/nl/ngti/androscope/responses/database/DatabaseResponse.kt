@@ -6,11 +6,13 @@ import android.text.format.Formatter
 import com.google.gson.Gson
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
+import nl.ngti.androscope.responses.common.RequestResult
 import nl.ngti.androscope.responses.common.toDownloadResponse
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.dbUri
 import nl.ngti.androscope.server.readSql
 import nl.ngti.androscope.utils.AndroscopeMetadata
+import java.io.File
 
 private const val TABLE_SQLITE_MASTER = "sqlite_master"
 
@@ -99,18 +101,76 @@ class DatabaseResponse(
         return type == DatabaseUtils.STATEMENT_SELECT
     }
 
-    fun executeSql(sessionParams: SessionParams): ExecuteSqlResult {
+    fun executeSql(sessionParams: SessionParams): RequestResult {
         return try {
             val sql = sessionParams.readSql(jsonConverter)
             databaseManager.executeSql(sessionParams.dbUri, sql)
-            ExecuteSqlResult(true, "Executed")
+            RequestResult.success("Executed")
         } catch (e: Throwable) {
-            return ExecuteSqlResult(false, e.message ?: "")
+            return RequestResult.error(e.message ?: e.javaClass.name)
         }
     }
 
     fun getDatabaseToDownload(sessionParams: SessionParams): NanoHTTPD.Response? {
         val file = sessionParams.dbUri.toConfig(context).databaseFile
         return file.toDownloadResponse()
+    }
+
+    fun uploadDatabase(sessionParams: SessionParams): RequestResult? {
+        val databaseFile = sessionParams.dbUri.toConfig(context).databaseFile
+        val body = HashMap<String, String>()
+        sessionParams.parseBody(body)
+        body.forEach { (key, value) ->
+            val bodyFile = File(value)
+
+            val replaceStrategy = if (databaseFile.exists())
+                BackupOriginalStrategy() else NoBackupStrategy()
+
+            return replaceStrategy.replace(bodyFile, databaseFile, key)
+        }
+        return RequestResult.error("No input file")
+    }
+}
+
+private abstract class ReplaceStrategy {
+
+    fun replace(sourceFile: File, destFile: File, sourceName: String): RequestResult {
+        onBeforeReplace(sourceFile, destFile)?.let {
+            return it
+        }
+        if (!sourceFile.renameTo(destFile)) {
+            onReplaceFailed(destFile)
+            return RequestResult.error("Failed to replace database with: $sourceName")
+        }
+        return RequestResult.success()
+    }
+
+    open fun onBeforeReplace(sourceFile: File, destFile: File): RequestResult? {
+        // Override in ancestors if needed
+        return null
+    }
+
+    open fun onReplaceFailed(destFile: File) {
+        // Override in ancestors if needed
+    }
+}
+
+private class NoBackupStrategy : ReplaceStrategy()
+
+private class BackupOriginalStrategy : ReplaceStrategy() {
+
+    private lateinit var backupFile: File
+
+    override fun onBeforeReplace(sourceFile: File, destFile: File): RequestResult? {
+        backupFile = createTempFile(directory = destFile.parentFile)
+        if (!destFile.renameTo(backupFile)) {
+            return RequestResult.error("Cannot create database backup: ${backupFile.absolutePath}")
+        }
+        return null
+    }
+
+    override fun onReplaceFailed(destFile: File) {
+        // Attempt to restore old destination file
+        backupFile.renameTo(destFile)
     }
 }

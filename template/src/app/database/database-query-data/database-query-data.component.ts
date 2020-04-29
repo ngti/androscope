@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {log} from 'util';
 import {ActivatedRoute} from '@angular/router';
@@ -8,7 +8,7 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './database-query-data.component.html',
   styleUrls: ['./database-query-data.component.css']
 })
-export class DatabaseQueryDataComponent implements OnInit {
+export class DatabaseQueryDataComponent implements OnInit, OnDestroy {
 
   constructor(
     readonly model: DatabaseModelService,
@@ -23,6 +23,11 @@ export class DatabaseQueryDataComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy(): void {
+    this.model.clearDatabaseQuery();
+    log('DatabaseQueryDataComponent destroyed');
   }
 
 }
