@@ -16,6 +16,9 @@ class ProviderResponse(
             dataSupplier = {
                 queryCursor(it.uri, it.sortOrder)
             },
+            canUseData = {
+                it != null && !it.isClosed
+            },
             onAbandonData = {
                 it?.close()
             }

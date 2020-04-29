@@ -42,6 +42,11 @@ class ParamsBuilder {
     return this;
   }
 
+  addCustom(key: string, value: string) {
+    this.httpParams = this.httpParams.set(key, value);
+    return this;
+  }
+
   build(): HttpParams {
     return this.httpParams;
   }
@@ -182,6 +187,15 @@ export class RestService {
     return this.http.post<RequestResult>(RestService.DATABASE_URL + 'upload', formData, {
       params: new ParamsBuilder()
         .addUri(uri)
+        .build()
+    });
+  }
+
+  getDatabaseSql(uri: Uri, name: string): Observable<string> {
+    return this.http.get<string>(RestService.DATABASE_URL + 'sql', {
+      params: new ParamsBuilder()
+        .addUri(uri)
+        .addCustom('name', name)
         .build()
     });
   }

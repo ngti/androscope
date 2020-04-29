@@ -1,9 +1,9 @@
 import {DataSource} from '@angular/cdk/collections';
 import {MatSort, SortDirection} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {DataParams} from './data-params';
+import {MatPaginator} from '@angular/material/paginator';
 
 export abstract class BaseDataSource<T> extends DataSource<T> {
 

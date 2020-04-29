@@ -10,6 +10,7 @@ import nl.ngti.androscope.responses.common.RequestResult
 import nl.ngti.androscope.responses.common.toDownloadResponse
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.dbUri
+import nl.ngti.androscope.server.get
 import nl.ngti.androscope.server.readSql
 import nl.ngti.androscope.utils.AndroscopeMetadata
 import java.io.File
@@ -129,6 +130,22 @@ class DatabaseResponse(
             return replaceStrategy.replace(bodyFile, databaseFile, key)
         }
         return RequestResult.error("No input file")
+    }
+
+    fun getSql(sessionParams: SessionParams): String {
+        val name = sessionParams["name"]!!
+        return databaseManager.query(sessionParams.dbUri,
+                tableName = TABLE_SQLITE_MASTER,
+                projection = arrayOf(
+                        /* 0 */ "sql"
+                ),
+                selection = "name=?",
+                selectionArgs = arrayOf(name)
+        )?.use {
+            if (it.moveToFirst()) {
+                it.getString(0)
+            } else null
+        } ?: "Cannot find '$name' sql"
     }
 }
 

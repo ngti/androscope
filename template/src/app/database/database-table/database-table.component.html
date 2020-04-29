@@ -12,6 +12,10 @@
         <mat-icon>edit</mat-icon>
         <span>Custom query</span>
       </a>
+      <button mat-menu-item (click)="onViewSql(tableName)">
+        <mat-icon>visibility</mat-icon>
+        <span>View SQL</span>
+      </button>
     </ng-template>
   </mat-menu>
 </mat-toolbar>

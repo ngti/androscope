@@ -1,0 +1,13 @@
+.view-sql-content {
+  width: 600px;
+}
+
+.full-size {
+  width: 100%;
+}
+
+.full-size textarea {
+  font-family: monospace;
+  font-size: 12pt;
+  height: 400px;
+}

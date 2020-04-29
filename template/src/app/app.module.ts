@@ -7,19 +7,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
-import {
-  MatButtonModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatProgressSpinnerModule,
-  MatSnackBarModule,
-  MatToolbarModule
-} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {ToolbarComponent} from './navigation/toolbar/toolbar.component';
@@ -39,13 +26,26 @@ import {DatabaseTableComponent} from './database/database-table/database-table.c
 import {ProviderDataComponent} from './provider/provider-data/provider-data.component';
 import {FileExplorerComponent} from './file-explorer/file-explorer.component';
 import {DeleteConfirmationDialogComponent} from './file-explorer/delete-confirmation-dialog/delete-confirmation-dialog.component';
-import { ImageCacheListComponent } from './image-cache/image-cache-list/image-cache-list.component';
-import { ImageCacheGridComponent } from './image-cache/image-cache-grid/image-cache-grid.component';
-import { DatabaseInfoComponent } from './database/database-info/database-info.component';
+import {ImageCacheListComponent} from './image-cache/image-cache-list/image-cache-list.component';
+import {ImageCacheGridComponent} from './image-cache/image-cache-grid/image-cache-grid.component';
+import {DatabaseInfoComponent} from './database/database-info/database-info.component';
 import {MatExpansionModule} from '@angular/material/expansion';
-import { DatabaseQueryDataComponent } from './database/database-query-data/database-query-data.component';
-import { DatabaseQueryEmptyComponent } from './database/database-query-empty/database-query-empty.component';
-import { DatabaseUploadComponent } from './database/database-upload/database-upload.component';
+import {DatabaseQueryDataComponent} from './database/database-query-data/database-query-data.component';
+import {DatabaseQueryEmptyComponent} from './database/database-query-empty/database-query-empty.component';
+import {DatabaseUploadComponent} from './database/database-upload/database-upload.component';
+import {DatabaseViewSqlComponent} from './database/database-view-sql/database-view-sql.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -70,6 +70,7 @@ import { DatabaseUploadComponent } from './database/database-upload/database-upl
     DatabaseQueryDataComponent,
     DatabaseQueryEmptyComponent,
     DatabaseUploadComponent,
+    DatabaseViewSqlComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,8 +96,13 @@ import { DatabaseUploadComponent } from './database/database-upload/database-upl
     MatDialogModule,
     MatSnackBarModule,
     MatExpansionModule,
+    ClipboardModule,
   ],
-  entryComponents: [DeleteConfirmationDialogComponent, DatabaseUploadComponent],
+  entryComponents: [
+    DeleteConfirmationDialogComponent,
+    DatabaseUploadComponent,
+    DatabaseViewSqlComponent
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

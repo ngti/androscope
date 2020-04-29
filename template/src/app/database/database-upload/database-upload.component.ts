@@ -40,10 +40,6 @@ export class DatabaseUploadComponent implements OnInit {
     }
   }
 
-  onCancelClick() {
-    this.dialogRef.close();
-  }
-
   onUploadClick() {
     const file = this.fileSubject.getValue();
     this.uploadStatusSubject.next(new StatusData(Status.IN_PROGRESS));

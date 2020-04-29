@@ -11,8 +11,9 @@ import {
   DeleteConfirmationDialogComponent,
   DeleteConfirmationDialogData
 } from './delete-confirmation-dialog/delete-confirmation-dialog.component';
-import {MatDialog, MatSnackBar} from '@angular/material';
 import {FileSystemParams} from '../common/base/file-system-params';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-file-explorer',

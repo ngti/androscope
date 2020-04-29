@@ -7,7 +7,7 @@
   </div>
 </div>
 <div align="end" mat-dialog-actions>
-  <button (click)="onCancelClick()" cdkFocusInitial mat-button>Cancel</button>
+  <button cdkFocusInitial mat-button mat-dialog-close>Cancel</button>
   <button #uploadButton (click)="onUploadClick()" mat-button
           [disabled]="(file$ | async) == null || (uploadStatus$ | async).isInProgress">
     Upload

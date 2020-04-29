@@ -45,6 +45,7 @@ internal class ResponseMatcher(
             addJson("database/execute-sql", ::executeSql)
             add("database/download", ::getDatabaseToDownload)
             addJson("database/upload", ::uploadDatabase)
+            addJson("database/sql", ::getSql)
         }
     }
 

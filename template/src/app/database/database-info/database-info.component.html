@@ -31,9 +31,13 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <mat-list-item *ngFor="let name of databaseInfo.views" routerLink="./">
+          <a mat-list-item *ngFor="let name of databaseInfo.views" [routerLink]="['./table/', name]">
             <h4 mat-line>{{name}}</h4>
-          </mat-list-item>
+            <button mat-icon-button [matMenuTriggerFor]="tableMenu" [matMenuTriggerData]="{tableName: name}"
+                    (click)="onMenuButtonClick($event)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
 
@@ -46,11 +50,15 @@
             {{databaseInfo.triggers.length}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <mat-nav-list>
-          <mat-list-item *ngFor="let name of databaseInfo.triggers" routerLink="./">
+        <mat-list>
+          <mat-list-item *ngFor="let name of databaseInfo.triggers">
             <h4 mat-line>{{name}}</h4>
+            <button mat-icon-button [matMenuTriggerFor]="nonTableMenu" [matMenuTriggerData]="{dbObjectName: name}"
+                    (click)="onMenuButtonClick($event)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
           </mat-list-item>
-        </mat-nav-list>
+        </mat-list>
       </mat-expansion-panel>
 
       <mat-expansion-panel [disabled]="databaseInfo.indexes.length == 0">
@@ -62,11 +70,15 @@
             {{databaseInfo.indexes.length}}
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <mat-nav-list>
-          <mat-list-item *ngFor="let name of databaseInfo.indexes" routerLink="./">
+        <mat-list>
+          <mat-list-item *ngFor="let name of databaseInfo.indexes">
             <h4 mat-line>{{name}}</h4>
+            <button mat-icon-button [matMenuTriggerFor]="nonTableMenu" [matMenuTriggerData]="{dbObjectName: name}"
+                    (click)="onMenuButtonClick($event)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
           </mat-list-item>
-        </mat-nav-list>
+        </mat-list>
       </mat-expansion-panel>
 
       <mat-expansion-panel>
@@ -105,7 +117,16 @@
       <mat-icon>edit</mat-icon>
       <span>Custom query</span>
     </a>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="onViewSql(name)">
+      <mat-icon>visibility</mat-icon>
+      <span>View SQL</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #nonTableMenu="matMenu">
+  <ng-template matMenuContent let-name="dbObjectName">
+    <button mat-menu-item (click)="onViewSql(name)">
       <mat-icon>visibility</mat-icon>
       <span>View SQL</span>
     </button>

@@ -1,10 +1,12 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {QueryModelService} from '../query-model/query-model.service';
-import {MatPaginator, MatSort, MatTable} from '@angular/material';
 import {RestService} from '../rest/rest.service';
 import {QueryDataSource} from './query-data-source';
 import {BehaviorSubject, merge, Subscription} from 'rxjs';
 import {Uri} from '../query-model/uri';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTable} from '@angular/material/table';
 
 @Component({
   selector: 'app-query-data',

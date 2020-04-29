@@ -5,6 +5,7 @@ import nl.ngti.androscope.server.SessionParams
 class ResponseDataCache<Params, Data>(
         private val paramsSupplier: (SessionParams) -> Params,
         private val dataSupplier: (Params) -> Data,
+        private val canUseData: (Data?) -> Boolean = { it != null },
         private val onAbandonData: ((Data?) -> Unit)? = null
 ) {
 
@@ -23,7 +24,7 @@ class ResponseDataCache<Params, Data>(
     operator fun get(session: SessionParams): Data {
         val params = paramsSupplier(session)
         return synchronized(this) {
-            if (lastParams == params) {
+            if (lastParams == params && canUseData(lastCachedData)) {
                 lastCachedData!!
             } else {
                 lastParams = params

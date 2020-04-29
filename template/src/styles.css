@@ -15,8 +15,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: 100%;
 }
 
-mat-cell, .mat-cell {
-  padding-right: 24px;
+td.mat-cell {
+  padding-right: 24px !important;
 }
 
 .spinner-container {

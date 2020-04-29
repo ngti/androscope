@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {ActivatedRoute} from '@angular/router';
 import {log} from 'util';
+import {DatabaseViewSqlComponent, DatabaseViewSqlDialogData} from "../database-view-sql/database-view-sql.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-database-table',
@@ -14,6 +16,7 @@ export class DatabaseTableComponent implements OnInit, OnDestroy {
 
   constructor(
     readonly model: DatabaseModelService,
+    private dialog: MatDialog,
     route: ActivatedRoute
   ) {
     log('DatabaseTableComponent created');
@@ -32,4 +35,9 @@ export class DatabaseTableComponent implements OnInit, OnDestroy {
     log('DatabaseTableComponent destroyed');
   }
 
+  onViewSql(tableName: string) {
+    this.dialog.open(DatabaseViewSqlComponent, {
+      data: new DatabaseViewSqlDialogData(this.model.uri, tableName)
+    });
+  }
 }
