@@ -1,9 +1,9 @@
 <mat-spinner *ngIf="loading$ | async"></mat-spinner>
 <mat-nav-list>
-  <mat-list-item *ngFor="let database of databaseList$ | async" [routerLink]="getDbPath(database)">
+  <a mat-list-item *ngFor="let database of databaseList$ | async" [routerLink]="getDbPath(database)">
     <h4 mat-line>{{database.title}}</h4>
     <p *ngIf="database.description != null" mat-line>{{database.description}}</p>
     <p *ngIf="database.error != null" mat-line style="color: red">{{database.error}}</p>
     <mat-icon *ngIf="database.error != null" color="warn">warning</mat-icon>
-  </mat-list-item>
+  </a>
 </mat-nav-list>

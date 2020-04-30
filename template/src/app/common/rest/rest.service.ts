@@ -67,7 +67,7 @@ export declare type FileSystemType =
 })
 export class RestService {
 
-  private static ROOT = 'http://192.168.178.10:8791/';
+  private static ROOT = '';
 
   private static REST_URL = `${RestService.ROOT}rest/`;
   private static PROVIDER_URL = `${RestService.REST_URL}provider/`;
