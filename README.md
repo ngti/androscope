@@ -13,6 +13,7 @@ Androscope is a debug tool that allows you to look into internals of your Androi
 - [Auto-start Androscope](#auto-start-androscope)
 - [Using Androscope in multiple applications](#using-androscope-in-multiple-applications)
 - [Configure your database](#configure-your-database)
+- [View BLOB database data](#view-blob-database-data)
 
 [Contribute](#contribute)
 
@@ -122,6 +123,15 @@ This feature is also convenient if you want to make your database be displayed a
 <meta-data
     android:name="nl.ngti.androscope.DATABASE_NAME"
     android:value="my_database.db" />
+```
+
+### View BLOB database data
+[BLOB](https://www.sqlite.org/datatype3.html) values are not displayed by Androscope, because the data contained in blob might be too large or might be binary - only database creator knows that. If you still want to view your BLOB data in Androscope, you can see it using **Custom query** feature:
+
+```sql
+SELECT 
+    CAST(my_blob_column AS TEXT)
+FROM my_table_containing_blobs
 ```
 
 ## Contribute

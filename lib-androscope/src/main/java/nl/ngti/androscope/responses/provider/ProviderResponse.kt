@@ -14,7 +14,9 @@ class ProviderResponse(
     private val cursorCache = ResponseDataCache(
             paramsSupplier = ::CursorParams,
             dataSupplier = {
-                queryCursor(it.uri, it.sortOrder)
+                queryCursor(it.uri, it.sortOrder)?.let { cursor ->
+                    ResponseCursor(cursor)
+                }
             },
             canUseData = {
                 it != null && !it.isClosed
@@ -61,7 +63,7 @@ class ProviderResponse(
                 val row = ArrayList<String>(columnCount)
 
                 for (i in 0 until columnCount) {
-                    row.add(cursor.getString(i))
+                    row.add(cursor[i])
                 }
 
                 add(row)
