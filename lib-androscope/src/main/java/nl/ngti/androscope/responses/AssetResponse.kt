@@ -9,7 +9,7 @@ import nl.ngti.androscope.server.path
 import java.io.FileNotFoundException
 import java.io.InputStream
 
-private const val WEB_CONTENT_ROOT = "www"
+private const val WEB_CONTENT_ROOT = "www-androscope"
 private const val HOME_PAGE = "$WEB_CONTENT_ROOT/index.html"
 
 class AssetResponse(

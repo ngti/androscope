@@ -12,5 +12,5 @@
 /captures
 .externalNativeBuild
 .idea
-lib-androscope/src/main/assets/www
+lib-androscope/src/main/assets/www-androscope
 template/package-lock.json
