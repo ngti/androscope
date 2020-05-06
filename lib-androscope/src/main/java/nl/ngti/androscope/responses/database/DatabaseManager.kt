@@ -54,10 +54,13 @@ class DatabaseManager(
         val dbConfig = uri.toConfig(context)
         val dbFile = dbConfig.databaseFile
         if (!dbFile.exists()) {
-            throw IllegalStateException("Database ${dbFile.absolutePath} does not exist")
+            throw IllegalStateException("Database ${dbFile.absolutePath} does not exist.")
         }
         if (!dbFile.isFile) {
-            throw IllegalStateException("The specified path ${dbFile.absolutePath} is not a file")
+            throw IllegalStateException("The specified path ${dbFile.absolutePath} is not a file.")
+        }
+        if (isAuxiliaryDatabaseFile(dbFile)) {
+            throw IllegalStateException("The specified file ${dbFile.absolutePath} is an auxiliary database file. Please choose the main database.")
         }
         return context.openOrCreateDatabase(dbConfig.databasePath, 0, null)
     }

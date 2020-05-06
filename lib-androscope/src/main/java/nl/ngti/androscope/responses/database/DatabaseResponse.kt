@@ -44,9 +44,15 @@ class DatabaseResponse(
             }
         }
 
-        context.databaseList().forEach {
-            result += Database(it)
-        }
+        context.databaseList()
+                .mapTo(HashSet()) {
+                    getMainDatabaseFile(context.getDatabasePath(it))
+                }
+                .sorted()
+                .mapTo(result) {
+                    Database(it.name)
+                }
+
         return result
     }
 
@@ -61,9 +67,11 @@ class DatabaseResponse(
         val size = Formatter.formatFileSize(context, databaseFile.length())
 
         return try {
-            DatabaseInfo(true,
+            DatabaseInfo(
+                    true,
                     fullPath = databaseFile.absolutePath,
-                    size = size).apply {
+                    size = size
+            ).apply {
                 fillDatabaseInfo(uri, this)
             }
         } catch (e: Throwable) {
@@ -72,7 +80,8 @@ class DatabaseResponse(
     }
 
     private fun fillDatabaseInfo(uri: DbUri, result: DatabaseInfo) {
-        databaseManager.query(uri,
+        databaseManager.query(
+                uri,
                 tableName = TABLE_SQLITE_MASTER,
                 projection = arrayOf(
                         /* 0 */ "name",
@@ -134,7 +143,8 @@ class DatabaseResponse(
 
     fun getSql(sessionParams: SessionParams): String {
         val name = sessionParams["name"]!!
-        return databaseManager.query(sessionParams.dbUri,
+        return databaseManager.query(
+                sessionParams.dbUri,
                 tableName = TABLE_SQLITE_MASTER,
                 projection = arrayOf(
                         /* 0 */ "sql"
@@ -159,12 +169,17 @@ private abstract class ReplaceStrategy {
             onReplaceFailed(destFile)
             return RequestResult.error("Failed to replace database with: $sourceName")
         }
+        onReplaceSuccess()
         return RequestResult.success()
     }
 
     open fun onBeforeReplace(sourceFile: File, destFile: File): RequestResult? {
         // Override in ancestors if needed
         return null
+    }
+
+    open fun onReplaceSuccess() {
+        // Override in ancestors if needed
     }
 
     open fun onReplaceFailed(destFile: File) {
@@ -176,18 +191,22 @@ private class NoBackupStrategy : ReplaceStrategy()
 
 private class BackupOriginalStrategy : ReplaceStrategy() {
 
-    private lateinit var backupFile: File
+    private lateinit var backup: FileBatch
 
     override fun onBeforeReplace(sourceFile: File, destFile: File): RequestResult? {
-        backupFile = createTempFile(directory = destFile.parentFile)
-        if (!destFile.renameTo(backupFile)) {
-            return RequestResult.error("Cannot create database backup: ${backupFile.absolutePath}")
-        }
+        val tempDir = createTempDir(directory = destFile.parentFile)
+
+        backup = collectAllDatabaseFiles(destFile).moveTo(tempDir)
+                ?: return RequestResult.error("Cannot backup original database into: ${tempDir.absolutePath}")
         return null
     }
 
     override fun onReplaceFailed(destFile: File) {
-        // Attempt to restore old destination file
-        backupFile.renameTo(destFile)
+        // Attempt to restore old destination database
+        backup.moveTo(destFile.parentFile!!, revertIfFailed = false)
+    }
+
+    override fun onReplaceSuccess() {
+        backup.parentDirectory.deleteRecursively()
     }
 }
