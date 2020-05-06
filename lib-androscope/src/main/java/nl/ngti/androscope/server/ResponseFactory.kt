@@ -30,12 +30,12 @@ internal class ResponseFactory(
         }
         val handler = urlMatcher["http:/${session.path}"] ?: urlMatcher.assetResponse
 
-        val start = SystemClock.elapsedRealtimeNanos()
+        val start = SystemClock.elapsedRealtime()
         try {
             return handler(session)
         } finally {
-            log("Response generation time [%s]: %,d ns",
-                    session.path, SystemClock.elapsedRealtimeNanos() - start)
+            log("Response generation time [%s]: %,d ms",
+                    session.path, SystemClock.elapsedRealtime() - start)
         }
     }
 }

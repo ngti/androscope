@@ -4,14 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.text.TextUtils;
 import android.text.format.Formatter;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.io.IOException;
 
 import fi.iki.elonen.NanoHTTPD;
 import nl.ngti.androscope.utils.AndroscopeMetadata;
@@ -20,8 +16,6 @@ import nl.ngti.androscope.utils.AndroscopeMetadata;
  * Custom HTTP server. Displays the structure of the database.
  */
 public class AndroscopeHttpServer extends NanoHTTPD {
-
-    private static final String TAG = AndroscopeHttpServer.class.getSimpleName();
 
     private final Context mContext;
 
@@ -44,18 +38,13 @@ public class AndroscopeHttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(final IHTTPSession session) {
-        try {
-            Response response = createResponse(session);
-            if (response == null) {
-                response = super.serve(session);
-            } else {
-                response.addHeader("Access-Control-Allow-Origin", "*");
-            }
-            return response;
-        } catch (IOException e) {
-            Log.e(TAG, "Error creating response", e);
-            return NanoHTTPD.newFixedLengthResponse(TextUtils.htmlEncode(e.toString()));
+        Response response = createResponse(session);
+        if (response == null) {
+            response = super.serve(session);
+        } else {
+            response.addHeader("Access-Control-Allow-Origin", "*");
         }
+        return response;
     }
 
     @NonNull
@@ -69,7 +58,7 @@ public class AndroscopeHttpServer extends NanoHTTPD {
     }
 
     @Nullable
-    private Response createResponse(IHTTPSession session) throws IOException {
+    private Response createResponse(IHTTPSession session) {
         return mResponseFactory.getResponse(session);
     }
 }

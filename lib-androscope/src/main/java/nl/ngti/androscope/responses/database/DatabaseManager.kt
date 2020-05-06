@@ -43,7 +43,7 @@ class DatabaseManager(
         dbUri.query?.let {
             return getDatabase(dbUri).rawQuery(it, null)
         }
-        throw IllegalArgumentException("Invalid uri: $uri");
+        throw IllegalArgumentException("Invalid uri: $uri")
     }
 
     fun executeSql(uri: DbUri, sql: String) {

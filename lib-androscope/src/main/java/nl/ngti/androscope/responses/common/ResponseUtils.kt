@@ -27,7 +27,7 @@ fun getMimeType(fileName: String): String? {
 val File.mimeType: String?
     get() = getMimeType(name)
 
-fun File.toDownloadResponse() =
+fun File.toDownloadResponse(): NanoHTTPD.Response =
         NanoHTTPD.newChunkedResponse(
                 NanoHTTPD.Response.Status.OK,
                 "application/octet-stream",

@@ -1,6 +1,7 @@
 package nl.ngti.androscope.responses.database
 
 import android.content.Context
+import android.os.Build
 import java.io.File
 
 private const val PATH_SEPARATOR = "://"
@@ -26,7 +27,7 @@ class DbConfig(
             customPath = databaseName.substring(0, separatorIndex)
             databaseFileName = databaseName.substring(separatorIndex + PATH_SEPARATOR.length)
 
-            if (customPath == "no_backup") {
+            if (customPath == "no_backup" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 databasePath = File(context.noBackupFilesDir, databaseFileName).absolutePath
             } else {
                 databasePath = ""
