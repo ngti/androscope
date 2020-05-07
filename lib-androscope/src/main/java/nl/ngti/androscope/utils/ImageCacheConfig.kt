@@ -25,4 +25,12 @@ val defaultConfigs
                             "^.*\\.0$"
                     )
             )
+            put(
+                    "coil",
+                    ImageCacheConfig(
+                            "Coil",
+                            "image_cache",
+                            "^.*\\.1$"
+                    )
+            )
         }
