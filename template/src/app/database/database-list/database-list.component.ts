@@ -8,7 +8,7 @@ import {Database} from '../../common/rest/database-data';
   templateUrl: './database-list.component.html',
   styleUrls: ['./database-list.component.css']
 })
-export class DatabaseListComponent {
+export class DatabaseListComponent implements OnInit {
 
   private databaseListSubject = new BehaviorSubject<Database[]>([]);
   databaseList$ = this.databaseListSubject.asObservable();
@@ -16,8 +16,11 @@ export class DatabaseListComponent {
   private loadingSubject = new BehaviorSubject<boolean>(true);
   loading$ = this.loadingSubject.asObservable();
 
-  constructor(restService: RestService) {
-    restService.getDatabaseList().subscribe(list => {
+  constructor(private restService: RestService) {
+  }
+
+  ngOnInit(): void {
+    this.restService.getDatabaseList().subscribe(list => {
       this.databaseListSubject.next(list);
       this.loadingSubject.next(false);
     });

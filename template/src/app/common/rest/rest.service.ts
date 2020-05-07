@@ -25,7 +25,7 @@ class ParamsBuilder {
       .set('type', params.fileSystemType)
       .set('timestamp', params.timestamp.toString());
     if (params.hasPath()) {
-      this.httpParams = this.httpParams.set('path', params.path);
+      this.httpParams = this.httpParams.set('path', params.encodedPath);
     }
     return this;
   }

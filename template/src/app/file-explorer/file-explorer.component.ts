@@ -109,7 +109,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result != null) {
+      if (result != null && result.length > 0) {
         this.snackBar.open(`«${result}» has been deleted`, null, {
           duration: 2000,
         });

@@ -1,6 +1,7 @@
 package nl.ngti.androscope.responses.files
 
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.get
@@ -15,7 +16,7 @@ data class FileSystemParams(
 
     constructor(session: SessionParams) : this(
             fileSystemType = session["type"]!!,
-            path = session["path"],
+            path = Uri.decode(session["path"]),
             timestamp = session.timestamp
     )
 

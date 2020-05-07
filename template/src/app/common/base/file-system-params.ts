@@ -43,6 +43,10 @@ export class FileSystemParams {
     this.timestampInternal = Date.now();
   }
 
+  get encodedPath(): string {
+    return encodeURIComponent(this.path);
+  }
+
   equals(other: FileSystemParams): boolean {
     return this.fileSystemType === other.fileSystemType
       && this.path === other.path;

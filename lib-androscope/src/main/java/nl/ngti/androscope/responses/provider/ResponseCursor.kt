@@ -7,10 +7,10 @@ class ResponseCursor(
 ) : Cursor by sourceCursor {
 
     operator fun get(columnIndex: Int): String {
-        return when (getType(columnIndex)) {
+        return when (sourceCursor.getType(columnIndex)) {
             Cursor.FIELD_TYPE_NULL -> "null"
             Cursor.FIELD_TYPE_BLOB -> "[BLOB]"
-            else -> getString(columnIndex)
+            else -> sourceCursor.getString(columnIndex)
         }
     }
 }

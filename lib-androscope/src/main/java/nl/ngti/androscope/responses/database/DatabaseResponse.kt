@@ -37,7 +37,7 @@ class DatabaseResponse(
                     Database(
                             databaseName,
                             title = name,
-                            description = "Set in manifest",
+                            description = "Configured in manifest",
                             error = errorMessage
                     )
                 }
@@ -47,6 +47,9 @@ class DatabaseResponse(
         context.databaseList()
                 .mapTo(HashSet()) {
                     getMainDatabaseFile(context.getDatabasePath(it))
+                }
+                .filter {
+                    it.exists() && it.isFile
                 }
                 .sorted()
                 .mapTo(result) {
@@ -197,7 +200,10 @@ private class BackupOriginalStrategy : ReplaceStrategy() {
         val tempDir = createTempDir(directory = destFile.parentFile)
 
         backup = collectAllDatabaseFiles(destFile).moveTo(tempDir)
-                ?: return RequestResult.error("Cannot backup original database into: ${tempDir.absolutePath}")
+                ?: return RequestResult.error(
+                        "Cannot backup original database into: ${tempDir.absolutePath}." +
+                                " There might be active writes into it."
+                )
         return null
     }
 
