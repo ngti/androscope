@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageCacheGridComponent } from './image-cache-grid.component';
+import { ImageCacheDataComponent } from './image-cache-data.component';
 
-describe('ImageCacheGridComponent', () => {
-  let component: ImageCacheGridComponent;
-  let fixture: ComponentFixture<ImageCacheGridComponent>;
+describe('ImageCacheDataComponent', () => {
+  let component: ImageCacheDataComponent;
+  let fixture: ComponentFixture<ImageCacheDataComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImageCacheGridComponent ]
+      declarations: [ ImageCacheDataComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImageCacheGridComponent);
+    fixture = TestBed.createComponent(ImageCacheDataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

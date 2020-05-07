@@ -9,6 +9,7 @@ import nl.ngti.androscope.responses.Response
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
 import nl.ngti.androscope.responses.database.DatabaseResponse
 import nl.ngti.androscope.responses.files.FileSystemResponse
+import nl.ngti.androscope.responses.image_cache.ImageCacheResponse
 import nl.ngti.androscope.responses.provider.ProviderResponse
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
@@ -46,6 +47,13 @@ internal class ResponseMatcher(
             add("database/download", ::getDatabaseToDownload)
             addJson("database/upload", ::uploadDatabase)
             addJson("database/sql", ::getSql)
+        }
+
+        ImageCacheResponse(context, metadata).apply {
+            addJson("image-cache/list") { getList() }
+            addJson("image-cache/info", ::getInfo)
+            addJson("image-cache/data", ::getData)
+            add("image-cache/thumbnail", ::getThumbnail)
         }
     }
 

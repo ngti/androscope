@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {RestService} from '../../common/rest/rest.service';
+import {ImageCache} from '../../common/rest/image-cache-data';
 
 @Component({
   selector: 'app-image-cache-list',
@@ -7,9 +10,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageCacheListComponent implements OnInit {
 
-  constructor() { }
+  private imageCachesSubject = new BehaviorSubject<ImageCache[]>([]);
+  imageCaches$ = this.imageCachesSubject.asObservable();
 
-  ngOnInit() {
+  private loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$ = this.loadingSubject.asObservable();
+
+  constructor(private restService: RestService) {
+  }
+
+  ngOnInit(): void {
+    this.restService.getImageCacheList().subscribe(list => {
+      this.imageCachesSubject.next(list);
+      this.loadingSubject.next(false);
+    });
+  }
+
+  getImageCachePath(imageCache: ImageCache): string {
+    return './image-cache/' + encodeURIComponent(imageCache.type);
   }
 
 }

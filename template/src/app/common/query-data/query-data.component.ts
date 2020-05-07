@@ -20,7 +20,7 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatTable, {static: false}) table: MatTable<[]>;
   dataSource: QueryDataSource;
 
-  defaultPageSize = QueryDataSource.DEFAULT_PAGE_SIZE;
+  readonly defaultPageSize = QueryDataSource.DEFAULT_PAGE_SIZE;
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();

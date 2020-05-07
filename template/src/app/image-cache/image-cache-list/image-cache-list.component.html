@@ -1,1 +1,6 @@
-<p>Not implemented yet</p>
+<mat-spinner *ngIf="loading$ | async"></mat-spinner>
+<mat-nav-list>
+  <a mat-list-item *ngFor="let imageCache of imageCaches$ | async" [routerLink]="getImageCachePath(imageCache)">
+    <h4 mat-line>{{imageCache.title}}</h4>
+  </a>
+</mat-nav-list>

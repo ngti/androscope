@@ -27,7 +27,6 @@ import {ProviderDataComponent} from './provider/provider-data/provider-data.comp
 import {FileExplorerComponent} from './file-explorer/file-explorer.component';
 import {DeleteConfirmationDialogComponent} from './file-explorer/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import {ImageCacheListComponent} from './image-cache/image-cache-list/image-cache-list.component';
-import {ImageCacheGridComponent} from './image-cache/image-cache-grid/image-cache-grid.component';
 import {DatabaseInfoComponent} from './database/database-info/database-info.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {DatabaseQueryDataComponent} from './database/database-query-data/database-query-data.component';
@@ -46,6 +45,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ImageCacheDataComponent } from './image-cache/image-cache-data/image-cache-data.component';
 
 @NgModule({
   declarations: [
@@ -65,12 +65,12 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     FileExplorerComponent,
     DeleteConfirmationDialogComponent,
     ImageCacheListComponent,
-    ImageCacheGridComponent,
     DatabaseInfoComponent,
     DatabaseQueryDataComponent,
     DatabaseQueryEmptyComponent,
     DatabaseUploadComponent,
     DatabaseViewSqlComponent,
+    ImageCacheDataComponent,
   ],
   imports: [
     BrowserModule,

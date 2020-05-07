@@ -1,0 +1,12 @@
+.image-cache-item {
+  float: left;
+  width: auto;
+  height: auto;
+  margin: 8px;
+}
+
+.image-entry-filename {
+  font-size: 10pt;
+  word-break: break-all;
+  max-width: 250px;
+}

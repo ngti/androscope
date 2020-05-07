@@ -8,6 +8,7 @@ import {DataParams} from '../base/data-params';
 import {FileSystemParams} from '../base/file-system-params';
 import {Database, DatabaseInfo, SqlParams} from './database-data';
 import {RequestResult} from './common-data';
+import {ImageCache, ImageCacheEntry, ImageCacheInfo} from './image-cache-data';
 
 class ParamsBuilder {
 
@@ -50,6 +51,10 @@ class ParamsBuilder {
   build(): HttpParams {
     return this.httpParams;
   }
+
+  toUrlParams(): string {
+    return '?' + this.httpParams.toString();
+  }
 }
 
 export declare type FileSystemType =
@@ -73,16 +78,13 @@ export class RestService {
   private static PROVIDER_URL = `${RestService.REST_URL}provider/`;
   private static FILE_SYSTEM_URL = `${RestService.REST_URL}file-system/`;
   private static DATABASE_URL = `${RestService.REST_URL}database/`;
+  private static IMAGE_CACHE_URL = `${RestService.REST_URL}image-cache/`;
 
   constructor(private http: HttpClient) {
   }
 
   private static getFileUrlParams(params: FileSystemParams): string {
-    return '?' + new ParamsBuilder().addFileSystemParams(params).build().toString();
-  }
-
-  private static getUriUrlParams(uri: Uri): string {
-    return '?' + new ParamsBuilder().addUri(uri).build().toString();
+    return new ParamsBuilder().addFileSystemParams(params).toUrlParams();
   }
 
   getProviderInfo(uri: Uri): Observable<ProviderInfo> {
@@ -178,7 +180,10 @@ export class RestService {
   }
 
   getDatabaseDownloadUrl(uri: Uri): string {
-    return RestService.DATABASE_URL + 'download' + RestService.getUriUrlParams(uri);
+    return RestService.DATABASE_URL + 'download'
+      + new ParamsBuilder()
+        .addUri(uri)
+        .toUrlParams();
   }
 
   uploadDatabase(uri: Uri, file: File): Observable<RequestResult> {
@@ -198,5 +203,34 @@ export class RestService {
         .addCustom('name', name)
         .build()
     });
+  }
+
+  getImageCacheList(): Observable<ImageCache[]> {
+    return this.http.get<ImageCache[]>(RestService.IMAGE_CACHE_URL + 'list');
+  }
+
+  getImageCacheInfo(name: string): Observable<ImageCacheInfo> {
+    return this.http.get<ImageCacheInfo>(RestService.IMAGE_CACHE_URL + 'info', {
+      params: new ParamsBuilder()
+        .addCustom('type', name)
+        .build()
+    });
+  }
+
+  getImageCacheData(cacheType: string, dataParams: DataParams): Observable<ImageCacheEntry[]> {
+    return this.http.get<ImageCacheEntry[]>(RestService.IMAGE_CACHE_URL + 'data', {
+      params: new ParamsBuilder()
+        .addCustom('type', cacheType)
+        .addDataParams(dataParams)
+        .build()
+    });
+  }
+
+  getImageCacheThumbnailUrl(cacheType: string, file: string): string {
+    return RestService.IMAGE_CACHE_URL + 'thumbnail'
+      + new ParamsBuilder()
+        .addCustom('type', cacheType)
+        .addCustom('file', file)
+        .toUrlParams();
   }
 }

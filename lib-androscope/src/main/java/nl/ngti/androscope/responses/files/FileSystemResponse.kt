@@ -23,7 +23,9 @@ class FileSystemResponse(
 
     fun getFileCount(session: SessionParams) = fileSystemResponseCache[session].getFileSystemCount()
 
-    fun getFileList(session: SessionParams) = fileSystemResponseCache[session].getFileSystemList(session)
+    fun getFileList(session: SessionParams) = fileSystemResponseCache[session].getFileSystemList(
+            session
+    )
 
     fun getBreadcrumbs(session: SessionParams): List<Breadcrumb> {
         val params = FileSystemParams(session)
@@ -57,8 +59,12 @@ class FileSystemResponse(
         val file = FileSystemParams(sessionParams).getFile(context)
 
         val mime = file.mimeType ?: "text/plain"
-        return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mime, FileInputStream(file)).apply {
-            addHeader("Content-Disposition", "filename=\"" + file.name + "\"")
+        return NanoHTTPD.newChunkedResponse(
+                NanoHTTPD.Response.Status.OK,
+                mime,
+                FileInputStream(file)
+        ).apply {
+            addHeader("Content-Disposition", "filename=\"${file.name}\"")
         }
     }
 
