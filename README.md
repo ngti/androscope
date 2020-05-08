@@ -127,7 +127,7 @@ This feature is also convenient if you want to make your database be displayed a
 ```
 
 ### Configure image cache
-Androscope is able to detect by default default cache locations of [Picasso](https://square.github.io/picasso/), [Glide](https://github.com/bumptech/glide) and [Coil](https://github.com/coil-kt/coil) image libraries. If you use another image library or a custom location for your image cache - you need to tell Androscope where it is located and how can it filter only images out:
+Androscope is able to detect by default default cache locations of [Picasso](https://square.github.io/picasso/), [Glide](https://github.com/bumptech/glide) and [Coil](https://github.com/coil-kt/coil) image libraries. If you use another image library or a custom location for your image cache - you need to tell Androscope where it is located and how can it filter out only images:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
