@@ -10,7 +10,7 @@
       <mat-form-field appearance="fill" class="full-width-table" hideRequiredMarker>
         <mat-label>SQL query</mat-label>
         <textarea matInput placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..." name="query" [(ngModel)]="query"
-                  required></textarea>
+                  required #sqlInput></textarea>
       </mat-form-field>
 
       <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="query != null && query.length == 0">

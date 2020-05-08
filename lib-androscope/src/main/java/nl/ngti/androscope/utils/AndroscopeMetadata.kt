@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 
-class AndroscopeMetadata private constructor(
+internal class AndroscopeMetadata private constructor(
         private val internal: Bundle
 ) {
 

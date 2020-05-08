@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package nl.ngti.androscope.responses.image_cache
 
 internal class ImageCache(

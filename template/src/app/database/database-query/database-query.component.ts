@@ -1,18 +1,17 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {log} from 'util';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {RestService} from '../../common/rest/rest.service';
 import {Status, StatusData} from '../../common/base/status.enum';
-import {delay, startWith} from "rxjs/operators";
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'app-database-query',
   templateUrl: './database-query.component.html',
   styleUrls: ['./database-query.component.css']
 })
-export class DatabaseQueryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DatabaseQueryComponent implements AfterViewInit, OnDestroy {
 
   query: string = null;
 
@@ -21,16 +20,15 @@ export class DatabaseQueryComponent implements OnInit, AfterViewInit, OnDestroy 
   private queryStatusSubject = new BehaviorSubject<StatusData>(new StatusData());
   readonly queryStatus$ = this.queryStatusSubject.asObservable();
 
+  @ViewChild('sqlInput', {static: false})
+  private sqlInput;
+
   constructor(
     readonly model: DatabaseModelService,
     private router: Router,
     private route: ActivatedRoute,
     private restService: RestService
   ) {
-    log('DatabaseQueryComponent created');
-  }
-
-  ngOnInit() {
   }
 
   ngAfterViewInit(): void {
@@ -40,19 +38,16 @@ export class DatabaseQueryComponent implements OnInit, AfterViewInit, OnDestroy 
       delay(0)
     ).subscribe(() => {
       this.query = this.model.queryValue;
+      this.sqlInput.nativeElement.focus();
     });
   }
 
   ngOnDestroy(): void {
     this.uriSubscription.unsubscribe();
-    log('DatabaseQueryComponent destroyed');
   }
 
   submitQuery(newQuery: string) {
-    log('Submit: ' + newQuery);
-
     this.restService.canQuery(newQuery).subscribe(canQuery => {
-      log('DatabaseQueryComponent can query: ' + newQuery + ' -> ' + canQuery);
       if (canQuery) {
         this.queryStatusSubject.next(new StatusData());
         this.router.navigate([encodeURIComponent(newQuery)], {

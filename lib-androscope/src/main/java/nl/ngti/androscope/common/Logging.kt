@@ -2,7 +2,6 @@ package nl.ngti.androscope.common
 
 import android.util.Log
 import nl.ngti.androscope.BuildConfig
-import java.lang.Exception
 
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun Any.log(message: String, vararg params: Any) {

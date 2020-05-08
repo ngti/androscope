@@ -6,7 +6,7 @@ import android.net.Uri
 import nl.ngti.androscope.service.AndroscopeService
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
-class AndroscopeContentProvider : ContentProvider() {
+internal class AndroscopeContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         val context = context!!

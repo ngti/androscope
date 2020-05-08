@@ -1,12 +1,12 @@
 package nl.ngti.androscope.utils
 
-data class ImageCacheConfig(
+internal data class ImageCacheConfig(
         val title: String,
         val path: String,
         val filter: String
 )
 
-val defaultConfigs
+internal val defaultConfigs
     get() =
         HashMap<String, ImageCacheConfig>(2).apply {
             put(

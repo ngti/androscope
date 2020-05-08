@@ -12,8 +12,8 @@ internal class DbConfig(
 ) {
     private val customPath: String?
     private val databaseFileName: String
-
-    val databasePath: String
+    private val databasePath: String
+    
     val databaseFile: File
         get() = context.getDatabasePath(databasePath)
     val name get() = customPath?.let { "$databaseFileName ($customPath)" } ?: databaseFileName

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.format.Formatter
 import fi.iki.elonen.NanoHTTPD
+import nl.ngti.androscope.BuildConfig
 import nl.ngti.androscope.utils.AndroscopeMetadata
 import nl.ngti.androscope.utils.AndroscopeMetadata.Companion.fromContext
 
@@ -19,7 +20,12 @@ internal class AndroscopeHttpServer private constructor(
     private val responseFactory = ResponseFactory(context, metadata)
 
     override fun serve(session: IHTTPSession): Response? {
-        return responseFactory.getResponse(session)
+        return responseFactory.getResponse(session)?.apply {
+            if (BuildConfig.DEBUG) {
+                // Allows development with Angular running on desktop
+                addHeader("Access-Control-Allow-Origin", "*")
+            }
+        }
     }
 
     val ipAddress: String
