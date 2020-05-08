@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {DatabaseModelService} from '../model/database-model.service';
 import {ActivatedRoute} from '@angular/router';
 import {DatabaseViewSqlComponent, DatabaseViewSqlDialogData} from '../database-view-sql/database-view-sql.component';
@@ -9,7 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
   templateUrl: './database-table.component.html',
   styleUrls: ['./database-table.component.css']
 })
-export class DatabaseTableComponent implements OnInit, OnDestroy {
+export class DatabaseTableComponent implements OnDestroy {
 
   tableName: string;
 
@@ -22,9 +22,6 @@ export class DatabaseTableComponent implements OnInit, OnDestroy {
       this.tableName = decodeURIComponent(route.snapshot.params.table);
       model.setDatabaseQuery('table', this.tableName);
     });
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {
