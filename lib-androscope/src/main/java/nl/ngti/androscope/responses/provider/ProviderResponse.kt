@@ -7,7 +7,7 @@ import nl.ngti.androscope.responses.common.UriDataProvider
 import nl.ngti.androscope.server.*
 import kotlin.math.min
 
-class ProviderResponse(
+internal class ProviderResponse(
         private val uriDataProvider: UriDataProvider
 ) {
 

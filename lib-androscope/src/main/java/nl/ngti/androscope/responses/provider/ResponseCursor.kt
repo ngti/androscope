@@ -2,7 +2,7 @@ package nl.ngti.androscope.responses.provider
 
 import android.database.Cursor
 
-class ResponseCursor(
+internal class ResponseCursor(
         private val sourceCursor: Cursor
 ) : Cursor by sourceCursor {
 

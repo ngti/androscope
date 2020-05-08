@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Androscope</string>
-    <string name="androscope_activity_label">Launch Androscope</string>
+    <string name="androscope_activity_label">Androscope</string>
     <string name="androscope_stop_server">Stop</string>
     <string name="androscope_restart">Restart</string>
 </resources>

@@ -10,7 +10,7 @@ internal interface IFormatter {
     fun formatDate(timestamp: Long): String
 }
 
-class FileSystemEntry internal constructor(
+internal class FileSystemEntry internal constructor(
         root: File,
         itemName: String
 ) {
@@ -48,7 +48,7 @@ class FileSystemEntry internal constructor(
         }
     }
 
-    internal fun prepareForSerialization(formatter: IFormatter) {
+    fun prepareForSerialization(formatter: IFormatter) {
         if (!::date.isInitialized) {
             date = formatter.formatDate(dateInternal)
             if (!isFolder) {
@@ -58,11 +58,11 @@ class FileSystemEntry internal constructor(
     }
 }
 
-class FileSystemCount(
+internal class FileSystemCount(
         val totalEntries: Int
 )
 
-class Breadcrumb(
+internal class Breadcrumb(
         val name: String,
         val path: String
 )

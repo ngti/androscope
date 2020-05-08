@@ -8,7 +8,7 @@ import nl.ngti.androscope.server.get
 import nl.ngti.androscope.server.timestamp
 import java.io.File
 
-data class FileSystemParams(
+internal data class FileSystemParams(
         private val fileSystemType: String,
         val path: String?,
         private val timestamp: Long

@@ -2,7 +2,7 @@ package nl.ngti.androscope.responses.common
 
 import android.net.Uri
 
-class MultiSchemeDataProvider : UriDataProvider {
+internal class MultiSchemeDataProvider : UriDataProvider {
 
     private val schemeToProviderMap = HashMap<String, UriDataProvider>()
 

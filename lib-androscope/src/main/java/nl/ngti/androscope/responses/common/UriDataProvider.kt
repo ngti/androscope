@@ -3,7 +3,7 @@ package nl.ngti.androscope.responses.common
 import android.database.Cursor
 import android.net.Uri
 
-interface UriDataProvider {
+internal interface UriDataProvider {
 
     fun query(
             uri: Uri,

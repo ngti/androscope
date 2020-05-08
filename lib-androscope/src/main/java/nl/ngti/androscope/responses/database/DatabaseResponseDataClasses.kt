@@ -1,13 +1,13 @@
 package nl.ngti.androscope.responses.database
 
-class Database(
+internal class Database(
         val name: String,
         val title: String = name,
         val description: String? = null,
         val error: String? = null
 )
 
-class DatabaseInfo(
+internal class DatabaseInfo(
         val valid: Boolean,
         val errorMessage: String? = null,
         val fullPath: String? = null,
@@ -19,6 +19,6 @@ class DatabaseInfo(
     val indexes = ArrayList<String>()
 }
 
-class SqlParams(
+internal class SqlParams(
         val sql: String
 )

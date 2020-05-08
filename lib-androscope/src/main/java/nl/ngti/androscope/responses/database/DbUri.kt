@@ -3,7 +3,7 @@ package nl.ngti.androscope.responses.database
 import android.content.Context
 import android.net.Uri
 
-class DbUri(
+internal class DbUri(
         private val uri: Uri
 ) {
     val databaseName: String

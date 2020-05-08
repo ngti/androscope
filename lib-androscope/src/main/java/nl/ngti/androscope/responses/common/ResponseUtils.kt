@@ -8,11 +8,11 @@ import java.io.FileInputStream
 private const val EXTENSION_SEPARATOR = '.'
 private const val EMPTY_EXTENSION = ""
 
-fun getExtension(fileName: String) = fileName.substringAfterLast(EXTENSION_SEPARATOR, EMPTY_EXTENSION)
+internal fun getExtension(fileName: String) = fileName.substringAfterLast(EXTENSION_SEPARATOR, EMPTY_EXTENSION)
 
-fun indexOfExtension(fileName: String) = fileName.lastIndexOf(EXTENSION_SEPARATOR)
+internal fun indexOfExtension(fileName: String) = fileName.lastIndexOf(EXTENSION_SEPARATOR)
 
-fun getMimeType(fileName: String): String? {
+internal fun getMimeType(fileName: String): String? {
     val extension = getExtension(fileName)
     var mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
     if (mimeType == null) {
@@ -24,10 +24,10 @@ fun getMimeType(fileName: String): String? {
     return mimeType
 }
 
-val File.mimeType: String?
+internal val File.mimeType: String?
     get() = getMimeType(name)
 
-fun File.toDownloadResponse(): NanoHTTPD.Response =
+internal fun File.toDownloadResponse(): NanoHTTPD.Response =
         NanoHTTPD.newChunkedResponse(
                 NanoHTTPD.Response.Status.OK,
                 "application/octet-stream",

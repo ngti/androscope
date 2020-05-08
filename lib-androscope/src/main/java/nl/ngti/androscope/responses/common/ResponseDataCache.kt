@@ -2,7 +2,7 @@ package nl.ngti.androscope.responses.common
 
 import nl.ngti.androscope.server.SessionParams
 
-class ResponseDataCache<Params, Data>(
+internal class ResponseDataCache<Params, Data>(
         private val paramsSupplier: (SessionParams) -> Params,
         private val dataSupplier: (Params) -> Data,
         private val canUseData: (Data?) -> Boolean = { it != null },

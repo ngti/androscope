@@ -1,6 +1,6 @@
 package nl.ngti.androscope.responses.common
 
-class RequestResult private constructor(
+internal class RequestResult private constructor(
         val success: Boolean,
         val message: String? = null
 ) {

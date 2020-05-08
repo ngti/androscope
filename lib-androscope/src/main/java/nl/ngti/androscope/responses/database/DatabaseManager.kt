@@ -9,7 +9,7 @@ import nl.ngti.androscope.common.log
 import nl.ngti.androscope.responses.common.UriDataProvider
 import java.io.File
 
-class DatabaseManager(
+internal class DatabaseManager(
         context: Context
 ) : UriDataProvider {
 

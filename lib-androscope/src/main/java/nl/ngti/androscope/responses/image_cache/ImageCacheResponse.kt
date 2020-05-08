@@ -17,7 +17,7 @@ import kotlin.math.min
 
 private const val MANIFEST_CONFIG_TYPE = "manifest"
 
-class ImageCacheResponse(
+internal class ImageCacheResponse(
         private val context: Context,
         private val metadata: AndroscopeMetadata
 ) {

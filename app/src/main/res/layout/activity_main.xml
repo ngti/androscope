@@ -5,25 +5,42 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:ignore="HardcodedText">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_message" />
+        android:text="Welcome to Androscope!" />
+
+    <Button
+        android:id="@+id/open_androscope_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Open Androscope activity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:text="If you want to see the content of corresponding content providers:" />
 
     <Button
         android:id="@+id/button_grant_storage_permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/grant_storage_permission" />
+        android:text="Grant Storage Permission" />
 
     <Button
         android:id="@+id/button_grant_contacts_permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/grant_contacts_permission" />
+        android:text="Grant Contacts Permission" />
 
 </LinearLayout>

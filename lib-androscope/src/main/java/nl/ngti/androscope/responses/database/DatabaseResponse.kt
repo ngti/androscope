@@ -17,7 +17,7 @@ import java.io.File
 
 private const val TABLE_SQLITE_MASTER = "sqlite_master"
 
-class DatabaseResponse(
+internal class DatabaseResponse(
         private val context: Context,
         private val metadata: AndroscopeMetadata,
         uriDataProvider: MultiSchemeDataProvider,

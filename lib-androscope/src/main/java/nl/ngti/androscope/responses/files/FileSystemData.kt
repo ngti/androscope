@@ -1,15 +1,17 @@
-package nl.ngti.androscope.server
+package nl.ngti.androscope.responses.files
 
 import android.content.Context
-import nl.ngti.androscope.responses.files.FileSystemCount
-import nl.ngti.androscope.responses.files.FileSystemEntry
-import nl.ngti.androscope.responses.files.FileSystemEntryListFactory
+import nl.ngti.androscope.server.*
+import nl.ngti.androscope.server.SessionParams
+import nl.ngti.androscope.server.pageNumber
+import nl.ngti.androscope.server.pageSize
+import nl.ngti.androscope.server.sortOrder
 import java.io.File
 import java.util.*
 import kotlin.Comparator
 import kotlin.math.min
 
-class FileSystemData(
+internal class FileSystemData(
         context: Context,
         private val root: File
 ) {

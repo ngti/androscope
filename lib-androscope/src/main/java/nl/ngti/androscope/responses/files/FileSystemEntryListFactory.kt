@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FileSystemEntryListFactory(
+internal class FileSystemEntryListFactory(
         private val context: Context
 ) : IFormatter {
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())

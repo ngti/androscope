@@ -6,11 +6,10 @@ import nl.ngti.androscope.responses.common.RequestResult
 import nl.ngti.androscope.responses.common.ResponseDataCache
 import nl.ngti.androscope.responses.common.mimeType
 import nl.ngti.androscope.responses.common.toDownloadResponse
-import nl.ngti.androscope.server.FileSystemData
 import nl.ngti.androscope.server.SessionParams
 import java.io.FileInputStream
 
-class FileSystemResponse(
+internal class FileSystemResponse(
         private val context: Context
 ) {
 

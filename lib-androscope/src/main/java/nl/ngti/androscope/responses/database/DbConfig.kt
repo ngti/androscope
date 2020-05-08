@@ -6,7 +6,7 @@ import java.io.File
 
 private const val PATH_SEPARATOR = "://"
 
-class DbConfig(
+internal class DbConfig(
         private val context: Context,
         val databaseName: String
 ) {
