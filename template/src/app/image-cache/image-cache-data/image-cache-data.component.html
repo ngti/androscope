@@ -16,9 +16,12 @@
 
   <div>
     <mat-card *ngFor="let entry of (dataSource.data | async)" class="image-cache-item">
-      <mat-card-subtitle class="image-entry-filename">{{entry.fileName}}</mat-card-subtitle>
+      <mat-card-subtitle class="image-entry-filename">
+        {{entry.fileName}}<br>
+        {{entry.size | number}} bytes
+      </mat-card-subtitle>
+      <img [src]="getThumbnailUri(entry)">
       <mat-card-content>
-        <img [src]="getThumbnailUri(entry)">
       </mat-card-content>
     </mat-card>
   </div>
