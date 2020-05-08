@@ -98,17 +98,16 @@ internal class AndroscopeService : Service() {
 
     @Synchronized
     private fun stopServer() {
-        if (serverHelper != null) {
-            serverHelper!!.stop()
-        }
+        serverHelper?.stop()
     }
 
     @Synchronized
     private fun handleServerStart() {
-        if (serverHelper == null) {
-            serverHelper = AndroscopeServerHelper.newInstance(this, ServerStartCallback())
-        }
-        serverHelper!!.start()
+        val serverHelper = serverHelper
+                ?: AndroscopeServerHelper.newInstance(this, ServerStartCallback()).also {
+                    serverHelper = it
+                }
+        serverHelper.start()
     }
 
     private fun handleServerStop() {
