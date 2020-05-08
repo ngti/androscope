@@ -13,6 +13,7 @@ Androscope is a debug tool that allows you to look into internals of your Androi
 - [Auto-start Androscope](#auto-start-androscope)
 - [Using Androscope in multiple applications](#using-androscope-in-multiple-applications)
 - [Configure your database](#configure-your-database)
+- [Configure image cache](#configure-image-cache)
 - [View BLOB database data](#view-blob-database-data)
 
 [Contribute](#contribute)
@@ -124,6 +125,29 @@ This feature is also convenient if you want to make your database be displayed a
     android:name="nl.ngti.androscope.DATABASE_NAME"
     android:value="my_database.db" />
 ```
+
+### Configure image cache
+Androscope is able to detect by default default cache locations of [Picasso](https://square.github.io/picasso/), [Glide](https://github.com/bumptech/glide) and [Coil](https://github.com/coil-kt/coil) image libraries. If you use another image library or a custom location for your image cache - you need to tell Androscope where it is located and how can it filter only images out:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <meta-data
+            android:name="nl.ngti.androscope.IMAGE_CACHE"
+            android:value="image_manager_disk_cache" />
+        <meta-data
+            android:name="nl.ngti.androscope.IMAGE_CACHE.filter"
+            android:value="^.*\\.0$" />
+    </application>
+</manifest>
+```
+
+- `nl.ngti.androscope.IMAGE_CACHE` option configures the folder where the cache is located. It must be located in the application `cache` folder.
+
+- `nl.ngti.androscope.IMAGE_CACHE.filter` is a regular expression for filenames inside the image cache folder. It should be able to filter only image files.
+
 
 ### View BLOB database data
 [BLOB](https://www.sqlite.org/datatype3.html) values are not displayed by Androscope, because the data contained in blob might be too large or might be binary - only database creator knows that. If you still want to view your BLOB data in Androscope, you can see it using **Custom query** feature:
