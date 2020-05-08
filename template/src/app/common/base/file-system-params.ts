@@ -9,6 +9,14 @@ export class FileSystemParams {
   ) {
   }
 
+  get timestamp(): number {
+    return this.timestampInternal;
+  }
+
+  get encodedPath(): string {
+    return encodeURIComponent(this.path);
+  }
+
   private static concatPaths(parent: string, path: string): string {
     if (parent == null || parent.length === 0) {
       return path;
@@ -35,16 +43,8 @@ export class FileSystemParams {
     );
   }
 
-  get timestamp(): number {
-    return this.timestampInternal;
-  }
-
   updateTimestamp() {
     this.timestampInternal = Date.now();
-  }
-
-  get encodedPath(): string {
-    return encodeURIComponent(this.path);
   }
 
   equals(other: FileSystemParams): boolean {

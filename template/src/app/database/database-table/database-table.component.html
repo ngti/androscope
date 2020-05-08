@@ -1,18 +1,18 @@
-<mat-toolbar color="primary" class="breadcrumb-toolbar">
-  <a class="toolbar-parent-link" [routerLink]="['../../']">{{model.databaseTitle$ | async}}</a>
+<mat-toolbar class="breadcrumb-toolbar" color="primary">
+  <a [routerLink]="['../../']" class="toolbar-parent-link">{{model.databaseTitle$ | async}}</a>
   <mat-icon>chevron_right</mat-icon>
   <span>{{tableName}}</span>
   <span class="toolbar-spacer"></span>
-  <button mat-icon-button [matMenuTriggerFor]="databaseMenu">
+  <button [matMenuTriggerFor]="databaseMenu" mat-icon-button>
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #databaseMenu="matMenu">
     <ng-template matMenuContent>
-      <a mat-menu-item [routerLink]="['../../query/', 'SELECT * FROM ' + tableName]">
+      <a [routerLink]="['../../query/', 'SELECT * FROM ' + tableName]" mat-menu-item>
         <mat-icon>edit</mat-icon>
         <span>Custom query</span>
       </a>
-      <button mat-menu-item (click)="onViewSql(tableName)">
+      <button (click)="onViewSql(tableName)" mat-menu-item>
         <mat-icon>visibility</mat-icon>
         <span>View SQL</span>
       </button>

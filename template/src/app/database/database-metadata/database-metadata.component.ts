@@ -34,12 +34,12 @@ export class DatabaseMetadataComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.uriSubscription.unsubscribe();
-  }
-
   get databaseDownloadUrl(): string {
     return this.restService.getDatabaseDownloadUrl(this.model.uri);
+  }
+
+  ngOnDestroy(): void {
+    this.uriSubscription.unsubscribe();
   }
 
   onDatabaseUpload() {

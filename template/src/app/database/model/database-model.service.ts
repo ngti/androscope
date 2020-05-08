@@ -35,6 +35,10 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
     }
   }
 
+  get queryValue(): string {
+    return this.databaseQueryValue;
+  }
+
   clearDatabaseQuery() {
     this.setDatabaseQuery(null, null);
   }
@@ -45,10 +49,6 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
       this.databaseQueryValue = value;
       this.updateUri();
     }
-  }
-
-  get queryValue(): string {
-    return this.databaseQueryValue;
   }
 
   private updateUri() {

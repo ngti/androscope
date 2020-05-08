@@ -17,7 +17,8 @@ export class DatabaseInfoComponent {
   constructor(
     private model: DatabaseModelService,
     private dialog: MatDialog
-  ) { }
+  ) {
+  }
 
   onMenuButtonClick($event: MouseEvent) {
     $event.preventDefault();

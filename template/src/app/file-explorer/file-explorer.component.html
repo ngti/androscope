@@ -7,14 +7,14 @@
     <li *ngFor="let item of breadcrumbs$ | async; let last = last"
         [class.active]="last"
         class="breadcrumb-item">
-      <a *ngIf="!last; else noLink" [routerLink]="['./']" [queryParams]="{path: item.path}">{{item.name}}</a>
+      <a *ngIf="!last; else noLink" [queryParams]="{path: item.path}" [routerLink]="['./']">{{item.name}}</a>
       <ng-template #noLink>{{item.name}}</ng-template>
     </li>
   </ol>
 
   <div class="mat-elevation-z8">
     <table [dataSource]="dataSource" [matSortActive]="defaultSortColumn" [matSortDirection]="defaultSortOrder"
-           class="full-width-table" mat-table matSort [matSortDisableClear]="true">
+           [matSortDisableClear]="true" class="full-width-table" mat-table matSort>
       <!-- Type Icon Column -->
       <ng-container matColumnDef="type">
         <th *matHeaderCellDef mat-header-cell style="width: 48px">Type</th>
@@ -54,7 +54,7 @@
       <ng-container matColumnDef="menu">
         <th *matHeaderCellDef mat-header-cell style="width: 24px"></th>
         <td (click)="$event.stopPropagation()" *matCellDef="let row" mat-cell>
-          <button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{data: row}" mat-icon-button>
+          <button [matMenuTriggerData]="{data: row}" [matMenuTriggerFor]="menu" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>
         </td>
@@ -77,7 +77,7 @@
 </div>
 
 <mat-menu #menu="matMenu">
-  <ng-template matMenuContent let-row="data">
+  <ng-template let-row="data" matMenuContent>
     <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
       <mat-icon>open_in_new</mat-icon>
       <span>Open in new window</span>

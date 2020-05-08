@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Confirmation</h1>
 <div mat-dialog-content>
   <p>Are you sure you want to delete {{getEntryType()}} <b>{{getEntryName()}}</b>?</p>
-  <div class="alert alert-danger" *ngIf="($error | async) != null" style="color: red">
+  <div *ngIf="($error | async) != null" class="alert alert-danger" style="color: red">
     <p>Failed to perform delete request:</p>
     <p>{{$error | async}}</p>
   </div>

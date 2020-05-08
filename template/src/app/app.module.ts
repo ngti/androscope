@@ -45,7 +45,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { ImageCacheDataComponent } from './image-cache/image-cache-data/image-cache-data.component';
+import {ImageCacheDataComponent} from './image-cache/image-cache-data/image-cache-data.component';
 
 @NgModule({
   declarations: [

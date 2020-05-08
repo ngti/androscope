@@ -1,16 +1,16 @@
-<mat-toolbar color="primary" class="breadcrumb-toolbar">
+<mat-toolbar class="breadcrumb-toolbar" color="primary">
   <span>{{model.databaseTitle$ | async}}</span>
   <span class="toolbar-spacer"></span>
-  <button mat-icon-button [matMenuTriggerFor]="databaseMenu">
+  <button [matMenuTriggerFor]="databaseMenu" mat-icon-button>
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #databaseMenu="matMenu">
     <ng-template matMenuContent>
-      <a mat-menu-item [href]="databaseDownloadUrl">
+      <a [href]="databaseDownloadUrl" mat-menu-item>
         <mat-icon>cloud_download</mat-icon>
         <span>Download</span>
       </a>
-      <button mat-menu-item (click)="onDatabaseUpload()">
+      <button (click)="onDatabaseUpload()" mat-menu-item>
         <mat-icon>cloud_upload</mat-icon>
         <span>Upload</span>
       </button>

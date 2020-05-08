@@ -1,27 +1,27 @@
-<mat-toolbar color="primary" class="breadcrumb-toolbar">
-  <a class="toolbar-parent-link" [routerLink]="['../']">{{model.databaseTitle$ | async}}</a>
+<mat-toolbar class="breadcrumb-toolbar" color="primary">
+  <a [routerLink]="['../']" class="toolbar-parent-link">{{model.databaseTitle$ | async}}</a>
   <mat-icon>chevron_right</mat-icon>
   <span>Custom query</span>
 </mat-toolbar>
 
 <div class="basic-container">
   <div class="query-input">
-    <form novalidate (ngSubmit)="submitQuery(query)">
+    <form (ngSubmit)="submitQuery(query)" novalidate>
       <mat-form-field appearance="fill" class="full-width-table" hideRequiredMarker>
         <mat-label>SQL query</mat-label>
-        <textarea matInput placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..." name="query" [(ngModel)]="query"
-                  required #sqlInput></textarea>
+        <textarea #sqlInput [(ngModel)]="query" matInput name="query"
+                  placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..." required></textarea>
       </mat-form-field>
 
-      <button mat-raised-button type="submit" class="btn btn-primary" [disabled]="query != null && query.length == 0">
+      <button [disabled]="query != null && query.length == 0" class="btn btn-primary" mat-raised-button type="submit">
         Submit
       </button>
     </form>
   </div>
 
   <div *ngIf="(queryStatus$ | async).display; else queryData">
-    <div class="alert" role="alert"
-         [ngClass]="(queryStatus$ | async).alertClass">
+    <div [ngClass]="(queryStatus$ | async).alertClass" class="alert"
+         role="alert">
       <p>{{(queryStatus$ | async).message}}</p>
     </div>
   </div>

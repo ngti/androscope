@@ -3,8 +3,8 @@ import {Uri} from './uri';
 
 export abstract class QueryModelService<U extends Uri> {
 
-  private readonly uriSubject: BehaviorSubject<U>;
   readonly uri$: Observable<U>;
+  private readonly uriSubject: BehaviorSubject<U>;
 
   protected constructor(initialUri: U) {
     this.uriSubject = new BehaviorSubject<U>(initialUri);

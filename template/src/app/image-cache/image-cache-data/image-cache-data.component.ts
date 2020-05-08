@@ -17,13 +17,13 @@ export class ImageCacheDataComponent implements OnInit, AfterViewInit {
 
   readonly defaultPageSize = ImageCacheDataSource.DEFAULT_PAGE_SIZE;
 
+  dataSource: ImageCacheDataSource;
+
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
   private infoSubject = new BehaviorSubject<ImageCacheInfo>(new ImageCacheInfo());
   info$ = this.infoSubject.asObservable();
-
-  dataSource: ImageCacheDataSource;
 
   constructor(
     private restService: RestService,

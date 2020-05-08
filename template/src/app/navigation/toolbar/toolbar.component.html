@@ -1,8 +1,8 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
+<mat-toolbar class="mat-elevation-z8" color="primary">
   <a mat-button routerLink="/">Androscope</a>
   <a mat-button routerLink="/provider">Content Providers</a>
   <!--  <a mat-button routerLink="/databases">Databases</a>-->
-  <button mat-button [matMenuTriggerFor]="fileExplorerMenu">File Explorer
+  <button [matMenuTriggerFor]="fileExplorerMenu" mat-button>File Explorer
     <mat-icon>arrow_drop_down</mat-icon>
   </button>
   <mat-menu #fileExplorerMenu="matMenu">

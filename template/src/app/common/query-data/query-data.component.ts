@@ -22,20 +22,24 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly defaultPageSize = QueryDataSource.DEFAULT_PAGE_SIZE;
 
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  loading$ = this.loadingSubject.asObservable();
-
-  private errorSubject = new BehaviorSubject<string>(null);
-  error$ = this.errorSubject.asObservable();
-
-  private uriSubscription: Subscription;
-
   @Input('queryModel')
   model: QueryModelService<Uri>;
+
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  readonly loading$ = this.loadingSubject.asObservable();
+
+  private errorSubject = new BehaviorSubject<string>(null);
+  readonly error$ = this.errorSubject.asObservable();
+
+  private uriSubscription: Subscription;
 
   constructor(
     private restService: RestService
   ) {
+  }
+
+  get showTable(): boolean {
+    return this.dataSource != null && this.dataSource.showTable;
   }
 
   ngOnInit() {
@@ -70,10 +74,6 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.uriSubscription.unsubscribe();
-  }
-
-  get showTable(): boolean {
-    return this.dataSource != null && this.dataSource.showTable;
   }
 
 }

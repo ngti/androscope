@@ -30,14 +30,14 @@ export class QueryDataSource extends BaseDataSource<[]> {
     });
   }
 
+  get showTable(): boolean {
+    return this.metadataLoaded && this.errorSubject.value == null;
+  }
+
   disconnect() {
     super.disconnect();
     this.columnNamesSubject.complete();
     this.rowCountSubject.complete();
-  }
-
-  get showTable(): boolean {
-    return this.metadataLoaded && this.errorSubject.value == null;
   }
 
   protected onGenerateNetworkRequest(dataParams: DataParams): Observable<[][]> {

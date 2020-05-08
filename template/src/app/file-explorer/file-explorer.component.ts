@@ -36,7 +36,7 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
-  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>([{ name: '...', path: ''}]);
+  private breadcrumbsSubject = new BehaviorSubject<Breadcrumb[]>([{name: '...', path: ''}]);
   breadcrumbs$ = this.breadcrumbsSubject.asObservable();
 
   private viewInitialized = false;
@@ -86,18 +86,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     });
   }
 
-  private openFolder(extras: NavigationExtras) {
-    // noinspection JSIgnoredPromiseFromCall
-    this.router.navigate([], extras);
-  }
-
-  private openFolderInNewWindow(event: MouseEvent, extrasSupplier: () => NavigationExtras) {
-    if (event == null || event.button === 1) {
-      const url = this.router.createUrlTree([], extrasSupplier()).toString();
-      window.open(url);
-    }
-  }
-
   onDelete(entry: FileSystemEntry) {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: new DeleteConfirmationDialogData(
@@ -127,6 +115,18 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     const params = this.dataSource.params.withAppendedPath(path);
     const url = this.restService.getFileViewUrl(params);
     window.open(url);
+  }
+
+  private openFolder(extras: NavigationExtras) {
+    // noinspection JSIgnoredPromiseFromCall
+    this.router.navigate([], extras);
+  }
+
+  private openFolderInNewWindow(event: MouseEvent, extrasSupplier: () => NavigationExtras) {
+    if (event == null || event.button === 1) {
+      const url = this.router.createUrlTree([], extrasSupplier()).toString();
+      window.open(url);
+    }
   }
 
   private updateDataSource() {
