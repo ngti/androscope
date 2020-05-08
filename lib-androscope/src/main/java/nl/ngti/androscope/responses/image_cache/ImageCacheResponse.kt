@@ -102,6 +102,8 @@ private class ImageCacheCachedData(
     private val list: List<ImageCacheEntry>
 
     init {
+        check(root.exists()) { "$root does not exist." }
+        check(root.isDirectory) { "$root is not a directory." }
         val fileList = root.list() ?: emptyArray()
 
         val pattern = Pattern.compile(params.config.filter)

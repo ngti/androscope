@@ -2,10 +2,6 @@
   <mat-spinner color="accent"></mat-spinner>
 </div>
 
-<div *ngIf="(info$ | async).error != null" class="alert alert-danger" role="alert">
-  <p>{{(info$ | async).error}}</p>
-</div>
-
 <mat-paginator [length]="(info$ | async).totalEntries"
                [pageIndex]="0"
                [pageSizeOptions]="[25, 50, 100, 250]"
@@ -13,6 +9,10 @@
                showFirstLastButtons>
 </mat-paginator>
 <div class="basic-container">
+
+  <div *ngIf="(info$ | async).error != null" class="alert alert-danger" role="alert">
+    <p>{{(info$ | async).error}}</p>
+  </div>
 
   <div>
     <mat-card *ngFor="let entry of (dataSource.data | async)" class="image-cache-item">
