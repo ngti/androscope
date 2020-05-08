@@ -1,6 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {RestService} from '../../common/rest/rest.service';
-import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {DatabaseInfo} from '../../common/rest/database-data';
 import {DatabaseModelService} from '../model/database-model.service';
@@ -30,11 +29,7 @@ export class DatabaseMetadataComponent implements OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
-    console.log('DatabaseMetadataComponent created');
-
     this.uriSubscription = model.uri$.subscribe(databaseUri => {
-      console.log('DatabaseMetadataComponent new database uri: ' + databaseUri.content);
-
       this.reloadData(databaseUri);
     });
   }

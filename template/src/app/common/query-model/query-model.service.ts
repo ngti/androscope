@@ -9,7 +9,6 @@ export abstract class QueryModelService<U extends Uri> {
   protected constructor(initialUri: U) {
     this.uriSubject = new BehaviorSubject<U>(initialUri);
     this.uri$ = this.uriSubject.asObservable();
-    console.log('QueryModelService created');
   }
 
   get uri(): U {
@@ -17,7 +16,6 @@ export abstract class QueryModelService<U extends Uri> {
   }
 
   set uri(newUri: U) {
-    console.log('QueryModelService set uri: ' + newUri.content);
     this.uriSubject.next(newUri);
   }
 }

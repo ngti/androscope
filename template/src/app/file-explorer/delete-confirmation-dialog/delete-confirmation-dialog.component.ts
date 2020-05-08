@@ -3,8 +3,8 @@ import {FileSystemEntry} from '../../common/rest/file-system-data';
 import {RestService} from '../../common/rest/rest.service';
 import {BehaviorSubject} from 'rxjs';
 import {FileSystemParams} from '../../common/base/file-system-params';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {MatButton} from "@angular/material/button";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MatButton} from '@angular/material/button';
 
 export class DeleteConfirmationDialogData {
   constructor(

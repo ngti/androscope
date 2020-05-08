@@ -48,14 +48,12 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
-    console.log('FileExplorerComponent created');
   }
 
   ngOnInit() {
     merge(this.route.queryParams, this.route.params).subscribe(() => {
       const snapshot = this.route.snapshot;
       const newParams = new FileSystemParams(snapshot.params.type, snapshot.queryParams.path);
-      console.log(`FileExplorerComponent new params: ${newParams}`);
       if (this.dataSource == null
         || !this.dataSource.params.equals(newParams)) {
         this.dataSource = new FileExplorerDataSource(
@@ -115,7 +113,6 @@ export class FileExplorerComponent implements AfterViewInit, OnInit {
         });
         this.dataSource.forceReloadData();
       }
-      console.log('The dialog was closed ' + result);
     });
   }
 

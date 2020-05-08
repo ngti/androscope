@@ -4,13 +4,3 @@
   height: auto;
   margin: 16px;
 }
-
-.more-button {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-}
-
-.dashboard-card-content {
-  text-align: center;
-}

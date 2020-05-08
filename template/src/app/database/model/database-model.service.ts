@@ -22,10 +22,6 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
     super(null);
   }
 
-  // get databaseName(): string {
-  //   return this.databaseNameInternal;
-  // }
-
   set databaseName(newName: string) {
     if (this.databaseName !== newName) {
       this.databaseNameInternal = newName;

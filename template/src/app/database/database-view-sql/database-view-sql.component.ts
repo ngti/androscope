@@ -27,7 +27,6 @@ export class DatabaseViewSqlComponent implements OnInit {
 
   constructor(
     private restService: RestService,
-    private dialogRef: MatDialogRef<DatabaseViewSqlComponent>,
     @Inject(MAT_DIALOG_DATA) readonly data: DatabaseViewSqlDialogData
   ) {
   }

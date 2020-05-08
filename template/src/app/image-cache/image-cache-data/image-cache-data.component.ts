@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
-import {DataParams} from '../../common/base/data-params';
 import {BehaviorSubject} from 'rxjs';
 import {ImageCacheEntry, ImageCacheInfo} from '../../common/rest/image-cache-data';
 import {RestService} from '../../common/rest/rest.service';
@@ -35,7 +34,6 @@ export class ImageCacheDataComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.route.url.subscribe(() => {
       const imageCacheType = decodeURIComponent(this.route.snapshot.params.type);
-      console.log('ImageCacheGridComponent imageCacheType = ' + imageCacheType);
 
       if (this.paginator != null) {
         this.paginator.pageIndex = 0;

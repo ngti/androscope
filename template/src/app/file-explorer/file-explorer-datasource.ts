@@ -1,6 +1,6 @@
 import {BaseDataSource} from '../common/base/base-data-source';
 import {Breadcrumb, FileSystemEntry} from '../common/rest/file-system-data';
-import {FileSystemType, RestService} from '../common/rest/rest.service';
+import {RestService} from '../common/rest/rest.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {DataParams} from '../common/base/data-params';
 import {FileSystemParams} from '../common/base/file-system-params';
@@ -19,8 +19,6 @@ export class FileExplorerDataSource extends BaseDataSource<FileSystemEntry> {
     breadcrumbsSubject: BehaviorSubject<Breadcrumb[]>
   ) {
     super(FileExplorerDataSource.DEFAULT_PAGE_SIZE, loadingSubject);
-
-    console.log('FileExplorerDataSource created');
 
     restService.getFileCount(params).subscribe(fileSystemCount => {
       this.rowCountSubject.next(fileSystemCount.totalEntries);

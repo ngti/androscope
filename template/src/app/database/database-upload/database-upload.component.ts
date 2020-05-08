@@ -1,5 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {log} from 'util';
+import {Component, Inject} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Status, StatusData} from '../../common/base/status.enum';
@@ -11,7 +10,7 @@ import {Uri} from '../../common/query-model/uri';
   templateUrl: './database-upload.component.html',
   styleUrls: ['./database-upload.component.css']
 })
-export class DatabaseUploadComponent implements OnInit {
+export class DatabaseUploadComponent {
 
   private fileSubject = new BehaviorSubject<File>(null);
   readonly file$ = this.fileSubject.asObservable();
@@ -26,17 +25,12 @@ export class DatabaseUploadComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
-  }
-
   handleFileInput(target) {
     const files = target.files;
     if (files.length > 0) {
       this.fileSubject.next(files[0]);
-      log('handleFileInput: ' + this.fileSubject.getValue().name);
     } else {
       this.fileSubject.next(null);
-      log('handleFileInput: file cleared');
     }
   }
 

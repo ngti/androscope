@@ -1,5 +1,4 @@
-import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-toolbar',
@@ -7,5 +6,4 @@ import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent {
-
 }

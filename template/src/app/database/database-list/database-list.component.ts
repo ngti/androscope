@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RestService} from '../../common/rest/rest.service';
 import {BehaviorSubject} from 'rxjs';
 import {Database} from '../../common/rest/database-data';
