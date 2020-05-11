@@ -249,7 +249,7 @@ After that you can access Androscope on your localhost with the port returned by
                     AndroscopeServiceStatus.success("""
 $message
     
-You can find this information also in Logcat for “:androidscope” process of your app.
+You can also find this information in Logcat for “:androidscope” process of your app.
 """))
             performLogging(message)
         }

@@ -10,7 +10,7 @@
         <activity
             android:name=".AndroscopeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|smallestScreenSize"
-            android:icon="@drawable/androscope_ic_launcher"
+            android:icon="@mipmap/androscope_ic_launcher"
             android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
             android:process=":androscope"
