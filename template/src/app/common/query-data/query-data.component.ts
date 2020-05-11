@@ -25,6 +25,9 @@ export class QueryDataComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('queryModel')
   model: QueryModelService<Uri>;
 
+  @Input('disableSorting')
+  disableSorting = false;
+
   private loadingSubject = new BehaviorSubject<boolean>(false);
   readonly loading$ = this.loadingSubject.asObservable();
 
