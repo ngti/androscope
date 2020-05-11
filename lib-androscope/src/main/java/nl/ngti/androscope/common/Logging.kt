@@ -15,9 +15,3 @@ internal inline fun Any.log(messageSupplier: () -> String) {
         Log.d(javaClass.simpleName, messageSupplier())
     }
 }
-
-internal inline fun Any.log(exception: Throwable, messageSupplier: () -> String) {
-    if (BuildConfig.DEBUG) {
-        Log.e(javaClass.simpleName, messageSupplier(), exception)
-    }
-}

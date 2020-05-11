@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.GuardedBy
 import androidx.annotation.StringRes
@@ -16,7 +17,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import nl.ngti.androscope.AndroscopeActivity
 import nl.ngti.androscope.R
-import nl.ngti.androscope.common.log
 import nl.ngti.androscope.server.AndroscopeHttpServer
 import java.io.IOException
 
@@ -156,9 +156,10 @@ internal class AndroscopeService : Service() {
     }
 
     private fun performLogging(message: String, exception: Throwable? = null) {
+        val tag = "Androscope"
         val delayedLogging = exception?.let {
-            { log(exception) { message } }
-        } ?: { log { message } }
+            Runnable { Log.e(tag, message, exception) }
+        } ?: Runnable { Log.d(tag, message) }
 
         // Logs on some devices are polluted when activity is started, here we add some delay,
         // so the IP address will be logged in the end and user will not need to scroll up.
