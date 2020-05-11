@@ -59,7 +59,7 @@ internal class ProviderResponse(
 
         var addedRows = 0
         return ArrayList<ArrayList<String>>(resultSize).apply {
-            while (cursor.moveToNext()) {
+            do {
                 val row = ArrayList<String>(columnCount)
 
                 for (i in 0 until columnCount) {
@@ -72,7 +72,7 @@ internal class ProviderResponse(
                 if (addedRows == pageSize) {
                     break
                 }
-            }
+            } while (cursor.moveToNext())
         }
     }
 
