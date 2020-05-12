@@ -43,7 +43,7 @@ internal class ProviderResponse(
         }
     }
 
-    fun getData(session: SessionParams): ArrayList<ArrayList<String>>? {
+    fun getData(session: SessionParams): ArrayList<ArrayList<String?>>? {
         val pageSize = session.pageSize
         val pageNumber = session.pageNumber
 
@@ -58,9 +58,9 @@ internal class ProviderResponse(
         val resultSize = min(pageSize, cursor.count - startPosition)
 
         var addedRows = 0
-        return ArrayList<ArrayList<String>>(resultSize).apply {
+        return ArrayList<ArrayList<String?>>(resultSize).apply {
             do {
-                val row = ArrayList<String>(columnCount)
+                val row = ArrayList<String?>(columnCount)
 
                 for (i in 0 until columnCount) {
                     row.add(cursor[i])

@@ -11,7 +11,12 @@
     <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index"
                   matColumnDef="{{disCol}}">
       <th *matHeaderCellDef [disabled]="disableSorting" mat-header-cell mat-sort-header>{{disCol}}</th>
-      <td *matCellDef="let element " mat-cell>{{element[colIndex]}}</td>
+      <td *matCellDef="let element " mat-cell>
+        <ng-template [ngIfElse]="nullValue" [ngIf]="element[colIndex] != null">
+          {{element[colIndex]}}
+        </ng-template>
+        <ng-template #nullValue><span class="null-data">null</span></ng-template>
+      </td>
     </ng-container>
 
     <tr *matHeaderRowDef="dataSource.columnNames$ | async; sticky: true" mat-header-row></tr>
