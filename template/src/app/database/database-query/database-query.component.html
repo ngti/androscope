@@ -9,13 +9,15 @@
     <form (ngSubmit)="submitQuery(query)" novalidate>
       <mat-form-field appearance="fill" class="full-width-table" hideRequiredMarker>
         <mat-label>SQL query</mat-label>
-        <textarea #sqlInput [(ngModel)]="query" matInput name="query"
-                  placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..." required></textarea>
+        <textarea #sqlInput (keydown)="onTextKeyDown($event)" [(ngModel)]="query" matInput
+                  name="query" placeholder="SELECT, INSERT, UPDATE, DELETE, CREATE..."
+                  required></textarea>
       </mat-form-field>
 
       <button [disabled]="query != null && query.length == 0" class="btn btn-primary" mat-raised-button type="submit">
         Submit
       </button>
+      <mat-hint style="margin-left: 16px">You can also press Ctrl+Enter to submit the query</mat-hint>
     </form>
   </div>
 

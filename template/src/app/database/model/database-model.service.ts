@@ -51,6 +51,10 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
     }
   }
 
+  forceUpdateUri() {
+    this.updateUri();
+  }
+
   private updateUri() {
     this.uri = new DatabaseUri(this.databaseNameInternal, this.databaseQueryKey, this.databaseQueryValue);
   }

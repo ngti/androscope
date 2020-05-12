@@ -52,7 +52,13 @@ export class DatabaseQueryComponent implements AfterViewInit, OnDestroy {
         this.queryStatusSubject.next(new StatusData());
         this.router.navigate([encodeURIComponent(newQuery)], {
           relativeTo: this.route
-        });
+        }).then(r => {
+            if (r == null) {
+              // Query didn't change, force update its data by updating model Uri
+              this.model.forceUpdateUri();
+            }
+        }
+        );
       } else {
         this.queryStatusSubject.next(new StatusData(Status.IN_PROGRESS, 'Executing...'));
         this.restService.executeSql(this.model.uri, newQuery).subscribe(queryResult => {
@@ -66,5 +72,11 @@ export class DatabaseQueryComponent implements AfterViewInit, OnDestroy {
         });
       }
     });
+  }
+
+  onTextKeyDown($event: KeyboardEvent) {
+    if ($event.ctrlKey && $event.key === 'Enter') {
+      this.submitQuery(this.query);
+    }
   }
 }
