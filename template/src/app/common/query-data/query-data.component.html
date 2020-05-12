@@ -10,7 +10,14 @@
   <table [dataSource]="dataSource" class="full-width-table" mat-table matSort>
     <ng-container *ngFor="let disCol of dataSource.columnNames$ | async; let colIndex = index"
                   matColumnDef="{{disCol}}">
-      <th *matHeaderCellDef [disabled]="disableSorting" mat-header-cell mat-sort-header>{{disCol}}</th>
+      <th *matHeaderCellDef [disabled]="disableSorting" mat-header-cell mat-sort-header>
+        <ng-template [ngIfElse]="regular" [ngIf]="disableSorting">
+          <button [cdkCopyToClipboard]="disCol" mat-button matTooltip="Copy to clipboard">{{disCol}}</button>
+        </ng-template>
+        <ng-template #regular>
+          {{disCol}}
+        </ng-template>
+      </th>
       <td *matCellDef="let element " mat-cell>
         <ng-template [ngIfElse]="nullValue" [ngIf]="element[colIndex] != null">
           {{element[colIndex]}}

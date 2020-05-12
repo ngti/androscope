@@ -46,6 +46,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {ImageCacheDataComponent} from './image-cache/image-cache-data/image-cache-data.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import {ImageCacheDataComponent} from './image-cache/image-cache-data/image-cach
     MatSnackBarModule,
     MatExpansionModule,
     ClipboardModule,
+    MatTooltipModule,
   ],
   entryComponents: [
     DeleteConfirmationDialogComponent,
