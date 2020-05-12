@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.basic-container {
+  padding: 24px 16px;
+}
+
+.smaller-top-padding-container {
+  padding: 8px 16px 24px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+td.mat-cell {
+  padding-right: 24px !important;
+}
+
+.spinner-container {
+  position: fixed;
+  /* Center alignment */
+  height: 10%;
+  width: 10%;
+  top: 45%;
+  left: 45%;
+  /* Must be on top of fixed columns */
+  z-index: 101;
+}
+
+.breadcrumb {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}
+
+.breadcrumb-item + .breadcrumb-item {
+  padding-left: 0.5rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  display: inline-block;
+  padding-right: 0.5rem;
+  color: #6c757d;
+  content: "/";
+}
+
+.breadcrumb-item + .breadcrumb-item:hover::before {
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+}
+
+li.breadcrumb-item a {
+  text-decoration: none;
+}
+
+li.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+a.toolbar-parent-link {
+  color: gainsboro;
+  text-decoration: none;
+}
+
+a.toolbar-parent-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-toolbar {
+  align-items: center;
+}
+
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-primary {
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+}

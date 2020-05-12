@@ -1,0 +1,134 @@
+<div class="basic-container">
+  <div *ngIf="databaseInfo != null">
+    <mat-accordion *ngIf="databaseInfo.valid; else errorView">
+      <mat-expansion-panel [disabled]="databaseInfo.tables.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Tables
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.tables.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a *ngFor="let name of databaseInfo.tables" [routerLink]="['./table/', name]" mat-list-item>
+            <h4 mat-line>{{name}}</h4>
+            <button (click)="onMenuButtonClick($event)" [matMenuTriggerData]="{tableName: name}" [matMenuTriggerFor]="tableMenu"
+                    mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.views.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Views
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.views.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a *ngFor="let name of databaseInfo.views" [routerLink]="['./table/', name]" mat-list-item>
+            <h4 mat-line>{{name}}</h4>
+            <button (click)="onMenuButtonClick($event)" [matMenuTriggerData]="{tableName: name}" [matMenuTriggerFor]="tableMenu"
+                    mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.triggers.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Triggers
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.triggers.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item *ngFor="let name of databaseInfo.triggers">
+            <h4 mat-line>{{name}}</h4>
+            <button (click)="onMenuButtonClick($event)" [matMenuTriggerData]="{dbObjectName: name}" [matMenuTriggerFor]="nonTableMenu"
+                    mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [disabled]="databaseInfo.indexes.length == 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Indexes
+          </mat-panel-title>
+          <mat-panel-description>
+            {{databaseInfo.indexes.length}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-list>
+          <mat-list-item *ngFor="let name of databaseInfo.indexes">
+            <h4 mat-line>{{name}}</h4>
+            <button (click)="onMenuButtonClick($event)" [matMenuTriggerData]="{dbObjectName: name}" [matMenuTriggerFor]="nonTableMenu"
+                    mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Info
+          </mat-panel-title>
+          <mat-panel-description>
+            General database information
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table>
+          <tr>
+            <td>Full path</td>
+            <td>{{databaseInfo.fullPath}}</td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td>{{databaseInfo.size}}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <ng-template #errorView>
+      <div class="alert alert-danger" role="alert">
+        <p>{{databaseInfo.errorMessage}}</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<mat-menu #tableMenu="matMenu">
+  <ng-template let-name="tableName" matMenuContent>
+    <a [routerLink]="['./query/', 'SELECT * FROM ' + name]" mat-menu-item>
+      <mat-icon>edit</mat-icon>
+      <span>Custom query</span>
+    </a>
+    <button (click)="onViewSql(name)" mat-menu-item>
+      <mat-icon>visibility</mat-icon>
+      <span>View SQL</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #nonTableMenu="matMenu">
+  <ng-template let-name="dbObjectName" matMenuContent>
+    <button (click)="onViewSql(name)" mat-menu-item>
+      <mat-icon>visibility</mat-icon>
+      <span>View SQL</span>
+    </button>
+  </ng-template>
+</mat-menu>

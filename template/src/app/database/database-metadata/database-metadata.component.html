@@ -1,0 +1,27 @@
+<mat-toolbar class="breadcrumb-toolbar" color="primary">
+  <span>{{model.databaseTitle$ | async}}</span>
+  <span class="toolbar-spacer"></span>
+  <button [matMenuTriggerFor]="databaseMenu" mat-icon-button>
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #databaseMenu="matMenu">
+    <ng-template matMenuContent>
+      <a [href]="databaseDownloadUrl" mat-menu-item>
+        <mat-icon>cloud_download</mat-icon>
+        <span>Download</span>
+      </a>
+      <button (click)="onDatabaseUpload()" mat-menu-item>
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Upload</span>
+      </button>
+      <a mat-menu-item routerLink="./query">
+        <mat-icon>edit</mat-icon>
+        <span>Custom query</span>
+      </a>
+    </ng-template>
+  </mat-menu>
+</mat-toolbar>
+
+<mat-spinner *ngIf="loading$ | async" class="spinner-container"></mat-spinner>
+
+<app-database-info [data]="databaseInfo$ | async"></app-database-info>

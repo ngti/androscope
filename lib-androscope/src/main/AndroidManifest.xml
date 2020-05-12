@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nl.ngti.androscope">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application android:label="@string/app_name">
+        <activity
+            android:name=".AndroscopeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|smallestScreenSize"
+            android:icon="@mipmap/androscope_ic_launcher"
+            android:label="@string/androscope_activity_label"
+            android:launchMode="singleInstance"
+            android:process=":androscope"
+            android:taskAffinity="${applicationId}.nl.ngti.androscope">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".AndroscopeContentProvider"
+            android:authorities="${applicationId}.androscope"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".service.AndroscopeService"
+            android:exported="false"
+            android:process=":androscope" />
+    </application>
+
+</manifest>

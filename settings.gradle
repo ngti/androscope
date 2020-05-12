@@ -1,1 +1,1 @@
-include ':app', ":utils-debug"
+include ':app', ':lib-androscope'

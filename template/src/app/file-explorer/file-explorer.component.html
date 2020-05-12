@@ -1,0 +1,98 @@
+<div *ngIf="loading$ | async" class="spinner-container">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<div class="smaller-top-padding-container">
+  <ol class="breadcrumb">
+    <li *ngFor="let item of breadcrumbs$ | async; let last = last"
+        [class.active]="last"
+        class="breadcrumb-item">
+      <a *ngIf="!last; else noLink" [queryParams]="{path: item.path}" [routerLink]="['./']">{{item.name}}</a>
+      <ng-template #noLink>{{item.name}}</ng-template>
+    </li>
+  </ol>
+
+  <div class="mat-elevation-z8">
+    <table [dataSource]="dataSource" [matSortActive]="defaultSortColumn" [matSortDirection]="defaultSortOrder"
+           [matSortDisableClear]="true" class="full-width-table" mat-table matSort>
+      <!-- Type Icon Column -->
+      <ng-container matColumnDef="type">
+        <th *matHeaderCellDef mat-header-cell style="width: 48px">Type</th>
+        <td *matCellDef="let row" mat-cell>
+          <mat-icon *ngIf="row.isFolder; else file" color="accent" mat-list-icon>folder</mat-icon>
+          <ng-template #file>
+            <mat-icon color="primary" mat-list-icon>subject</mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+        <td *matCellDef="let row" mat-cell>{{row.name}}</td>
+      </ng-container>
+
+      <!-- Extension Column -->
+      <ng-container matColumnDef="extension">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Ext.</th>
+        <td *matCellDef="let row" mat-cell>{{row.extension}}</td>
+      </ng-container>
+
+      <!-- Extension Column -->
+      <ng-container matColumnDef="date">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Date</th>
+        <td *matCellDef="let row" mat-cell>{{row.date}}</td>
+      </ng-container>
+
+      <!-- Size Column -->
+      <ng-container matColumnDef="size">
+        <th *matHeaderCellDef mat-header-cell mat-sort-header>Size</th>
+        <td *matCellDef="let row" mat-cell>{{row.size}}</td>
+      </ng-container>
+
+      <!-- Menu Column -->
+      <ng-container matColumnDef="menu">
+        <th *matHeaderCellDef mat-header-cell style="width: 24px"></th>
+        <td (click)="$event.stopPropagation()" *matCellDef="let row" mat-cell>
+          <button [matMenuTriggerData]="{data: row}" [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+      <tr (click)="onMouseClick(row)" (mouseup)="onMouseUp(row, $event)"
+          *matRowDef="let row; columns: displayedColumns;"
+          [ngClass]="{'highlightable-row': row.isFolder}" mat-row></tr>
+    </table>
+
+    <mat-paginator [length]="dataSource.rowCount$ | async"
+                   [pageIndex]="0"
+                   [pageSizeOptions]="[25, 50, 100, 250, 500, 1000]"
+                   [pageSize]="defaultPageSize"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
+
+</div>
+
+<mat-menu #menu="matMenu">
+  <ng-template let-row="data" matMenuContent>
+    <button (click)="onMouseUp(row, null)" *ngIf="row.isFolder" mat-menu-item>
+      <mat-icon>open_in_new</mat-icon>
+      <span>Open in new window</span>
+    </button>
+    <button (click)="onDownload(row)" *ngIf="!row.isFolder" mat-menu-item>
+      <mat-icon>cloud_download</mat-icon>
+      <span>Download</span>
+    </button>
+    <button (click)="onView(row)" *ngIf="!row.isFolder" mat-menu-item>
+      <mat-icon>launch</mat-icon>
+      <span>View</span>
+    </button>
+    <button (click)="onDelete(row)" mat-menu-item>
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </ng-template>
+</mat-menu>

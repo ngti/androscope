@@ -1,0 +1,29 @@
+<div *ngIf="loading$ | async" class="spinner-container">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<mat-paginator [length]="(info$ | async).totalEntries"
+               [pageIndex]="0"
+               [pageSizeOptions]="[25, 50, 100, 250]"
+               [pageSize]="defaultPageSize"
+               showFirstLastButtons>
+</mat-paginator>
+<div class="basic-container">
+
+  <div *ngIf="(info$ | async).error != null" class="alert alert-danger" role="alert">
+    <p>{{(info$ | async).error}}</p>
+  </div>
+
+  <div>
+    <mat-card *ngFor="let entry of (dataSource.data | async)" class="image-cache-item">
+      <mat-card-subtitle class="image-entry-filename">
+        {{entry.fileName}}<br>
+        {{entry.size | number}} bytes
+      </mat-card-subtitle>
+      <img [src]="getThumbnailUri(entry)">
+      <mat-card-content>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

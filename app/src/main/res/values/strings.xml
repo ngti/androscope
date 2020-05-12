@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Androscope Demo</string>
-    <string name="androscope_activity_label">Androscope DWS</string>
-    <string name="grant_storage_permission">Grant storage permission</string>
 </resources>

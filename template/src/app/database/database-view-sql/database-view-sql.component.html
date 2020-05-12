@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>View SQL of «{{data.name}}»</h1>
+<div class="view-sql-content" mat-dialog-content>
+  <mat-spinner *ngIf="(loading$ | async); else sqlText"></mat-spinner>
+  <ng-template #sqlText>
+    <mat-form-field appearance="outline" class="full-size">
+      <textarea [ngModel]="sql$ | async" matInput></textarea>
+    </mat-form-field>
+  </ng-template>
+</div>
+<div align="end" mat-dialog-actions>
+  <button [cdkCopyToClipboard]="sql$ | async" cdkFocusInitial mat-button>Copy to clipboard</button>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

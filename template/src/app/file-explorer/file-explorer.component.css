@@ -1,0 +1,4 @@
+tr.highlightable-row:hover {
+  background: #eee;
+  cursor: pointer;
+}
