@@ -40,18 +40,6 @@ internal class AndroscopeService : Service() {
     @GuardedBy("this")
     private var serverHelper: AndroscopeServerHelper? = null
 
-    private val notificationBuilder: NotificationCompat.Builder
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = getString(R.string.androscope_channel_id)
-            val channelName = getString(R.string.androscope_channel_name)
-            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_MIN)
-            notificationManager.createNotificationChannel(channel)
-            NotificationCompat.Builder(this, channelId)
-        } else {
-            @Suppress("DEPRECATION")
-            NotificationCompat.Builder(this)
-        }
-
     private val notificationManager: NotificationManager
         get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -141,12 +129,25 @@ internal class AndroscopeService : Service() {
         addAction(action)
     }
 
-    private fun NotificationCompat.Builder.showNotification() {
-        setSmallIcon(R.drawable.androscope_notification_icon)
-        setContentIntent(PendingIntent.getActivity(context,
-                R.id.androscope_notification_request_code_open_androscope_activity,
-                Intent(context, AndroscopeActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
-        startForeground(R.id.androscope_notification_id, build())
+    private fun showNotification(setupBlock: NotificationCompat.Builder.() -> Unit) {
+        val notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = getString(R.string.androscope_channel_id)
+            val channelName = getString(R.string.androscope_channel_name)
+            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_MIN)
+            notificationManager.createNotificationChannel(channel)
+            NotificationCompat.Builder(this, channelId)
+        } else {
+            @Suppress("DEPRECATION")
+            NotificationCompat.Builder(this)
+        }
+        setupBlock(notificationBuilder)
+        notificationBuilder.run {
+            setSmallIcon(R.drawable.androscope_notification_icon)
+            setContentIntent(PendingIntent.getActivity(context,
+                    R.id.androscope_notification_request_code_open_androscope_activity,
+                    Intent(context, AndroscopeActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
+            startForeground(R.id.androscope_notification_id, build())
+        }
     }
 
     private fun showToast(message: String) {
@@ -180,19 +181,17 @@ internal class AndroscopeService : Service() {
     private inner class ServerStartCallback : AndroscopeServerHelper.Callback {
 
         override fun onStarting() {
-            notificationBuilder.run {
+            showNotification {
                 setContentText("Androscope: attempting to start the web server")
-                showNotification()
             }
 
             statusLiveData.postValue(AndroscopeServiceStatus.success("Starting Androscope..."))
         }
 
         override fun onStarted(server: AndroscopeHttpServer) {
-            notificationBuilder.run {
+            showNotification {
                 setContentText("Androscope is running")
                 addStopAction()
-                showNotification()
             }
             showToast("Androscope was started")
             reportServerInfo(server)
@@ -203,11 +202,10 @@ internal class AndroscopeService : Service() {
         }
 
         override fun onError(e: IOException) {
-            notificationBuilder.run {
+            showNotification {
                 setContentText("Error starting Androscope")
                 addRestartAction()
                 addStopAction()
-                showNotification()
             }
 
             showToast("Error starting Androscope")
