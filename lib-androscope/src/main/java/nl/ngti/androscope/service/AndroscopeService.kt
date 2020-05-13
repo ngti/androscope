@@ -51,6 +51,7 @@ internal class AndroscopeService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
+        serviceHandler.removeCallbacksAndMessages(null)
         serviceLooper.quit()
         stopServer()
 
@@ -58,12 +59,10 @@ internal class AndroscopeService : Service() {
     }
 
     private fun onHandleIntent(intent: Intent) {
-        val action = intent.action
-        if (action != null) {
-            when (action) {
-                ACTION_START_WEB_SERVER -> handleServerStart()
-                ACTION_STOP_WEB_SERVER -> handleServerStop()
-            }
+        val action = intent.action ?: return
+        when (action) {
+            ACTION_START_WEB_SERVER -> handleServerStart()
+            ACTION_STOP_WEB_SERVER -> handleServerStop()
         }
     }
 
