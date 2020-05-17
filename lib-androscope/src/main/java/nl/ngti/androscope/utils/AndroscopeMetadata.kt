@@ -38,7 +38,7 @@ internal class AndroscopeMetadata private constructor(
 
         @JvmStatic
         fun fromContext(context: Context): AndroscopeMetadata {
-            return AndroscopeMetadata(getManifestMetadata(context)!!)
+            return AndroscopeMetadata(getManifestMetadata(context) ?: Bundle.EMPTY)
         }
 
         fun isAutoStartEnabled(context: Context): Boolean =
