@@ -8,16 +8,12 @@ internal open class UrlMatcher<T> {
     private val matcher = UriMatcher(UriMatcher.NO_MATCH)
     private val handlers = ArrayList<T>()
 
-    /**
-     * Adds an [handler] for the specified [path]. The same rules apply as in
-     * [UriMatcher.addURI].
-     */
-    fun add(rootPath: String, path: String?, handler: T) {
+    fun build(rootPath: String, block: Builder.() -> Unit) {
         require(rootPath.isNotBlank()) { "Invalid root path: $rootPath" }
+        require(!rootPath.contains('/')) { "Root path cannot contain any '/'" }
 
-        val code = handlers.size
-        matcher.addURI(rootPath, path, code)
-        handlers += handler
+        val builder = Builder(rootPath)
+        block(builder)
     }
 
     /**
@@ -29,5 +25,36 @@ internal open class UrlMatcher<T> {
             return null
         }
         return handlers[code]
+    }
+
+    /**
+     * Adds an [handler] for the specified [path]. The same rules apply as in
+     * [UriMatcher.addURI].
+     */
+    private fun add(rootPath: String, path: String?, handler: T) {
+        val code = handlers.size
+        matcher.addURI(rootPath, path, code)
+        handlers += handler
+    }
+
+    internal inner class Builder(
+            private val rootPath: String,
+            private val parentPath: String = ""
+    ) {
+
+        fun addSubPath(path: String, block: Builder.() -> Unit) {
+            require(!path.contains('/')) {
+                "Path must not contain any '/'"
+            }
+            val subTreeBuilder = Builder(rootPath, "$parentPath$path/")
+            block(subTreeBuilder)
+        }
+
+        fun add(path: String, handler: T) {
+            require(!path.contains('/')) {
+                "Use addSubPath method to create urls with multiple sub-paths"
+            }
+            add(rootPath, "$parentPath$path", handler)
+        }
     }
 }

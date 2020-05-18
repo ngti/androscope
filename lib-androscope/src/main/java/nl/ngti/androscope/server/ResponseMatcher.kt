@@ -22,21 +22,15 @@ internal class ResponseMatcher(
 
     private val urlMatcher = UrlMatcher<Response>()
 
+    private val jsonConverter = Gson()
+
     private val assetResponse = AssetResponse(context)
 
     operator fun get(session: SessionParams) =
             urlMatcher["http:/${session.path}"] ?: assetResponse
 
     init {
-        val gson = Gson()
-        val jsonConverter: (Any?) -> String = {
-            gson.toJson(it)
-//                    .also {
-//                        log { "Response: $it" }
-//                    }
-        }
-
-        with(ResponseTreeBuilder(urlMatcher, jsonConverter, "rest")) {
+        urlMatcher.build("rest") {
             addSubPath("file-system") {
                 FileSystemResponse(context).run {
                     addJson("list", ::getFileList)
@@ -56,7 +50,7 @@ internal class ResponseMatcher(
             }
 
             addSubPath("database") {
-                DatabaseResponse(context, metadata, uriDataProvider, gson).run {
+                DatabaseResponse(context, metadata, uriDataProvider, jsonConverter).run {
                     addJson("list") { getList() }
                     addJson("title", ::getTitle)
                     addJson("info", ::getInfo)
@@ -80,28 +74,13 @@ internal class ResponseMatcher(
             addJson("app-name") { context.applicationName }
         }
     }
-}
 
-private class ResponseTreeBuilder(
-        private val uriMatcher: UrlMatcher<Response>,
-        private val jsonConverter: (Any?) -> String,
-        private val rootPath: String,
-        private val parentPath: String = ""
-) {
-
-    inline fun addSubPath(path: String, block: ResponseTreeBuilder.() -> Unit) {
-        val subTreeBuilder = ResponseTreeBuilder(uriMatcher, jsonConverter, rootPath, "$parentPath$path/")
-        block(subTreeBuilder)
-    }
-
-    fun add(path: String, handler: Response) {
-        uriMatcher.add(rootPath, "$parentPath$path", handler)
-    }
-
-    fun addJson(path: String, handler: (SessionParams) -> Any?) {
-        uriMatcher.add(rootPath, "$parentPath$path") {
+    private fun UrlMatcher<Response>.Builder.addJson(path: String, handler: (SessionParams) -> Any?) {
+        add(path) {
             val data = handler(it)
-            val json = jsonConverter(data)
+            val json = jsonConverter.toJson(data)
+
+//            this@ResponseMatcher.log { "Response: $json" }
 
             NanoHTTPD.newFixedLengthResponse(json)
         }

@@ -9,31 +9,66 @@ class UrlMatcherTest {
     private val urlMatcher = UrlMatcher<TestUrlHandler>()
 
     @Test(expected = IllegalArgumentException::class)
-    fun addEmptyRootPath() {
-        urlMatcher.add("", null, RestUrlHandler())
+    fun buildEmptyRootPath() {
+        urlMatcher.build("") {}
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun buildRootPathWithSubPaths() {
+        urlMatcher.build("sub/path") {}
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun builderAddPathWithSubPaths() {
+        urlMatcher.build("root") {
+            add("sub/path", TestUrlHandler())
+        }
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun builderAddSubPathWithSubPaths() {
+        urlMatcher.build("root") {
+            addSubPath("sub/path") { }
+        }
     }
 
     @Test
     fun get() {
-        val restUrlHandler = RestUrlHandler()
+        val restUrlHandler1 = RestUrlHandler()
+        val restUrlHandler2 = RestUrlHandler()
+        val fileSystemHandler1 = FileSystemHandler()
+        val fileSystemHandler2 = FileSystemHandler()
         val downloadUrlHandler = DownloadUrlHandler()
         val viewUrlHandler = ViewUrlHandler()
-        val matchAllRootPath = MatchHandler()
-        urlMatcher.add("rest", "provider/data", restUrlHandler)
-        urlMatcher.add("rest", "provider/metadata", restUrlHandler)
-        urlMatcher.add("rest", "file-system/list", restUrlHandler)
-        urlMatcher.add("rest", "file-system/breadcrumbs", restUrlHandler)
-        urlMatcher.add("download", null, downloadUrlHandler)
-        urlMatcher.add("view", null, viewUrlHandler)
-        urlMatcher.add("*", null, matchAllRootPath)
+        val otherHandler = TestUrlHandler()
 
-        assertSame(restUrlHandler, urlMatcher["http://rest/provider/data"])
-        assertSame(restUrlHandler, urlMatcher["http://rest/provider/metadata"])
-        assertSame(restUrlHandler, urlMatcher["http://rest/file-system/list"])
-        assertSame(restUrlHandler, urlMatcher["http://rest/file-system/breadcrumbs"])
-        assertSame(downloadUrlHandler, urlMatcher["http://download"])
-        assertSame(viewUrlHandler, urlMatcher["http://view"])
-        assertSame(matchAllRootPath, urlMatcher["http://match_all"])
+        urlMatcher.build("rest") {
+            addSubPath("provider") {
+                add("data", restUrlHandler1)
+                add("metadata", restUrlHandler2)
+            }
+            addSubPath("file-system") {
+                add("list", fileSystemHandler1)
+                add("breadcrumbs", fileSystemHandler2)
+            }
+
+            add("download", downloadUrlHandler)
+            add("view", viewUrlHandler)
+        }
+
+        urlMatcher.build("root") {
+            addSubPath("sub") {
+                add("path", otherHandler)
+            }
+        }
+
+        assertSame(restUrlHandler1, urlMatcher["http://rest/provider/data"])
+        assertSame(restUrlHandler2, urlMatcher["http://rest/provider/metadata"])
+        assertSame(fileSystemHandler1, urlMatcher["http://rest/file-system/list"])
+        assertSame(fileSystemHandler2, urlMatcher["http://rest/file-system/breadcrumbs"])
+        assertSame(downloadUrlHandler, urlMatcher["http://rest/download"])
+        assertSame(viewUrlHandler, urlMatcher["http://rest/view"])
+        assertSame(otherHandler, urlMatcher["http://root/sub/path"])
 
         assertNull(urlMatcher["http://not/existing"])
     }
@@ -42,6 +77,6 @@ class UrlMatcherTest {
 private open class TestUrlHandler
 
 private class RestUrlHandler : TestUrlHandler()
+private class FileSystemHandler : TestUrlHandler()
 private class DownloadUrlHandler : TestUrlHandler()
 private class ViewUrlHandler : TestUrlHandler()
-private class MatchHandler : TestUrlHandler()

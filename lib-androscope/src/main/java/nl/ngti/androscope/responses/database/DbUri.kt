@@ -16,7 +16,7 @@ internal class DbUri(
         get() = uri.getQueryParameter("query")
 
     init {
-        check(uri.scheme == SCHEME) {
+        require(uri.scheme == SCHEME) {
             "Invalid ${javaClass.simpleName} scheme: ${uri.scheme}"
         }
     }
