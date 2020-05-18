@@ -6,7 +6,7 @@ import org.junit.Test
 class DatabaseFileUtilsTest : BaseFileSystemTest() {
 
     @Test
-    fun test() {
+    fun `return values in normal setup`() {
         // Simulate database with auxiliary files
         val dbFile = createTestFile("test.db")
         val journalFile = createTestFile("test.db-journal")
@@ -37,7 +37,7 @@ class DatabaseFileUtilsTest : BaseFileSystemTest() {
     }
 
     @Test
-    fun databaseNameHasAuxiliarySuffix() {
+    fun `when database name has auxiliary suffix`() {
         // Database file name contains a suffix of an auxiliary file, but there is no other
         // database file named "test", so it must be considered as a main database file.
         val dbFile = createTestFile("test-journal")

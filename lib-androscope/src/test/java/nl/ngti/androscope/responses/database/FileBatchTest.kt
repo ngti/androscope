@@ -35,7 +35,7 @@ class FileBatchTest : BaseFileSystemTest() {
     }
 
     @Test
-    fun moveToSuccess() {
+    fun `moveTo success`() {
         val result = batch.moveTo(newDirectory) ?: throw AssertionError("Moving batch failed")
 
         assertEquals(newDirectory, result.parentDirectory)
@@ -50,7 +50,7 @@ class FileBatchTest : BaseFileSystemTest() {
     }
 
     @Test
-    fun moveTo_RestoreOnFailure() {
+    fun `moveTo restore on failure`() {
         // Add non-existing file in the end, so batch will fail
         batch += "non_existing_file"
 
@@ -66,7 +66,7 @@ class FileBatchTest : BaseFileSystemTest() {
     }
 
     @Test
-    fun batchStopsMovingOnFailure() {
+    fun `moveTo stops on failure`() {
         assert(originalFiles[middleIndex].delete())
 
         assertNull(batch.moveTo(newDirectory, revertIfFailed = true))
