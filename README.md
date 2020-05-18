@@ -1,6 +1,6 @@
 # Androscope
 
-Androscope is a debug tool that allows you to look into internals of your Android application and device data. Some of this data is still not possible to see using standard debug tools, or it is not very convenient (you need to use ADB), or they require certain dependencies (like Chrome Developer Tools for Stetho). Androscope runs in any browser, even on the mobile device where your application is running.
+Androscope is a debug tool that allows to see the internals of your Android application and device. Some of this data is still not possible to see using standard debug tools, or it is not very convenient (you need to use ADB), or they require certain dependencies (like Chrome Developer Tools for Stetho). Androscope runs in any browser, even on the mobile device where your application is running.
 
 [Features](#features)
 
@@ -11,7 +11,7 @@ Androscope is a debug tool that allows you to look into internals of your Androi
 - [Best practices](#best-practices)
 - [Customize Androscope activity name](#customize-androscope-activity-name)
 - [Auto-start Androscope](#auto-start-androscope)
-- [Using Androscope in multiple applications](#using-androscope-in-multiple-applications)
+- [Set a fixed port](#set-a-fixed-port)
 - [Configure your database](#configure-your-database)
 - [Configure image cache](#configure-image-cache)
 - [View BLOB database data](#view-blob-database-data)
@@ -32,20 +32,23 @@ Androscope is a debug tool that allows you to look into internals of your Androi
 ![](images/database.png)
 
 4. Download and upload databases.
+5. View caches of image libraries, like Glide, Coil, Picasso.
 
 On top of that, Androscope is very efficient. Displayed data is cached and paginated, so you are not going to experience any freezes while viewing content. You can also adjust sorting in tables.
 
 ## Setup
 
-Androscope supports Android applications with minimum API level 14.
+Androscope supports Android applications with minimum API level 16.
 
 Add Androscope dependency to your Gradle script:
 
 ```
-debugImplementation "nl.ngti:androscope:1.0-alpha1"
+debugImplementation "nl.ngti:androscope:1.0-beta4"
 ```
 
-No configuration in code is required.
+Install your application and you will see the entry named **Androscope** in launcher. Run it to launch the web server and then you can start using Androscope in a web browser.
+
+No configuration in code is required, but you might want to do some customizations (see [Recipes](#recipes)).
 
 <b>TODO: configure repository if it is going to be deployed to NGTI repository or not to Maven Central?</b>
 
@@ -86,8 +89,8 @@ By default you need to open Androscope activity in order to start it. If you wan
 </manifest>
 ```
 
-### Using Androscope in multiple applications
-You might have multiple projects using Androscope running at the same time on the same device. In this case you will need to set a custom port for each of them.
+### Set a fixed port
+By default Androscope tries to automatically choose a free port in a range within `8787..10000`. If you want to be able to bookmark Androscope links for specific applications, you need to assign a fixed port:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -96,13 +99,15 @@ You might have multiple projects using Androscope running at the same time on th
     <application>
         <meta-data
             android:name="nl.ngti.androscope.HTTP_PORT"
-            android:value="8791" />
+            android:value="87910" />
     </application>
 </manifest>
 ```
 
+In this case Androscope will fail to start when the specified port is occupied.
+
 ### Configure your database
-In Androscope you can see all databases returned by [Context.databaseList()](https://developer.android.com/reference/android/content/Context#databaseList()) method. However, you might have databases in `no_backup` folder to avoid that they will be automatically backed up by Android. In this case to see your database in Androscope you will need to add a custom manifest configuration:
+In Androscope you can see all databases returned by [Context.databaseList()](https://developer.android.com/reference/android/content/Context#databaseList()) method. However, you might have databases in `no_backup` folder to avoid them being automatically backed up by Android. In this case to see your database in Androscope you will need to add a custom manifest configuration:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -144,7 +149,7 @@ Androscope is able to detect by default default cache locations of [Picasso](htt
 </manifest>
 ```
 
-- `nl.ngti.androscope.IMAGE_CACHE` option configures the folder where the cache is located. It must be located in the application `cache` folder.
+- `nl.ngti.androscope.IMAGE_CACHE` option configures the folder where the cache is located. It should be a relative path in the application `cache` folder.
 
 - `nl.ngti.androscope.IMAGE_CACHE.filter` is a regular expression for filenames inside the image cache folder. It should be able to filter only image files.
 
