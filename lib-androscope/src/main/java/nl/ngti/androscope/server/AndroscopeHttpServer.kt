@@ -11,7 +11,7 @@ import nl.ngti.androscope.utils.AndroscopeMetadata.Companion.fromContext
 /**
  * Custom HTTP server. Displays the structure of the database.
  */
-internal class AndroscopeHttpServer private constructor(
+internal class AndroscopeHttpServer constructor(
         private val context: Context,
         httpPort: Int,
         metadata: AndroscopeMetadata
@@ -37,13 +37,4 @@ internal class AndroscopeHttpServer private constructor(
             @Suppress("DEPRECATION")
             return Formatter.formatIpAddress(myIp)
         }
-
-    companion object {
-
-        fun newInstance(context: Context): AndroscopeHttpServer {
-            val metadata = fromContext(context)
-            val httpPort = metadata.httpPort
-            return AndroscopeHttpServer(context.applicationContext, httpPort, metadata)
-        }
-    }
 }

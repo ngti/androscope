@@ -5,19 +5,24 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 
 internal class AndroscopeMetadata private constructor(
-        private val internal: Bundle
+        private val bundle: Bundle
 ) {
 
-    val httpPort: Int
-        get() = internal.getInt(KEY_HTTP_PORT, HTTP_PORT)
+    val httpPortRange: IntRange
+        get() {
+            val port = bundle.getInt(KEY_HTTP_PORT, -1)
+            return if (port == -1)
+                START_HTTP_PORT..END_HTTP_PORT
+            else port..port
+        }
 
     val databaseName: String?
-        get() = internal.getString(KEY_DATABASE_NAME)
+        get() = bundle.getString(KEY_DATABASE_NAME)
 
     val imageCacheConfig: ImageCacheConfig?
         get() {
-            val cache = internal.getString(KEY_IMAGE_CACHE)
-            val filter = internal.getString(KEY_IMAGE_CACHE_FILTER)
+            val cache = bundle.getString(KEY_IMAGE_CACHE)
+            val filter = bundle.getString(KEY_IMAGE_CACHE_FILTER)
             if (cache?.isNotBlank() == true && filter?.isNotBlank() == true) {
                 return ImageCacheConfig("Configured in manifest", cache, filter)
             }
@@ -29,7 +34,8 @@ internal class AndroscopeMetadata private constructor(
         private const val KEY_AUTO_START = "nl.ngti.androscope.AUTO_START"
 
         private const val KEY_HTTP_PORT = "nl.ngti.androscope.HTTP_PORT"
-        private const val HTTP_PORT = 8787
+        private const val START_HTTP_PORT = 8787
+        private const val END_HTTP_PORT = 10000
 
         private const val KEY_DATABASE_NAME = "nl.ngti.androscope.DATABASE_NAME"
 

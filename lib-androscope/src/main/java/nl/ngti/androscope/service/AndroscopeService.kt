@@ -74,7 +74,7 @@ internal class AndroscopeService : Service() {
     @Synchronized
     private fun handleServerStart() {
         val serverHelper = serverHelper
-                ?: AndroscopeServerHelper.newInstance(
+                ?: AndroscopeServerHelper(
                         this,
                         AndroscopeServerCallback(this, uiThreadHandler, statusLiveData)
                 ).also {
