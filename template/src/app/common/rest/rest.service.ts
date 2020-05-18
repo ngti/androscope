@@ -87,6 +87,10 @@ export class RestService {
     return new ParamsBuilder().addFileSystemParams(params).toUrlParams();
   }
 
+  getAppName(): Observable<string> {
+    return this.http.get<string>(RestService.REST_URL + 'app-name');
+  }
+
   getProviderInfo(uri: Uri): Observable<ProviderInfo> {
     return this.http.get<ProviderInfo>(RestService.PROVIDER_URL + 'info', {
       params: new ParamsBuilder()

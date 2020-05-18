@@ -12,6 +12,7 @@ import nl.ngti.androscope.responses.files.FileSystemResponse
 import nl.ngti.androscope.responses.image_cache.ImageCacheResponse
 import nl.ngti.androscope.responses.provider.ProviderResponse
 import nl.ngti.androscope.utils.AndroscopeMetadata
+import nl.ngti.androscope.utils.applicationName
 
 internal class ResponseMatcher(
         context: Context,
@@ -55,6 +56,8 @@ internal class ResponseMatcher(
             addJson("image-cache/data", ::getData)
             add("image-cache/thumbnail", ::getThumbnail)
         }
+
+        addJson("app-name") { context.applicationName }
     }
 
     private fun add(path: String, handler: Response) {

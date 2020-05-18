@@ -1,5 +1,5 @@
 <mat-toolbar class="mat-elevation-z8" color="primary">
-  <a mat-button routerLink="/">Androscope</a>
+  <a mat-button routerLink="/">{{appName$ | async}}</a>
   <a mat-button routerLink="/provider">Content Providers</a>
   <!--  <a mat-button routerLink="/databases">Databases</a>-->
   <button [matMenuTriggerFor]="fileExplorerMenu" mat-button>File Explorer

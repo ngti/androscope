@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import nl.ngti.androscope.AndroscopeActivity
 import nl.ngti.androscope.R
+import nl.ngti.androscope.utils.applicationName
 
 internal class AndroscopeNotificationHelper(
         private val service: Service,
@@ -41,8 +42,7 @@ internal class AndroscopeNotificationHelper(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 // Android before Nougat does not display application name in notifications.
                 // So we need to manually set it in the notification title.
-                val applicationName = service.packageManager.getApplicationLabel(service.applicationInfo)
-                setContentTitle(applicationName)
+                setContentTitle(service.applicationName)
             }
             setSmallIcon(R.drawable.androscope_notification_icon)
             setContentIntent(PendingIntent.getActivity(service,
