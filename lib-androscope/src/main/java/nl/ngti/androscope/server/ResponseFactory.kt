@@ -3,10 +3,10 @@ package nl.ngti.androscope.server
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.os.SystemClock
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.IHTTPSession
 import nl.ngti.androscope.common.log
+import nl.ngti.androscope.common.logTime
 import nl.ngti.androscope.responses.common.MultiSchemeDataProvider
 import nl.ngti.androscope.responses.common.UriDataProvider
 import nl.ngti.androscope.utils.AndroscopeMetadata
@@ -30,13 +30,11 @@ internal class ResponseFactory(
         }
         val handler = urlMatcher[session]
 
-        val start = SystemClock.elapsedRealtime()
-        try {
-            return handler(session)
-        } finally {
-            log("Response generation time [%s]: %,d ms",
-                    session.path, SystemClock.elapsedRealtime() - start)
-        }
+        return logTime({
+            handler(session)
+        }, {
+            "Response generation time [${session.path}]"
+        })
     }
 }
 

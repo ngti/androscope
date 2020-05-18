@@ -69,7 +69,7 @@ internal class ResponseMatcher(
             }
 
             addSubPath("image-cache") {
-                ImageCacheResponse(context, metadata).apply {
+                ImageCacheResponse(context, metadata).run {
                     addJson("list") { getList() }
                     addJson("info", ::getInfo)
                     addJson("data", ::getData)
