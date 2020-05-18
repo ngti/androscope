@@ -28,7 +28,7 @@ internal class ResponseFactory(
                 | path ${session.path},
                 | params ${session.parameters}""".trimMargin()
         }
-        val handler = urlMatcher["http:/${session.path}"] ?: urlMatcher.assetResponse
+        val handler = urlMatcher[session]
 
         val start = SystemClock.elapsedRealtime()
         try {

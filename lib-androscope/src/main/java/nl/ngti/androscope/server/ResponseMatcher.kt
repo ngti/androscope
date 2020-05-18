@@ -18,58 +18,90 @@ internal class ResponseMatcher(
         context: Context,
         metadata: AndroscopeMetadata,
         uriDataProvider: MultiSchemeDataProvider
-) : UrlMatcher<Response>() {
+) {
 
-    private val jsonConverter = Gson()
+    private val urlMatcher = UrlMatcher<Response>()
 
-    val assetResponse = AssetResponse(context)
+    private val assetResponse = AssetResponse(context)
+
+    operator fun get(session: SessionParams) =
+            urlMatcher["http:/${session.path}"] ?: assetResponse
 
     init {
-        FileSystemResponse(context).apply {
-            addJson("file-system/list", ::getFileList)
-            addJson("file-system/count", ::getFileCount)
-            addJson("file-system/breadcrumbs", ::getBreadcrumbs)
-            addJson("file-system/delete", ::delete)
-            add("file-system/view", ::getFileToView)
-            add("file-system/download", ::getFileToDownload)
+        val gson = Gson()
+        val jsonConverter: (Any?) -> String = {
+            gson.toJson(it)
+//                    .also {
+//                        log { "Response: $it" }
+//                    }
         }
 
-        ProviderResponse(uriDataProvider).apply {
-            addJson("provider/info", ::getInfo)
-            addJson("provider/data", ::getData)
-        }
+        with(ResponseTreeBuilder(urlMatcher, jsonConverter, "rest")) {
+            addSubPath("file-system") {
+                FileSystemResponse(context).run {
+                    addJson("list", ::getFileList)
+                    addJson("count", ::getFileCount)
+                    addJson("breadcrumbs", ::getBreadcrumbs)
+                    addJson("delete", ::delete)
+                    add("view", ::getFileToView)
+                    add("download", ::getFileToDownload)
+                }
+            }
 
-        DatabaseResponse(context, metadata, uriDataProvider, jsonConverter).apply {
-            addJson("database/list") { getList() }
-            addJson("database/title", ::getTitle)
-            addJson("database/info", ::getInfo)
-            addJson("database/can-query", ::getCanQuery)
-            addJson("database/execute-sql", ::executeSql)
-            add("database/download", ::getDatabaseToDownload)
-            addJson("database/upload", ::uploadDatabase)
-            addJson("database/sql", ::getSql)
-        }
+            addSubPath("provider") {
+                ProviderResponse(uriDataProvider).run {
+                    addJson("info", ::getInfo)
+                    addJson("data", ::getData)
+                }
+            }
 
-        ImageCacheResponse(context, metadata).apply {
-            addJson("image-cache/list") { getList() }
-            addJson("image-cache/info", ::getInfo)
-            addJson("image-cache/data", ::getData)
-            add("image-cache/thumbnail", ::getThumbnail)
-        }
+            addSubPath("database") {
+                DatabaseResponse(context, metadata, uriDataProvider, gson).run {
+                    addJson("list") { getList() }
+                    addJson("title", ::getTitle)
+                    addJson("info", ::getInfo)
+                    addJson("can-query", ::getCanQuery)
+                    addJson("execute-sql", ::executeSql)
+                    add("download", ::getDatabaseToDownload)
+                    addJson("upload", ::uploadDatabase)
+                    addJson("sql", ::getSql)
+                }
+            }
 
-        addJson("app-name") { context.applicationName }
+            addSubPath("image-cache") {
+                ImageCacheResponse(context, metadata).apply {
+                    addJson("list") { getList() }
+                    addJson("info", ::getInfo)
+                    addJson("data", ::getData)
+                    add("thumbnail", ::getThumbnail)
+                }
+            }
+
+            addJson("app-name") { context.applicationName }
+        }
+    }
+}
+
+private class ResponseTreeBuilder(
+        private val uriMatcher: UrlMatcher<Response>,
+        private val jsonConverter: (Any?) -> String,
+        private val rootPath: String,
+        private val parentPath: String = ""
+) {
+
+    inline fun addSubPath(path: String, block: ResponseTreeBuilder.() -> Unit) {
+        val subTreeBuilder = ResponseTreeBuilder(uriMatcher, jsonConverter, rootPath, "$parentPath$path/")
+        block(subTreeBuilder)
     }
 
-    private fun add(path: String, handler: Response) {
-        add("rest", path, handler)
+    fun add(path: String, handler: Response) {
+        uriMatcher.add(rootPath, "$parentPath$path", handler)
     }
 
-    private fun addJson(path: String, handler: (SessionParams) -> Any?) {
-        add("rest", path) {
+    fun addJson(path: String, handler: (SessionParams) -> Any?) {
+        uriMatcher.add(rootPath, "$parentPath$path") {
             val data = handler(it)
-            val json = jsonConverter.toJson(data)
-
-//            log { "Response: $json" }
+            val json = jsonConverter(data)
 
             NanoHTTPD.newFixedLengthResponse(json)
         }
