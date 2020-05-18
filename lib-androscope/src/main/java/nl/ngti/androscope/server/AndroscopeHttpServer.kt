@@ -6,7 +6,6 @@ import android.text.format.Formatter
 import fi.iki.elonen.NanoHTTPD
 import nl.ngti.androscope.BuildConfig
 import nl.ngti.androscope.utils.AndroscopeMetadata
-import nl.ngti.androscope.utils.AndroscopeMetadata.Companion.fromContext
 
 /**
  * Custom HTTP server. Displays the structure of the database.

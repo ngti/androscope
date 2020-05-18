@@ -57,8 +57,12 @@ class UrlMatcherTest {
         }
 
         urlMatcher.build("root") {
-            addSubPath("sub") {
-                add("path", otherHandler)
+            addSubPath("very") {
+                addSubPath("deep") {
+                    addSubPath("sub") {
+                        add("path", otherHandler)
+                    }
+                }
             }
         }
 
@@ -68,7 +72,7 @@ class UrlMatcherTest {
         assertSame(fileSystemHandler2, urlMatcher["http://rest/file-system/breadcrumbs"])
         assertSame(downloadUrlHandler, urlMatcher["http://rest/download"])
         assertSame(viewUrlHandler, urlMatcher["http://rest/view"])
-        assertSame(otherHandler, urlMatcher["http://root/sub/path"])
+        assertSame(otherHandler, urlMatcher["http://root/very/deep/sub/path"])
 
         assertNull(urlMatcher["http://not/existing"])
     }

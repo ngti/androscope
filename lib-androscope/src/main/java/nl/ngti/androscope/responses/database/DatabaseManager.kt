@@ -70,13 +70,11 @@ private class ConnectionManager(
     private val cachedConnections = HashMap<File, DatabaseHolder>()
 
     fun <R> performOnDatabase(uri: DbUri, block: SQLiteDatabase.() -> R): R {
-        val dbFile = uri.dbFile
-        return getDatabase(dbFile).use(block)
+        return getDatabase(uri.dbFile).use(block)
     }
 
     fun queryCursor(uri: DbUri, block: SQLiteDatabase.() -> Cursor?): Cursor? {
-        val dbFile = uri.dbFile
-        val database = getDatabase(dbFile)
+        val database = getDatabase(uri.dbFile)
         return block(database.use())?.let {
             UsageTrackingCursor(database, it)
         }
@@ -86,10 +84,7 @@ private class ConnectionManager(
         return synchronized(cachedConnections) {
             cachedConnections.getOrPut(dbFile) {
                 sweep()
-                context.openOrCreateDatabase(dbFile.absolutePath, 0, null).let {
-                    val database = openDb(dbFile)
-                    DatabaseHolder(database)
-                }
+                DatabaseHolder(openDb(dbFile))
             }
         }
     }
