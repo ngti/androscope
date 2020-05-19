@@ -17,7 +17,6 @@ export class ToolbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.restService.getAppName().subscribe(name => {
-      console.log('Name: ' + name);
       this.appNameSubject.next(name);
     });
   }

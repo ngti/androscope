@@ -9,18 +9,20 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DatabaseQueryDataComponent implements OnDestroy {
 
+  private query: string;
+
   constructor(
     readonly model: DatabaseModelService,
     route: ActivatedRoute
   ) {
     route.url.subscribe(() => {
-      const query = decodeURIComponent(route.snapshot.params.query);
-      model.setDatabaseQuery('query', query);
+      this.query = decodeURIComponent(route.snapshot.params.query);
+      model.setDatabaseQuery(this.query);
     });
   }
 
   ngOnDestroy(): void {
-    this.model.clearDatabaseQuery();
+    this.model.clearDatabaseQuery(this.query);
   }
 
 }

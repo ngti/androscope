@@ -39,20 +39,35 @@ export class DatabaseModelService extends QueryModelService<DatabaseUri> {
     return this.databaseQueryValue;
   }
 
-  clearDatabaseQuery() {
-    this.setDatabaseQuery(null, null);
+  clearDatabaseTable() {
+    this.setDatabaseQueryInternal(null, null);
   }
 
-  setDatabaseQuery(key: string, value: string) {
+  clearDatabaseQuery(expectedQuery: string) {
+    // Avoid overwriting query that was set by another component
+    if (this.databaseQueryKey === 'query' && this.databaseQueryValue === expectedQuery) {
+      this.setDatabaseQueryInternal(null, null);
+    }
+  }
+
+  setDatabaseTable(table: string) {
+    this.setDatabaseQueryInternal('table', table)
+  }
+
+  setDatabaseQuery(query: string) {
+    this.setDatabaseQueryInternal('query', query)
+  }
+
+  forceUpdateUri() {
+    this.updateUri();
+  }
+
+  private setDatabaseQueryInternal(key: string, value: string) {
     if (this.databaseQueryKey !== key || this.databaseQueryValue !== value) {
       this.databaseQueryKey = key;
       this.databaseQueryValue = value;
       this.updateUri();
     }
-  }
-
-  forceUpdateUri() {
-    this.updateUri();
   }
 
   private updateUri() {

@@ -60,6 +60,7 @@ export class DatabaseQueryComponent implements AfterViewInit, OnDestroy {
         }
         );
       } else {
+        this.model.setDatabaseQuery(newQuery);
         this.queryStatusSubject.next(new StatusData(Status.IN_PROGRESS, 'Executing...'));
         this.restService.executeSql(this.model.uri, newQuery).subscribe(queryResult => {
           let queryStatus: Status;

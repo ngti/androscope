@@ -20,12 +20,12 @@ export class DatabaseTableComponent implements OnDestroy {
   ) {
     route.url.subscribe(() => {
       this.tableName = decodeURIComponent(route.snapshot.params.table);
-      model.setDatabaseQuery('table', this.tableName);
+      model.setDatabaseTable(this.tableName);
     });
   }
 
   ngOnDestroy(): void {
-    this.model.clearDatabaseQuery();
+    this.model.clearDatabaseTable();
   }
 
   onViewSql(tableName: string) {
