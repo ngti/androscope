@@ -3,7 +3,7 @@ package nl.ngti.androscope.common
 import android.content.UriMatcher
 import androidx.core.net.toUri
 
-internal open class UrlMatcher<T> {
+internal class UrlMatcher<T> {
 
     private val matcher = UriMatcher(UriMatcher.NO_MATCH)
     private val handlers = ArrayList<T>()

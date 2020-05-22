@@ -10,7 +10,7 @@ import nl.ngti.androscope.utils.AndroscopeMetadata
 /**
  * Custom HTTP server. Displays the structure of the database.
  */
-internal class AndroscopeHttpServer constructor(
+internal class AndroscopeHttpServer(
         private val context: Context,
         httpPort: Int,
         metadata: AndroscopeMetadata
