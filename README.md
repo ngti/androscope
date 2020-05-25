@@ -51,7 +51,7 @@ Install your application and you will see the entry named **Androscope** in laun
 
 No configuration in code is required, but you might want to do some customizations (see [Recipes](#recipes)).
 
-**Note:** if your application crashes when attempting to launch Androscope because of some initialization in Application class, you can [disable a separate process](#customize-androscope-process) in which Androscope runs by default.
+**Note:** if your application crashes when attempting to launch Androscope because of some initialization in Application class, you can [force Androscope to run in the main process](#customize-androscope-process).
 
 It is a good idea to put Androscope only for debug build type or for a specific flavor, so you don't use it in production builds.
 
@@ -165,7 +165,7 @@ FROM my_table_containing_blobs
 ```
 
 ### Customize Androscope process
-Androscope runs by default in a separate process. This is convenient, so it doesn't interfere with the code of your main application. Also it is useful for debugging, because if the main or some other process crash, you can look what kind of data could have lead to it. If your application has issues with multiple processes, you can disable a separate process for Androscope:
+Androscope runs by default in a separate process. This is convenient, so it doesn't interfere with the code of your main application. Also it is useful for debugging, because if the main or some other process crash, you can look what kind of data could have lead to it. If your application has issues with multiple processes, you can force Androscope to run in the main process:
 
 ```xml
 <resources>
@@ -177,6 +177,6 @@ You can also customize the process name:
 
 ```xml
 <resources>
-    <string name=":debug" />
+    <string name="androscope_process">:debug</string>
 </resources>
 ```
