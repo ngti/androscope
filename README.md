@@ -1,6 +1,6 @@
 # Androscope
 
-Androscope is a debug tool that allows to see the internals of your Android application and device. Some of this data is still not possible to see using standard debug tools, or it is not very convenient (you need to use ADB), or they require certain dependencies (like Chrome Developer Tools for Stetho). Androscope runs in any browser, even on the mobile device where your application is running.
+Androscope is a debugging tool that allows to see the internals of your Android application and device. Some of this data is still not possible to see using standard debug tools, or it is not very convenient (you need to use ADB), or they require certain dependencies (like Chrome Developer Tools for Stetho). Androscope runs in any browser, even on the mobile device where your application is running.
 
 [Features](#features)
 
@@ -43,14 +43,12 @@ Androscope supports Android applications with minimum API level 16.
 Add Androscope dependency to your Gradle script:
 
 ```
-debugImplementation "nl.ngti:androscope:1.0-beta4"
+debugImplementation (COMING SOON)
 ```
 
 Install your application and you will see the entry named **Androscope** in launcher. Run it to launch the web server and then you can start using Androscope in a web browser.
 
 No configuration in code is required, but you might want to do some customizations (see [Recipes](#recipes)).
-
-<b>TODO: configure repository if it is going to be deployed to NGTI repository or not to Maven Central?</b>
 
 It is a good idea to put Androscope only for debug build type or for a specific flavor, so you don't use it in production builds.
 
@@ -162,6 +160,3 @@ SELECT
     CAST(my_blob_column AS TEXT)
 FROM my_table_containing_blobs
 ```
-
-## Contribute
-***TODO***
