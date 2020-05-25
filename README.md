@@ -15,6 +15,7 @@ Androscope is a debugging tool that allows to see the internals of your Android 
 - [Configure your database](#configure-your-database)
 - [Configure image cache](#configure-image-cache)
 - [View BLOB database data](#view-blob-database-data)
+- [Customize Androscope process](#customize-androscope-process)
 
 [Contribute](#contribute)
 
@@ -49,6 +50,8 @@ debugImplementation (COMING SOON)
 Install your application and you will see the entry named **Androscope** in launcher. Run it to launch the web server and then you can start using Androscope in a web browser.
 
 No configuration in code is required, but you might want to do some customizations (see [Recipes](#recipes)).
+
+**Note:** if your application crashes when attempting to launch Androscope because of some initialization in Application class, you can [disable a separate process](#customize-androscope-process) in which Androscope runs by default.
 
 It is a good idea to put Androscope only for debug build type or for a specific flavor, so you don't use it in production builds.
 
@@ -159,4 +162,21 @@ Androscope is able to detect by default default cache locations of [Picasso](htt
 SELECT 
     CAST(my_blob_column AS TEXT)
 FROM my_table_containing_blobs
+```
+
+### Customize Androscope process
+Androscope runs by default in a separate process. This is convenient, so it doesn't interfere with the code of your main application. Also it is useful for debugging, because if the main or some other process crash, you can look what kind of data could have lead to it. If your application has issues with multiple processes, you can disable a separate process for Androscope:
+
+```xml
+<resources>
+    <string name="androscope_process" />
+</resources>
+```
+
+You can also customize the process name:
+
+```xml
+<resources>
+    <string name=":debug" />
+</resources>
 ```

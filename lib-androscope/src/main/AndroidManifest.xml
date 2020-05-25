@@ -13,7 +13,7 @@
             android:icon="@mipmap/androscope_ic_launcher"
             android:label="@string/androscope_activity_label"
             android:launchMode="singleInstance"
-            android:process=":androscope"
+            android:process="@string/androscope_process"
             android:taskAffinity="${applicationId}.nl.ngti.androscope">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         <service
             android:name=".service.AndroscopeService"
             android:exported="false"
-            android:process=":androscope" />
+            android:process="@string/androscope_process" />
     </application>
 
 </manifest>
