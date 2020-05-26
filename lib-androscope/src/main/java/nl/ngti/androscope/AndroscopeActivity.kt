@@ -14,6 +14,12 @@ import androidx.lifecycle.Observer
 import nl.ngti.androscope.service.AndroscopeService
 import nl.ngti.androscope.service.AndroscopeService.LocalBinder
 
+/**
+ * Starts Androscope (if it was not started yet) and shows its status.
+ *
+ * You can configure Androscope in manifest or resources,
+ * see [https://github.com/ngti/androscope#recipes].
+ */
 class AndroscopeActivity : FragmentActivity(R.layout.activity_androscope), ServiceConnection, View.OnClickListener {
 
     private lateinit var infoView: TextView

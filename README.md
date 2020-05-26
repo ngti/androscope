@@ -44,7 +44,7 @@ Androscope supports Android applications with minimum API level 16.
 Add Androscope dependency to your Gradle script:
 
 ```
-debugImplementation (COMING SOON)
+debugImplementation 'nl.ngti:androscope:1.0-RC1'
 ```
 
 Install your application and you will see the entry named **Androscope** in launcher. Run it to launch the web server and then you can start using Androscope in a web browser.
