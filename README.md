@@ -1,5 +1,7 @@
 # Androscope
 
+[![Maven Central](https://img.shields.io/maven-central/v/nl.ngti/androscope.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22nl.ngti%22%20AND%20a:%22androscope%22)
+
 Androscope is a debugging tool that allows to see the internals of your Android application and device. Some of this data is still not possible to see using standard debug tools, or it is not very convenient (you need to use ADB), or they require certain dependencies (like Chrome Developer Tools for Stetho). Androscope runs in any browser, even on the mobile device where your application is running.
 
 [Features](#features)
