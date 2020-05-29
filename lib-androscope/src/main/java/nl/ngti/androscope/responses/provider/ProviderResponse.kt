@@ -29,11 +29,12 @@ internal class ProviderResponse(
     fun getInfo(session: SessionParams): ProviderInfo? {
         return try {
             val uri = session.providerUri
-            val cursor = queryCursor(uri) ?: throw IllegalStateException("Cannot query uri: $uri")
-            cursor.use {
+            val cursor = cursorCache[session]
+                    ?: throw IllegalStateException("Cannot query uri: $uri")
+            cursor.run {
                 ProviderInfo(
-                        columns = it.columnNames,
-                        rowCount = it.count
+                        columns = columnNames,
+                        rowCount = count
                 )
             }
         } catch (e: Throwable) {
@@ -57,22 +58,24 @@ internal class ProviderResponse(
         val columnCount = cursor.columnCount
         val resultSize = min(pageSize, cursor.count - startPosition)
 
-        var addedRows = 0
         return ArrayList<ArrayList<String?>>(resultSize).apply {
-            do {
-                val row = ArrayList<String?>(columnCount)
+            synchronized(cursor) {
+                var addedRows = 0
+                do {
+                    val row = ArrayList<String?>(columnCount)
 
-                for (i in 0 until columnCount) {
-                    row.add(cursor[i])
-                }
+                    for (i in 0 until columnCount) {
+                        row.add(cursor[i])
+                    }
 
-                add(row)
-                addedRows++
+                    add(row)
+                    addedRows++
 
-                if (addedRows == pageSize) {
-                    break
-                }
-            } while (cursor.moveToNext())
+                    if (addedRows == pageSize) {
+                        break
+                    }
+                } while (cursor.moveToNext())
+            }
         }
     }
 
