@@ -10,6 +10,8 @@ export class ImageCacheDataSource extends BaseDataSource<ImageCacheEntry> {
 
   data = this.connect();
 
+  private timestamp: number = Date.now();
+
   constructor(
     private restService: RestService,
     readonly imageCacheType: string,
@@ -24,6 +26,6 @@ export class ImageCacheDataSource extends BaseDataSource<ImageCacheEntry> {
   }
 
   protected onGenerateNetworkRequest(dataParams: DataParams): Observable<ImageCacheEntry[]> {
-    return this.restService.getImageCacheData(this.imageCacheType, dataParams);
+    return this.restService.getImageCacheData(this.imageCacheType, this.timestamp, dataParams);
   }
 }

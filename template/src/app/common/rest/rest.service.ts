@@ -15,16 +15,13 @@ class ParamsBuilder {
   private httpParams = new HttpParams();
 
   addUri(uri: Uri): ParamsBuilder {
-    this.httpParams = this.httpParams
-      .set('uri', uri.content)
-      .set('timestamp', uri.timestamp.toString());
-    return this;
+    this.httpParams = this.httpParams.set('uri', uri.content);
+    return this.addTimestamp(uri.timestamp);
   }
 
   addFileSystemParams(params: FileSystemParams): ParamsBuilder {
-    this.httpParams = this.httpParams
-      .set('type', params.fileSystemType)
-      .set('timestamp', params.timestamp.toString());
+    this.httpParams = this.httpParams.set('type', params.fileSystemType);
+    this.addTimestamp(params.timestamp);
     if (params.hasPath()) {
       this.httpParams = this.httpParams.set('path', params.encodedPath);
     }
@@ -45,6 +42,11 @@ class ParamsBuilder {
 
   addCustom(key: string, value: string) {
     this.httpParams = this.httpParams.set(key, value);
+    return this;
+  }
+
+  addTimestamp(value: number) {
+    this.httpParams = this.httpParams.set('timestamp', value.toString());
     return this;
   }
 
@@ -221,10 +223,11 @@ export class RestService {
     });
   }
 
-  getImageCacheData(cacheType: string, dataParams: DataParams): Observable<ImageCacheEntry[]> {
+  getImageCacheData(cacheType: string, timestamp: number, dataParams: DataParams): Observable<ImageCacheEntry[]> {
     return this.http.get<ImageCacheEntry[]>(RestService.IMAGE_CACHE_URL + 'data', {
       params: new ParamsBuilder()
         .addCustom('type', cacheType)
+        .addTimestamp(timestamp)
         .addDataParams(dataParams)
         .build()
     });
