@@ -9,8 +9,8 @@ import android.os.IBinder
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
+import androidx.activity.ComponentActivity
+import androidx.lifecycle.observe
 import nl.ngti.androscope.service.AndroscopeService
 import nl.ngti.androscope.service.AndroscopeService.LocalBinder
 
@@ -20,7 +20,7 @@ import nl.ngti.androscope.service.AndroscopeService.LocalBinder
  * You can configure Androscope in manifest or resources,
  * see [https://github.com/ngti/androscope#recipes].
  */
-class AndroscopeActivity : FragmentActivity(R.layout.activity_androscope), ServiceConnection, View.OnClickListener {
+class AndroscopeActivity : ComponentActivity(R.layout.activity_androscope), ServiceConnection, View.OnClickListener {
 
     private lateinit var infoView: TextView
     private lateinit var restartButton: Button
@@ -50,10 +50,10 @@ class AndroscopeActivity : FragmentActivity(R.layout.activity_androscope), Servi
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         val localBinder = service as LocalBinder
-        localBinder.statusLiveData.observe(this, Observer { status ->
+        localBinder.statusLiveData.observe(this) { status ->
             infoView.text = status.message
             restartButton.visibility = if (status.isRestartNeeded) View.VISIBLE else View.GONE
-        })
+        }
     }
 
     override fun onServiceDisconnected(name: ComponentName) {}
