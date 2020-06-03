@@ -2,11 +2,9 @@ package nl.ngti.androscope.responses.image_cache
 
 import android.content.Context
 import fi.iki.elonen.NanoHTTPD
+import nl.ngti.androscope.responses.common.Refreshable
 import nl.ngti.androscope.responses.common.ResponseDataCache
 import nl.ngti.androscope.server.*
-import nl.ngti.androscope.server.SessionParams
-import nl.ngti.androscope.server.pageNumber
-import nl.ngti.androscope.server.pageSize
 import nl.ngti.androscope.utils.AndroscopeMetadata
 import nl.ngti.androscope.utils.ImageCacheConfig
 import nl.ngti.androscope.utils.defaultConfigs
@@ -92,8 +90,8 @@ internal class ImageCacheResponse(
 private data class ImageCacheParams(
         val config: ImageCacheConfig,
         val root: File,
-        private val timestamp: Long
-)
+        override val timestamp: Long
+) : Refreshable
 
 private class ImageCacheCachedData(
         private val params: ImageCacheParams

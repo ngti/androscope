@@ -3,6 +3,7 @@ package nl.ngti.androscope.responses.files
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import nl.ngti.androscope.responses.common.Refreshable
 import nl.ngti.androscope.server.SessionParams
 import nl.ngti.androscope.server.get
 import nl.ngti.androscope.server.timestamp
@@ -11,8 +12,8 @@ import java.io.File
 internal data class FileSystemParams(
         private val fileSystemType: String,
         val path: String?,
-        private val timestamp: Long
-) {
+        override val timestamp: Long
+) : Refreshable {
 
     constructor(session: SessionParams) : this(
             fileSystemType = session["type"]!!,

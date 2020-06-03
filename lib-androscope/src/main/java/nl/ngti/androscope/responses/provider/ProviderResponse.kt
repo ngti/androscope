@@ -2,6 +2,7 @@ package nl.ngti.androscope.responses.provider
 
 import android.database.Cursor
 import android.net.Uri
+import nl.ngti.androscope.responses.common.Refreshable
 import nl.ngti.androscope.responses.common.ResponseDataCache
 import nl.ngti.androscope.responses.common.UriDataProvider
 import nl.ngti.androscope.server.*
@@ -89,9 +90,9 @@ internal class ProviderResponse(
 
 private data class CursorParams(
         val uri: Uri,
-        private val timestamp: Long,
+        override val timestamp: Long,
         val sortOrder: String?
-) {
+) : Refreshable {
     constructor(session: SessionParams) : this(
             uri = session.providerUri,
             timestamp = session.timestamp,
