@@ -14,33 +14,50 @@ internal class FileSystemEntry internal constructor(
         root: File,
         itemName: String
 ) {
+    @Transient
+    private val file = File(root, itemName)
+
+    @JvmField
+    val isFolder = file.isDirectory
+
     val name: String
-    val extension: String?
-    val isFolder: Boolean
+    val extension: String
 
     @Volatile
     lateinit var date: String
     var size: String? = null
 
     @Transient
-    val dateInternal: Long
+    private var dateOnDemand: Long = -1
+
+    val dateAsLong: Long
+        get() {
+            if (dateOnDemand == -1L) {
+                dateOnDemand = file.lastModified()
+            }
+            return dateOnDemand
+        }
 
     @Transient
-    val sizeInternal: Long
+    private var sizeOnDemand: Long = if (isFolder) 0 else -1
+
+    val sizeAsLong: Long
+        get() {
+            if (sizeOnDemand == -1L) {
+                sizeOnDemand = file.length()
+            }
+            return sizeOnDemand
+        }
 
     init {
-        val file = File(root, itemName)
-        isFolder = file.isDirectory
-        dateInternal = file.lastModified()
-        sizeInternal = if (isFolder) -1 else file.length()
         if (isFolder) {
             name = itemName
-            extension = null
+            extension = ""
         } else {
             val extensionIndex = indexOfExtension(itemName)
             if (extensionIndex < 1) {
                 name = itemName
-                extension = null
+                extension = ""
             } else {
                 name = itemName.substring(0, extensionIndex)
                 extension = itemName.substring(extensionIndex + 1)
@@ -50,9 +67,9 @@ internal class FileSystemEntry internal constructor(
 
     fun prepareForSerialization(formatter: IFormatter) {
         if (!::date.isInitialized) {
-            date = formatter.formatDate(dateInternal)
+            date = formatter.formatDate(dateAsLong)
             if (!isFolder) {
-                size = formatter.formatFileSize(sizeInternal)
+                size = formatter.formatFileSize(sizeAsLong)
             }
         }
     }

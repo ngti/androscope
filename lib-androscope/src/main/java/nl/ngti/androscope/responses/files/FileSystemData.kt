@@ -3,8 +3,6 @@ package nl.ngti.androscope.responses.files
 import android.content.Context
 import nl.ngti.androscope.server.*
 import java.io.File
-import java.util.*
-import kotlin.Comparator
 import kotlin.math.min
 
 internal class FileSystemData(
@@ -57,36 +55,24 @@ internal class FileSystemData(
 }
 
 private data class SortParams(
-        val sortOrder: String?,
-        val sortColumn: String?
+        private val sortOrder: String?,
+        private val sortColumn: String?
 ) {
 
     val comparator: Comparator<FileSystemEntry>
         get() {
-            val nameCompareFunction: (FileSystemEntry, FileSystemEntry) -> Int = { entry1, entry2 ->
-                entry1.name.compareTo(entry2.name, ignoreCase = true)
+            var result = SortParamsUtil.getFolderComparator()
+            sortOrderComparator?.let {
+                result = result then it
             }
-            val folderComparator = Comparator<FileSystemEntry> { entry1, entry2 ->
-                entry2.isFolder.compareTo(entry1.isFolder)
-            }
-            return sortOrder?.let { order ->
-                sortColumn?.let { column ->
-                    val compareFunction: (FileSystemEntry, FileSystemEntry) -> Int = when (column) {
-                        "name" -> nameCompareFunction
-                        "extension" -> { entry1, entry2 -> entry1.extension.orEmpty().compareTo(entry2.extension.orEmpty()) }
-                        "date" -> { entry1, entry2 -> entry1.dateInternal.compareTo(entry2.dateInternal) }
-                        "size" -> { entry1, entry2 -> entry1.sizeInternal.compareTo(entry2.sizeInternal) }
-                        else -> throw IllegalArgumentException("Illegal sort column: $column")
-                    }
-                    val comparator = Comparator<FileSystemEntry>(compareFunction).let {
-                        if (order == "desc") Collections.reverseOrder(it) else it
-                    }
-                    if (compareFunction !== nameCompareFunction) {
-                        comparator.then(Comparator(nameCompareFunction))
-                    } else comparator
-                }
-            }?.let {
-                folderComparator.then(it)
-            } ?: folderComparator
+            return result
         }
+
+    private val sortOrderComparator: Comparator<FileSystemEntry>?
+        get() =
+            sortOrder?.let { order ->
+                sortColumn?.let { column ->
+                    SortParamsUtil.getSortingComparator(order, column)
+                }
+            }
 }
