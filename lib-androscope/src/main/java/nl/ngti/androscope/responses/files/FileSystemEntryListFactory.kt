@@ -5,21 +5,16 @@ import android.text.format.Formatter
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 internal class FileSystemEntryListFactory(
         private val context: Context
 ) : IFormatter {
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
 
-    fun generate(root: File): List<FileSystemEntry> =
-            root.list()?.let { array ->
-                ArrayList<FileSystemEntry>(array.size).also { result ->
-                    array.forEach {
-                        result += FileSystemEntry(root, it)
-                    }
-                }
-            } ?: emptyList()
+    fun generate(root: File, files: Array<String>): Array<FileSystemEntry> =
+            Array(files.size) { index ->
+                FileSystemEntry(root, files[index])
+            }
 
     override fun formatFileSize(size: Long): String = Formatter.formatFileSize(context, size)
 

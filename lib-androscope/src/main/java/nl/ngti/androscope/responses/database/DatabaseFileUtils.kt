@@ -12,29 +12,29 @@ private val AUXILIARY_DB_FILES_SUFFIXES = arrayOf(
         "-wal"
 )
 
-internal fun getMainDatabaseFile(file: File): File {
-    val fileName = file.name
-    AUXILIARY_DB_FILES_SUFFIXES.forEach { suffix ->
-        if (fileName.endsWith(suffix)) {
-            val parent = file.parentFile
-            val mainFileName = file.name.removeSuffix(suffix)
-            val mainFile = File(parent, mainFileName)
-            return if (mainFile.exists())
-                mainFile
-            else file
+internal val File.mainDatabaseFile: File
+    get() {
+        val fileName = name
+        AUXILIARY_DB_FILES_SUFFIXES.forEach { suffix ->
+            if (fileName.endsWith(suffix)) {
+                val parent = parentFile
+                val mainFileName = fileName.removeSuffix(suffix)
+                val mainFile = File(parent, mainFileName)
+                return if (mainFile.exists())
+                    mainFile
+                else this
+            }
         }
+        return this
     }
-    return file
-}
 
-internal fun isAuxiliaryDatabaseFile(file: File): Boolean {
-    return file != getMainDatabaseFile(file)
-}
+internal val File.isAuxiliaryDatabaseFile: Boolean
+    get() = this != mainDatabaseFile
 
-internal fun collectAllDatabaseFiles(databaseFile: File): FileBatch {
-    val parentDirectory = databaseFile.parentFile!!
+internal fun File.collectAllDatabaseFiles(): FileBatch {
+    val parentDirectory = parentFile!!
     return FileBatch(parentDirectory).also {
-        val mainDatabaseFileName = databaseFile.name
+        val mainDatabaseFileName = name
         it += mainDatabaseFileName
         AUXILIARY_DB_FILES_SUFFIXES.forEach { suffix ->
             val auxiliaryFileName = mainDatabaseFileName + suffix

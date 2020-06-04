@@ -1,10 +1,13 @@
 package nl.ngti.androscope.responses.database
 
 import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import java.io.File
 
-class FileBatchTest : BaseFileSystemTest() {
+class FileBatchTest {
 
     private val testFilesCount = 5
     private val middleIndex = 2
@@ -13,40 +16,52 @@ class FileBatchTest : BaseFileSystemTest() {
         "file$it"
     }
 
-    private val batch = FileBatch(testDirectory)
+    @Rule
+    @JvmField
+    val sourceFolder = TemporaryFolder()
 
-    private val newDirectory = createTempDir(directory = testDirectory)
+    @Rule
+    @JvmField
+    val destinationFolder = TemporaryFolder()
 
-    private val originalFiles
-        get() = fileNames.map {
-            File(testDirectory, it)
-        }
+    private val originalFiles = ArrayList<File>(fileNames.size)
 
-    private val movedFiles
-        get() = fileNames.map {
-            File(newDirectory, it)
-        }
+    private lateinit var destination: File
 
-    init {
+    private lateinit var movedFiles: List<File>
+
+    private lateinit var batch: FileBatch
+
+    @Before
+    fun setUp() {
+        batch = FileBatch(sourceFolder.root)
+
         fileNames.forEach {
-            createTestFile(it)
+            originalFiles += sourceFolder.newFile(it)
             batch += it
+        }
+
+        destination = destinationFolder.root
+
+        movedFiles = fileNames.map {
+            File(destination, it)
         }
     }
 
     @Test
     fun `moveTo success`() {
-        val result = batch.moveTo(newDirectory) ?: throw AssertionError("Moving batch failed")
+        val result = batch.moveTo(destination)
+                ?: throw AssertionError("Moving batch failed")
 
-        assertEquals(newDirectory, result.parentDirectory)
+        assertEquals(destination, result.parentDirectory)
         assertEquals(fileNames.size, result.size)
 
         fileNames.forEach {
             assertTrue(result.containsFile(it))
         }
 
-        assertFiles(originalFiles, exist = false)
-        assertFiles(movedFiles, exist = true)
+        originalFiles.assertExist(false)
+        movedFiles.assertExist()
     }
 
     @Test
@@ -54,55 +69,50 @@ class FileBatchTest : BaseFileSystemTest() {
         // Add non-existing file in the end, so batch will fail
         batch += "non_existing_file"
 
-        assertNull(batch.moveTo(newDirectory, revertIfFailed = true))
+        assertNull(batch.moveTo(destination, revertIfFailed = true))
 
-        assertFiles(originalFiles, exist = true)
-        assertFiles(movedFiles, exist = false)
+        originalFiles.assertExist()
+        movedFiles.assertExist(false)
 
-        assertNull(batch.moveTo(newDirectory, revertIfFailed = false))
+        assertNull(batch.moveTo(destination, revertIfFailed = false))
 
-        assertFiles(originalFiles, exist = false)
-        assertFiles(movedFiles, exist = true)
+        originalFiles.assertExist(false)
+        movedFiles.assertExist()
     }
 
     @Test
     fun `moveTo stops on failure`() {
         assert(originalFiles[middleIndex].delete())
 
-        assertNull(batch.moveTo(newDirectory, revertIfFailed = true))
+        assertNull(batch.moveTo(destination, revertIfFailed = true))
 
-        assertFiles(
-                originalFiles.filterIndexed { index, _ ->
+        originalFiles
+                .filterIndexed { index, _ ->
                     index != middleIndex
-                },
-                exist = true
-
-        )
+                }
+                .assertExist()
         assertFalse(originalFiles[middleIndex].exists())
         assertFalse(movedFiles[middleIndex].exists())
-        assertFiles(movedFiles, exist = false)
+        movedFiles.assertExist(false)
 
-        assertNull(batch.moveTo(newDirectory, revertIfFailed = false))
+        assertNull(batch.moveTo(destination, revertIfFailed = false))
 
-        assertFiles(
-                originalFiles.filterIndexed { index, _ ->
+        originalFiles
+                .filterIndexed { index, _ ->
                     index > middleIndex
-                },
-                exist = true
-        )
+                }
+                .assertExist()
         assertFalse(originalFiles[middleIndex].exists())
         assertFalse(movedFiles[middleIndex].exists())
-        assertFiles(
-                movedFiles.filterIndexed { index, _ ->
+        movedFiles
+                .filterIndexed { index, _ ->
                     index < middleIndex
-                },
-                exist = true
-        )
+                }
+                .assertExist()
     }
 
-    private fun assertFiles(files: List<File>, exist: Boolean) {
-        files.forEach {
-            assertEquals(exist, it.exists())
-        }
-    }
+    private fun List<File>.assertExist(expected: Boolean = true) =
+            forEach {
+                assertEquals(expected, it.exists())
+            }
 }

@@ -2,10 +2,6 @@ package nl.ngti.androscope.responses.files
 
 import android.content.Context
 import nl.ngti.androscope.server.*
-import nl.ngti.androscope.server.SessionParams
-import nl.ngti.androscope.server.pageNumber
-import nl.ngti.androscope.server.pageSize
-import nl.ngti.androscope.server.sortOrder
 import java.io.File
 import java.util.*
 import kotlin.Comparator
@@ -18,28 +14,23 @@ internal class FileSystemData(
 
     private val responseFactory = FileSystemEntryListFactory(context)
 
-    private val fileList: Array<String>? by lazy {
-        root.list()
-    }
+    private val files = root.list() ?: emptyArray()
+
+    private lateinit var fileEntries: Array<FileSystemEntry>
 
     private val fileCount
-        get() = fileList?.size ?: 0
-
-    private var fileEntryList: List<FileSystemEntry>? = null
+        get() = files.size
 
     private var lastSortParams: SortParams? = null
 
-    fun getFileSystemList(session: SessionParams): List<FileSystemEntry> {
+    fun getFileSystemList(session: SessionParams): Array<FileSystemEntry> {
         val pageSize = session.pageSize
         val pageNumber = session.pageNumber
 
         val sortParams = SortParams(session.sortOrder, session.sortColumn)
 
-        return getEntryList(sortParams).run {
-            val fromIndex = pageSize * pageNumber
-            val toIndex = min(fromIndex + pageSize, size)
-            subList(fromIndex, toIndex)
-        }.apply {
+        val fromIndex = pageSize * pageNumber
+        return getEntries(sortParams, fromIndex, pageSize).apply {
             forEach {
                 it.prepareForSerialization(responseFactory)
             }
@@ -50,18 +41,17 @@ internal class FileSystemData(
         return FileSystemCount(fileCount)
     }
 
-    private fun getEntryList(sortParams: SortParams): List<FileSystemEntry> {
+    private fun getEntries(sortParams: SortParams, fromIndex: Int, pageSize: Int): Array<FileSystemEntry> {
         synchronized(this) {
-            var entryList = fileEntryList
-            if (entryList == null) {
-                entryList = responseFactory.generate(root)
+            if (!::fileEntries.isInitialized) {
+                fileEntries = responseFactory.generate(root, files)
             }
             if (lastSortParams != sortParams) {
-                entryList = entryList.sortedWith(sortParams.comparator)
+                fileEntries.sortWith(sortParams.comparator)
                 lastSortParams = sortParams
             }
-            fileEntryList = entryList
-            return entryList
+            val toIndex = min(fromIndex + pageSize, fileEntries.size)
+            return fileEntries.copyOfRange(fromIndex, toIndex)
         }
     }
 }

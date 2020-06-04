@@ -1,9 +1,16 @@
 package nl.ngti.androscope.responses.database
 
 import junit.framework.TestCase.*
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
+import java.io.File
 
-class DatabaseFileUtilsTest : BaseFileSystemTest() {
+class DatabaseFileUtilsTest {
+
+    @Rule
+    @JvmField
+    val tempFolder = TemporaryFolder()
 
     @Test
     fun `return values in normal setup`() {
@@ -14,19 +21,19 @@ class DatabaseFileUtilsTest : BaseFileSystemTest() {
         val walFile = createTestFile("test.db-wal")
         val otherFile = createTestFile("test.db-wal1")
 
-        assertEquals(dbFile, getMainDatabaseFile(dbFile))
-        assertEquals(dbFile, getMainDatabaseFile(journalFile))
-        assertEquals(dbFile, getMainDatabaseFile(shmFile))
-        assertEquals(dbFile, getMainDatabaseFile(walFile))
-        assertEquals(otherFile, getMainDatabaseFile(otherFile))
+        assertEquals(dbFile, dbFile.mainDatabaseFile)
+        assertEquals(dbFile, journalFile.mainDatabaseFile)
+        assertEquals(dbFile, shmFile.mainDatabaseFile)
+        assertEquals(dbFile, walFile.mainDatabaseFile)
+        assertEquals(otherFile, otherFile.mainDatabaseFile)
 
-        assertFalse(isAuxiliaryDatabaseFile(dbFile))
-        assertTrue(isAuxiliaryDatabaseFile(journalFile))
-        assertTrue(isAuxiliaryDatabaseFile(shmFile))
-        assertTrue(isAuxiliaryDatabaseFile(walFile))
-        assertFalse(isAuxiliaryDatabaseFile(otherFile))
+        assertFalse(dbFile.isAuxiliaryDatabaseFile)
+        assertTrue(journalFile.isAuxiliaryDatabaseFile)
+        assertTrue(shmFile.isAuxiliaryDatabaseFile)
+        assertTrue(walFile.isAuxiliaryDatabaseFile)
+        assertFalse(otherFile.isAuxiliaryDatabaseFile)
 
-        collectAllDatabaseFiles(dbFile).apply {
+        dbFile.collectAllDatabaseFiles().apply {
             assertEquals(dbFile.parentFile, parentDirectory)
             assertEquals(4, size)
             assertTrue(containsFile(dbFile.name))
@@ -45,10 +52,10 @@ class DatabaseFileUtilsTest : BaseFileSystemTest() {
         val shmFile = createTestFile("test-journal-shm")
         val walFile = createTestFile("test-journal-wal")
 
-        assertEquals(dbFile, getMainDatabaseFile(dbFile))
-        assertFalse(isAuxiliaryDatabaseFile(dbFile))
+        assertEquals(dbFile, dbFile.mainDatabaseFile)
+        assertFalse(dbFile.isAuxiliaryDatabaseFile)
 
-        collectAllDatabaseFiles(dbFile).apply {
+        dbFile.collectAllDatabaseFiles().run {
             assertEquals(dbFile.parentFile, parentDirectory)
             assertEquals(4, size)
             assertTrue(containsFile(dbFile.name))
@@ -57,4 +64,6 @@ class DatabaseFileUtilsTest : BaseFileSystemTest() {
             assertTrue(containsFile(walFile.name))
         }
     }
+
+    private fun createTestFile(name: String): File = tempFolder.newFile(name)
 }

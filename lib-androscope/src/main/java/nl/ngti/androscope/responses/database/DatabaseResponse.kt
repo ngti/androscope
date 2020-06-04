@@ -46,7 +46,7 @@ internal class DatabaseResponse(
 
         context.databaseList()
                 .mapTo(HashSet()) {
-                    getMainDatabaseFile(context.getDatabasePath(it))
+                    context.getDatabasePath(it).mainDatabaseFile
                 }
                 .filter {
                     it.exists() && it.isFile
@@ -199,7 +199,7 @@ private class BackupOriginalStrategy : ReplaceStrategy() {
     override fun onBeforeReplace(sourceFile: File, destFile: File): RequestResult? {
         val tempDir = createTempDir(directory = destFile.parentFile)
 
-        backup = collectAllDatabaseFiles(destFile).moveTo(tempDir)
+        backup = destFile.collectAllDatabaseFiles().moveTo(tempDir)
                 ?: return RequestResult.error(
                         "Cannot backup original database into: ${tempDir.absolutePath}." +
                                 " There might be active writes into it."

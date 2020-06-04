@@ -90,15 +90,18 @@ private class ConnectionManager(
     }
 
     private fun openDb(dbFile: File): SQLiteDatabase {
-        if (!dbFile.exists()) {
-            throw IllegalStateException("Database ${dbFile.absolutePath} does not exist.")
+        with(dbFile) {
+            if (!exists()) {
+                throw IllegalStateException("Database $absolutePath does not exist.")
+            }
+            if (!isFile) {
+                throw IllegalStateException("The specified path $absolutePath is not a file.")
+            }
+            if (isAuxiliaryDatabaseFile) {
+                throw IllegalStateException("The specified file $absolutePath is an auxiliary database file. Please choose the main database.")
+            }
         }
-        if (!dbFile.isFile) {
-            throw IllegalStateException("The specified path ${dbFile.absolutePath} is not a file.")
-        }
-        if (isAuxiliaryDatabaseFile(dbFile)) {
-            throw IllegalStateException("The specified file ${dbFile.absolutePath} is an auxiliary database file. Please choose the main database.")
-        }
+
         log { "Opening new connection for $dbFile" }
         return context.openOrCreateDatabase(dbFile.absolutePath, 0, null)
     }
