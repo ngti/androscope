@@ -40,7 +40,7 @@ internal class ResponseDataCache<Params : Refreshable, Data>(
  * Enforces parameters used in [ResponseDataCache] to contain [timestamp] property that allows to
  * invalidate cache when user refreshes a web page.
  */
-interface Refreshable {
+internal interface Refreshable {
 
     /**
      * Should be passed from a web page. When user refreshes the web page, a new timestamp
