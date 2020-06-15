@@ -49,6 +49,8 @@ Add Androscope dependency to your Gradle script:
 debugImplementation 'nl.ngti:androscope:1.0-RC4'
 ```
 
+Make also sure [Java 8 language features support](https://developer.android.com/studio/write/java8-support#supported_features) is also enabled (required since 1.0-RC4).
+
 Install your application and you will see the entry named **Androscope** in launcher. Run it to launch the web server and then you can start using Androscope in a web browser.
 
 No configuration in code is required, but you might want to do some customizations (see [Recipes](#recipes)).
