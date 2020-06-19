@@ -1,8 +1,12 @@
 package nl.ngti.androscope
 
+import android.app.Activity
+import android.app.Application
 import android.content.ContentProvider
 import android.content.ContentValues
+import android.content.Context
 import android.net.Uri
+import android.os.Bundle
 import nl.ngti.androscope.service.AndroscopeService
 import nl.ngti.androscope.utils.AndroscopeMetadata
 
@@ -12,7 +16,7 @@ internal class AndroscopeContentProvider : ContentProvider() {
         val context = context!!
 
         if (AndroscopeMetadata.isAutoStartEnabled(context)) {
-            AndroscopeService.startServer(context)
+            registerActivityMonitor(context)
         }
 
         return false
@@ -30,4 +34,39 @@ internal class AndroscopeContentProvider : ContentProvider() {
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?) =
             throw UnsupportedOperationException()
+
+    private fun registerActivityMonitor(context: Context) {
+        (context.applicationContext as Application).run {
+            registerActivityLifecycleCallbacks(AndroscopeStartCallback(this))
+        }
+    }
+}
+
+private class AndroscopeStartCallback(
+        private val application: Application
+) : Application.ActivityLifecycleCallbacks {
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        AndroscopeService.startServer(activity)
+
+        application.unregisterActivityLifecycleCallbacks(this)
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+    }
+
+    override fun onActivityPaused(activity: Activity) {
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+    }
 }
