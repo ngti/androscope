@@ -3,6 +3,7 @@ package nl.ngti.androscope.responses.database
 import android.content.Context
 import android.database.Cursor
 import android.database.DataSetObserver
+import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import nl.ngti.androscope.common.log
@@ -103,7 +104,21 @@ private class ConnectionManager(
         }
 
         log { "Opening new connection for $dbFile" }
-        return context.openOrCreateDatabase(dbFile.absolutePath, 0, null)
+
+        val errorHandler = AndroscopeDbErrorHandler()
+        try {
+            // First try to open the database in read-only mode to prevent deleting database files
+            // that might be encrypted.
+            SQLiteDatabase.openDatabase(dbFile.absolutePath, null, SQLiteDatabase.OPEN_READONLY, errorHandler).use {
+                // Need to perform at least one query
+                it.version
+            }
+        } catch (e: Throwable) {
+            log { "Error opening database in read-only mode: ${e.message}" }
+            throw e
+        }
+
+        return SQLiteDatabase.openDatabase(dbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE, errorHandler)
     }
 
     private fun sweep() {
@@ -165,4 +180,13 @@ private class ConnectionManager(
             return false
         }
     }
+}
+
+private class AndroscopeDbErrorHandler : DatabaseErrorHandler {
+
+    override fun onCorruption(dbObj: SQLiteDatabase) {
+        log { "onCorruption ${dbObj.path}" }
+        // Default handler removes the database(s), for Androscope we don't do anything
+    }
+
 }
