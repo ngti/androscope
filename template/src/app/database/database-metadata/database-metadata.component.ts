@@ -38,6 +38,11 @@ export class DatabaseMetadataComponent implements OnDestroy {
     return this.restService.getDatabaseDownloadUrl(this.model.uri);
   }
 
+  get isDatabaseValid(): boolean {
+    const info = this.databaseInfoSubject.getValue()
+    return info != null && info.valid
+  }
+
   ngOnDestroy(): void {
     this.uriSubscription.unsubscribe();
   }

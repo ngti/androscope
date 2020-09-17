@@ -14,7 +14,7 @@
         <mat-icon>cloud_upload</mat-icon>
         <span>Upload</span>
       </button>
-      <a mat-menu-item routerLink="./query">
+      <a [disabled]="!isDatabaseValid" mat-menu-item routerLink="./query">
         <mat-icon>edit</mat-icon>
         <span>Custom query</span>
       </a>
