@@ -9,6 +9,7 @@
     <application>
         <activity
             android:name=".AndroscopeActivity"
+            android:exported="true"
             android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|smallestScreenSize"
             android:icon="@mipmap/androscope_ic_launcher"
             android:label="@string/androscope_activity_label"
