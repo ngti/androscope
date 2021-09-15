@@ -53,26 +53,3 @@ internal class FileSystemData(
         }
     }
 }
-
-private data class SortParams(
-        private val sortOrder: String?,
-        private val sortColumn: String?
-) {
-
-    val comparator: Comparator<FileSystemEntry>
-        get() {
-            var result = SortParamsUtil.getFolderComparator()
-            sortOrderComparator?.let {
-                result = result then it
-            }
-            return result
-        }
-
-    private val sortOrderComparator: Comparator<FileSystemEntry>?
-        get() =
-            sortOrder?.let { order ->
-                sortColumn?.let { column ->
-                    SortParamsUtil.getSortingComparator(order, column)
-                }
-            }
-}

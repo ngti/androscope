@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.observe
 import nl.ngti.androscope.service.AndroscopeService
 import nl.ngti.androscope.service.AndroscopeService.LocalBinder
 

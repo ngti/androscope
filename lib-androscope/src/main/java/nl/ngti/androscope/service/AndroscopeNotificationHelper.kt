@@ -15,8 +15,8 @@ import nl.ngti.androscope.R
 import nl.ngti.androscope.utils.applicationName
 
 internal class AndroscopeNotificationHelper(
-        private val service: Service,
-        private val handler: Handler
+    private val service: Service,
+    private val handler: Handler
 ) {
     private val showPendingNotification = Runnable {
         pendingNotification?.run {
@@ -37,22 +37,31 @@ internal class AndroscopeNotificationHelper(
 
     fun showNotification(setupBlock: NotificationCompat.Builder.() -> Unit) {
         val notificationBuilder = NotificationCompat.Builder(service, channelId)
-        setupBlock(notificationBuilder)
-        notificationBuilder.run {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                // Android before Nougat does not display application name in notifications.
-                // So we need to manually set it in the notification title.
-                setContentTitle(service.applicationName)
+            .apply {
+                setupBlock()
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    // Android before Nougat does not display application name in notifications.
+                    // So we need to manually set it in the notification title.
+                    setContentTitle(service.applicationName)
+                }
+                setSmallIcon(R.drawable.androscope_notification_icon)
+                setContentIntent(createNotificationIntent())
             }
-            setSmallIcon(R.drawable.androscope_notification_icon)
-            setContentIntent(PendingIntent.getActivity(service,
-                    R.id.androscope_notification_request_code_open_androscope_activity,
-                    Intent(service, AndroscopeActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
-        }
 
         handler.post {
             queueNotification(notificationBuilder)
         }
+    }
+
+    private fun createNotificationIntent(): PendingIntent {
+        return Intent(service, AndroscopeActivity::class.java)
+            .let {
+                PendingIntent.getActivity(
+                    service,
+                    R.id.androscope_notification_request_code_open_androscope_activity,
+                    it, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
     }
 
     private fun queueNotification(builder: NotificationCompat.Builder) {
