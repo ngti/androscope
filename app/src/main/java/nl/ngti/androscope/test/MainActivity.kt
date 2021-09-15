@@ -5,34 +5,40 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import nl.ngti.androscope.AndroscopeActivity
+import nl.ngti.androscope.test.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        findViewById<View>(R.id.open_androscope_activity).setOnClickListener(this)
-        findViewById<View>(R.id.button_grant_storage_permission).setOnClickListener(this)
-        findViewById<View>(R.id.button_grant_contacts_permission).setOnClickListener(this)
+        ActivityMainBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            bindViews()
+        }
 
         addSamplePreferences()
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.open_androscope_activity -> openAndroscopeActivity()
-            R.id.button_grant_contacts_permission -> requestPermissions(Manifest.permission.READ_CONTACTS)
-            R.id.button_grant_storage_permission -> requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private fun ActivityMainBinding.bindViews() {
+        openAndroscopeActivity.setOnClickListener {
+            openAndroscopeActivity()
+        }
+        buttonGrantStoragePermission.setOnClickListener {
+            requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        buttonGrantContactsPermission.setOnClickListener {
+            requestPermissions(Manifest.permission.READ_CONTACTS)
         }
     }
 
     private fun addSamplePreferences() {
-        val prefs = getSharedPreferences("sample", Context.MODE_PRIVATE)
-        if (!prefs.contains("sample_key")) {
-            prefs.edit().putString("sample_key", "Sample Value").apply()
+        getSharedPreferences("sample", Context.MODE_PRIVATE).run {
+            if (!contains("sample_key")) {
+                edit().putString("sample_key", "Sample Value").apply()
+            }
         }
     }
 
@@ -43,7 +49,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), View.OnClickList
     }
 
     private fun openAndroscopeActivity() {
-        val intent = Intent(this, AndroscopeActivity::class.java)
-        startActivity(intent)
+        Intent(this, AndroscopeActivity::class.java).also {
+            startActivity(it)
+        }
     }
 }

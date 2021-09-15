@@ -46,7 +46,7 @@ Androscope supports Android applications with minimum API level 16.
 Add Androscope dependency to your Gradle script:
 
 ```
-debugImplementation 'nl.ngti:androscope:1.0'
+debugImplementation 'nl.ngti:androscope:1.1'
 ```
 
 Also make sure [Java 8 language features support](https://developer.android.com/studio/write/java8-support#supported_features) is enabled (required since 1.0-RC4).

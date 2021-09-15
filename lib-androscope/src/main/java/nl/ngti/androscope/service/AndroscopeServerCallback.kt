@@ -117,12 +117,14 @@ You can also find this information in Logcat for “:androidscope” process of 
         val intent = Intent(service, AndroscopeService::class.java).apply {
             action = serviceAction
         }
-        val pendingIntent = PendingIntent.getService(service,
-                requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val action = NotificationCompat.Action.Builder(0,
-                service.getString(textResId), pendingIntent)
-                .build()
-        addAction(action)
+        val pendingIntent = PendingIntent.getService(
+            service, requestCode, intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        NotificationCompat.Action.Builder(0, service.getString(textResId), pendingIntent)
+            .build().also {
+                addAction(it)
+            }
     }
 
     private fun performLogging(message: String, exception: Throwable? = null) {

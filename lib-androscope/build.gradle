@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -34,7 +32,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1"
     implementation 'androidx.activity:activity-ktx:1.3.1'
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'org.nanohttpd:nanohttpd-webserver:2.3.1'
@@ -45,10 +42,4 @@ dependencies {
 }
 
 apply plugin: 'org.jetbrains.dokka'
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
-}
-
 apply plugin: "com.vanniktech.maven.publish"

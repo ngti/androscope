@@ -93,7 +93,7 @@ internal class AndroscopeService : Service() {
             get() = this@AndroscopeService.statusLiveData
     }
 
-    private inner class ServiceHandler internal constructor(looper: Looper) : Handler(looper) {
+    private inner class ServiceHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
             onHandleIntent(msg.obj as Intent)
         }

@@ -3,6 +3,8 @@ package nl.ngti.androscope.responses.files
 import nl.ngti.androscope.responses.common.indexOfExtension
 import java.io.File
 
+private const val NOT_INITIALIZED = -1L
+
 internal interface IFormatter {
 
     fun formatFileSize(size: Long): String
@@ -28,22 +30,22 @@ internal class FileSystemEntry internal constructor(
     var size: String? = null
 
     @Transient
-    private var dateOnDemand: Long = -1
+    private var dateOnDemand: Long = NOT_INITIALIZED
 
     val dateAsLong: Long
         get() {
-            if (dateOnDemand == -1L) {
+            if (dateOnDemand == NOT_INITIALIZED) {
                 dateOnDemand = file.lastModified()
             }
             return dateOnDemand
         }
 
     @Transient
-    private var sizeOnDemand: Long = if (isFolder) 0 else -1
+    private var sizeOnDemand: Long = if (isFolder) 0 else NOT_INITIALIZED
 
     val sizeAsLong: Long
         get() {
-            if (sizeOnDemand == -1L) {
+            if (sizeOnDemand == NOT_INITIALIZED) {
                 sizeOnDemand = file.length()
             }
             return sizeOnDemand

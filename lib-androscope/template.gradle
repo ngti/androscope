@@ -1,13 +1,13 @@
 class BuildTemplateTask extends Exec {
 
+    @Input
     String templatePath
+    @Input
     String outputPath
 
     @Override
     protected void exec() {
-        println 'Building Angular template'
-        println "Input: $templatePath"
-        println "Output: $outputPath"
+        println "Building Angular template: '$templatePath' -> '$outputPath'"
 
         workingDir(templatePath)
         commandLine("ng", "build",
@@ -23,6 +23,6 @@ class BuildTemplateTask extends Exec {
 }
 
 task buildTemplate(type: BuildTemplateTask) {
-    templatePath = "$projectDir/../template"
+    templatePath = "$rootDir/template"
     outputPath = "$projectDir/src/main/assets/www-androscope/"
 }

@@ -6,9 +6,9 @@ internal data class ImageCacheConfig(
         val filter: String
 )
 
-internal val defaultConfigs
+internal val defaultConfigs: Map<String, ImageCacheConfig>
     get() =
-        HashMap<String, ImageCacheConfig>(2).apply {
+        HashMap<String, ImageCacheConfig>(3).apply {
             put(
                     "picasso",
                     ImageCacheConfig(
